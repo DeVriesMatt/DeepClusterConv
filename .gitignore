@@ -4,6 +4,7 @@ nets/
 reports/
 runs/
 reconstructed_imgs/
+lightning_logs/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

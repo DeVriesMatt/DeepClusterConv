@@ -11,9 +11,12 @@ from metrics import print_both
 from training_functions import train_model, pretraining
 from torch.utils.tensorboard import SummaryWriter
 import os
+import pytorch_lightning as pl
 
 from datasets import ImageFolder
 from loss_functions import *
+import pl_networks
+
 
 if __name__ == "__main__":
 
@@ -33,13 +36,13 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default=1, help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5'], help='network architecture used')
-    parser.add_argument('--dataset', default='Sibgle-Cell',
+    parser.add_argument('--dataset', default='Single-Cell',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
                         default='/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3',
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=256, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=16, type=int, help='batch size')
     parser.add_argument('--rate', default=0.00002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.00002, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
@@ -63,6 +66,8 @@ if __name__ == "__main__":
     parser.add_argument('--activations', default=False, type=str2bool)
     parser.add_argument('--bias', default=True, type=str2bool)
     parser.add_argument('--output_dir', default='./', type=str)
+    parser.add_argument('--train_lightning', default=True, type=str2bool)
+    parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
     args = parser.parse_args()
     print(args)
 
@@ -161,13 +166,16 @@ if __name__ == "__main__":
     params['batch'] = batch
     # Number of workers (typically 4*num_of_GPUs)
     workers = 4
+    params['workers'] = workers
     # Learning rate
     rate = args.rate
     rate_pretrain = args.rate_pretrain
+    params['rate_pretrain'] = rate_pretrain
     # Adam params
     # Weight decay
     weight = args.weight
     weight_pretrain = args.weight_pretrain
+    params['weight_pretrain'] = weight_pretrain
     # Scheduler steps for rate update
     sched_step = args.sched_step
     sched_step_pretrain = args.sched_step_pretrain
@@ -248,6 +256,7 @@ if __name__ == "__main__":
     # Data preparation
     # Data folder
     data_dir = args.dataset_path
+    params['data_dir'] = data_dir
     tmp = "\nData preparation\nReading data from:\t./" + data_dir
     print_both(f, tmp)
 
@@ -260,74 +269,96 @@ if __name__ == "__main__":
     tmp = "Image size used:\t{0}x{1}x{2}".format(img_size[0], img_size[1], img_size[2])
     print_both(f, tmp)
 
-    # Transformations
-    # TODO: look at adding in transforms
-    data_transforms = transforms.Compose([
-        # transforms.Resize(img_size[0:3]),
-        # transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ])
-
-    # Read data from selected folder and apply transformations
-    image_dataset = ImageFolder(root=data_dir, transform=data_transforms)
-    # Prepare data for network: schuffle and arrange batches
-    dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
-                                             shuffle=True, num_workers=workers)
-
-    # Size of data sets
-    dataset_size = len(image_dataset)
-    tmp = "Training set size:\t" + str(dataset_size)
-    print_both(f, tmp)
-
-    params['dataset_size'] = dataset_size
-
     # GPU check
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     tmp = "\nPerforming calculations on:\t" + str(device)
     print_both(f, tmp + '\n')
     params['device'] = device
 
-    # Evaluate the proper model
-    to_eval = "networks." + model_name + "(img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope)"
+    if args.train_lightning:
+        print('Training using pytorch-lightning')
+        # Evaluate the proper model
+        model_name = 'Lit_' + model_name
+        to_eval = "pl_networks." + model_name + "(params, img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope)"
+        model = eval(to_eval)
+        # Tensorboard model representation
+        if board:
+            writer.add_graph(model, torch.autograd.Variable(
+                torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
+        dm = pl_networks.LitSingleCellData(params)
+        data_transforms = transforms.Compose([ transforms.ToTensor()])
+        image_dataset = ImageFolder(root=data_dir, transform=data_transforms)
+        dataloader = torch.utils.data.DataLoader(image_dataset,
+                                                 batch_size=batch,
+                                                 shuffle=True,
+                                                 num_workers=workers)
+        trainer = pl.Trainer(gpus=args.num_gpus, max_epochs=300, progress_bar_refresh_rate=1,
+                             default_root_dir=args.output_dir, accelerator='dp')
+        trainer.fit(model, dataloader)
 
-    model = eval(to_eval)
-    # print(to_eval.input_shape)
+    else:
+        # Transformations
+        # TODO: look at adding in transforms
+        data_transforms = transforms.Compose([
+            # transforms.Resize(img_size[0:3]),
+            # transforms.RandomHorizontalFlip(),
+            transforms.ToTensor(),
+            # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        ])
 
-    # Tensorboard model representation
-    if board:
-        writer.add_graph(model, torch.autograd.Variable(torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
+        # Read data from selected folder and apply transformations
+        image_dataset = ImageFolder(root=data_dir, transform=data_transforms)
+        # Prepare data for network: schuffle and arrange batches
+        dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
+                                                 shuffle=True, num_workers=workers)
+        # Size of data sets
+        dataset_size = len(image_dataset)
+        tmp = "Training set size:\t" + str(dataset_size)
+        print_both(f, tmp)
 
-    model = model.to(device)
-    # Reconstruction loss
-    criterion_1 = FocalTverskyLoss()  # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
-    # Clustering loss
-    criterion_2 = nn.KLDivLoss(size_average=False)
+        params['dataset_size'] = dataset_size
 
-    criteria = [criterion_1, criterion_2]
+        # Evaluate the proper model
+        to_eval = "networks." + model_name + "(img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope)"
 
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate, weight_decay=weight)
+        model = eval(to_eval)
+        # print(to_eval.input_shape)
 
-    optimizer_pretrain = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate_pretrain,
-                                    weight_decay=weight_pretrain)
+        # Tensorboard model representation
+        if board:
+            writer.add_graph(model, torch.autograd.Variable(
+                torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
 
-    optimizers = [optimizer, optimizer_pretrain]
+        model = model.to(device)
+        # Reconstruction loss
+        criterion_1 = FocalTverskyLoss()  # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
+        # Clustering loss
+        criterion_2 = nn.KLDivLoss(size_average=False)
 
-    scheduler = lr_scheduler.StepLR(optimizer, step_size=sched_step, gamma=sched_gamma)
-    #     lr_scheduler.ReduceLROnPlateau(optimizer)
-    scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
-                                             gamma=sched_gamma_pretrain)
+        criteria = [criterion_1, criterion_2]
 
-    #     ReduceLROnPlateau()
-    schedulers = [scheduler, scheduler_pretrain]
+        optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate, weight_decay=weight)
 
-    if args.mode == 'train_full':
-        model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params)
-    elif args.mode == 'pretrain':
-        model = pretraining(model, dataloader, criteria[0], optimizers[1], schedulers[1], epochs, params)
+        optimizer_pretrain = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate_pretrain,
+                                        weight_decay=weight_pretrain)
+
+        optimizers = [optimizer, optimizer_pretrain]
+
+        scheduler = lr_scheduler.StepLR(optimizer, step_size=sched_step, gamma=sched_gamma)
+        #     lr_scheduler.ReduceLROnPlateau(optimizer)
+        scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
+                                                 gamma=sched_gamma_pretrain)
+
+        #     ReduceLROnPlateau()
+        schedulers = [scheduler, scheduler_pretrain]
+
+        if args.mode == 'train_full':
+            model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params)
+        elif args.mode == 'pretrain':
+            model = pretraining(model, dataloader, criteria[0], optimizers[1], schedulers[1], epochs, params)
 
     # Save final model
-    torch.save(model.state_dict(), './SingleCellFull/' + 'CAE3_orig_paddedWithin_646464Treatments_3Clusters' + '.pt')
+    torch.save(model.state_dict(), name_net + '.pt')
 
     # Close files
     f.close()
