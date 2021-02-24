@@ -8,8 +8,8 @@ import torch.nn.functional as F
 
 # module visualizations.py
 from datetime import datetime
-import visdom
-from visdom import Visdom
+# import visdom
+# from visdom import Visdom
 from skimage import io
 
 # import from files
