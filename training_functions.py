@@ -13,8 +13,7 @@ from datetime import datetime
 from skimage import io
 
 # import from files
-import metrics
-from metrics import print_both, tensor2img
+from metrics import print_both, tensor2img, metrics
 from utils import create_dir_if_not_exist
 
 
