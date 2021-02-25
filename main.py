@@ -12,6 +12,7 @@ from training_functions import train_model, pretraining
 from torch.utils.tensorboard import SummaryWriter
 import os
 import pytorch_lightning as pl
+from pytorch_lightning.loggers import TestTubeLogger
 
 from datasets import ImageFolder
 from loss_functions import *
@@ -277,6 +278,12 @@ if __name__ == "__main__":
 
     if args.train_lightning:
         print('Training using pytorch-lightning')
+        tt_logger = TestTubeLogger(
+            save_dir=args.output_dir,
+            name='TestTube_lightning_logs/' + model_name,
+            debug=False,
+            create_git_tag=False
+        )
         # Evaluate the proper model
         model_name = 'Lit_' + model_name
         to_eval = "pl_networks." + model_name + "(params, img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope)"
@@ -293,7 +300,7 @@ if __name__ == "__main__":
                                                  shuffle=True,
                                                  num_workers=workers)
         trainer = pl.Trainer(gpus=args.num_gpus, max_epochs=300, progress_bar_refresh_rate=1,
-                             default_root_dir=args.output_dir, accelerator='dp')
+                             default_root_dir=args.output_dir, accelerator='dp', logger=tt_logger)
         trainer.fit(model, dataloader)
 
     else:
