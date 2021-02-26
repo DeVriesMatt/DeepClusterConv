@@ -37,7 +37,7 @@ if __name__ == "__main__":
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default=1, help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5'], help='network architecture used')
+    parser.add_argument('--net_architecture', default='CAE_bn3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5'], help='network architecture used')
     parser.add_argument('--dataset', default='Single-Cell',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
                         help='custom or prepared dataset')
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     parser.add_argument('--sched_gamma_pretrain', default=0.1, type=float,
                         help='scheduler gamma for rate update - pretrain')
     parser.add_argument('--epochs', default=1000, type=int, help='clustering epochs')
-    parser.add_argument('--epochs_pretrain', default=300, type=int, help='pretraining epochs')
+    parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
     parser.add_argument('--gamma', default=0.3, type=float, help='clustering loss weight')
     parser.add_argument('--update_interval', default=300, type=int, help='update interval for target distribution')

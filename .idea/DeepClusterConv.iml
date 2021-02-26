@@ -6,6 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/reports" />
       <excludeFolder url="file://$MODULE_DIR$/runs" />
       <excludeFolder url="file://$MODULE_DIR$/lightning_logs" />
+      <excludeFolder url="file://$MODULE_DIR$/TestTube_lightning_logs" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
