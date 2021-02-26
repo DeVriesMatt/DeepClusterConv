@@ -6,10 +6,13 @@ from torch.utils.data import DataLoader, random_split
 import pytorch_lightning as pl
 import copy
 from torchvision import transforms
+from sklearn.cluster import KMeans
+import numpy as np
 
 from networks import ClusterlingLayer
 from loss_functions import *
 from datasets import ImageFolder
+from metrics import metrics
 
 
 class Cae3Encoder(nn.Module):
@@ -182,7 +185,8 @@ class Cae3Decoder(nn.Module):
 
 class Lit_CAE_3(pl.LightningModule):
     def __init__(self, params, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True, encoder='CAE_3', loss=FocalTverskyLoss()):
+                 neg_slope=0.01, activations=False, bias=True, encoder='CAE_3', loss_rec=FocalTverskyLoss(),
+                 loss_clus=nn.KLDivLoss(size_average=False)):
         super(Lit_CAE_3, self).__init__()
         self.num_clusters = num_clusters
         self.activations = activations
@@ -192,7 +196,9 @@ class Lit_CAE_3(pl.LightningModule):
         self.filters = filters
         self.neg_slope = neg_slope
         self.leaky = leaky
-        self.loss = loss
+        self.loss_rec = loss_rec
+        self.loss_clus = loss_clus
+        self.params = params
 
         if encoder == 'CAE_3':
             self.encoder = Cae3Encoder(self.input_shape, self.num_clusters, self.filters, self.leaky,
@@ -215,23 +221,95 @@ class Lit_CAE_3(pl.LightningModule):
         self.tol = params['tol']
         self.weight_pretrain = params['weight_pretrain']
         self.rate_pretrain = params['rate_pretrain']
+        self.update_interval = params['update_interval']
 
     def forward(self, x):
         embedding, clustering_out, extra_out, fcdown1 = self.encoder(x)
-        return embedding, clustering_out, fcdown1
+        output = self.decoder(embedding)
+        return embedding, clustering_out, fcdown1, output
+
+    def on_train_start(self) -> None:
+        pass
+        # kmeans(self, copy.deepcopy(self.params['dataloader']), self.params)
+        # print('\nUpdating target distribution')
+        # self.output_distribution, self.labels, self.preds_prev = calculate_predictions(self,
+        #                                                                 copy.deepcopy(self.params['dataloader']),
+        #                                                                 self.params)
+        # self.target_distribution = target(self.output_distribution)
+        # self.nmi = metrics.nmi(self.labels, self.preds_prev)
+        # self.ari = metrics.ari(self.labels, self.preds_prev)
+        # self.acc = metrics.acc(self.labels, self.preds_prev)
+        # log_dict = {'NMI': nmi,
+        #             'ARI': ari,
+        #             'Acc': acc,
+        #             'Reconstruction loss': nmi,
+        #             'Clustering loss': nmi,
+        #             'Total loss': nmi}
+        # self.logger.log_metrics(log_dict)
+
+    def on_epoch_end(self) -> None:
+        pass
+        # self.output_distribution, self.labels, self.preds = calculate_predictions(self,
+        #                                                                           self.params['dataloader'],
+        #                                                                           self.params)
+        # self.target_distribution = target(self.output_distribution)
+        # self.nmi = metrics.nmi(self.labels, self.preds)
+        # self.ari = metrics.ari(self.labels, self.preds)
+        # self.acc = metrics.acc(self.labels, self.preds)
 
     def training_step(self, batch, batch_idx):
+        # print(self.current_epoch)
         inputs, labels = batch
+        threshold = 0.0
+        inputs = (inputs > threshold).type_as(inputs)
         embedding, clustering_out, extra_out, fcdown1 = self.encoder(inputs)
         outputs = self.decoder(embedding)
-        loss = self.loss(outputs, inputs)
-        self.log('Train loss', loss, logger=True)
+        loss = self.loss_rec(outputs, inputs)
+        self.logger.log_graph(self, inputs)
+        self.logger.log_metrics({'Loss': loss.item()})
         return loss
 
+        # if self.params['mode'] == 'train_full':
+        #     inputs, labels = batch
+        #     threshold = 0.0
+        #     inputs = (inputs > threshold).type_as(inputs)
+        #     batch_size = self.batch_size
+        #
+        #     # Uptade target distribution, chack and print performance
+        #     self.tar_dist = self.target_distribution[((batch_idx - 1) * batch_size):(batch_idx * batch_size), :]
+        #     self.tar_dist = torch.from_numpy(self.tar_dist).type_as(inputs)
+        #
+        #     embedding, clustering_out, extra_out, fcdown1 = self.encoder(inputs)
+        #     outputs = self.decoder(embedding)
+        #     comb_loss = CombinedLoss()
+        #     loss, rec_loss, clus_loss = comb_loss(outputs,
+        #                                           inputs,
+        #                                           self.tar_dist,
+        #                                           clustering_out,
+        #                                           self.gamma,
+        #                                           batch_size)
+        #     # log_dict = {'NMI': self.nmi,
+        #     #             'ARI': self.ari,
+        #     #             'Acc': self.acc,
+        #     #             'Reconstruction loss': rec_loss,
+        #     #             'Clustering loss': clus_loss,
+        #     #             'Total loss': loss}
+        #     # self.logger.log_metrics(log_dict)
+        #     self.log('Train loss', loss, prog_bar=True, on_step=True)
+        #     return loss
+
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()), lr=self.rate_pretrain,
+        optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.parameters()),
+                                     lr=self.rate_pretrain,
                                      weight_decay=self.weight_pretrain)
-        return optimizer
+        lr_scheduler = {'scheduler': torch.optim.lr_scheduler.StepLR(optimizer,
+                                                                     step_size=self.params['sched_step_pretrain'],
+                                                                     gamma=self.params['sched_gamma_pretrain']),
+                        'name': 'learning_rate',
+                        'interval': 'step',
+                        'frequency': 1}
+
+        return [optimizer], [lr_scheduler]
 
 
 class LitSingleCellData(pl.LightningDataModule):
@@ -274,3 +352,57 @@ class LitSingleCellData(pl.LightningDataModule):
                           batch_size=self.batch_size,
                           shuffle=True,
                           num_workers=self.num_workers)
+
+
+# K-means clusters initialisation
+def kmeans(model, dataloader, params):
+    km = KMeans(n_clusters=model.num_clusters, n_init=20)
+    output_array = None
+    model.eval()
+    # Itarate throught the data and concatenate the latent space representations of images
+    for data in dataloader:
+        inputs, _ = data
+        inputs = inputs.to(params['device'])
+        outputs, clustering_out, fcdown1, _ = model(inputs)
+        if output_array is not None:
+            output_array = np.concatenate((output_array, outputs.cpu().detach().numpy()), 0)
+        else:
+            output_array = outputs.cpu().detach().numpy()
+        # print(output_array.shape)
+        if output_array.shape[0] > 50000: break
+
+    # Perform K-means
+    km.fit_predict(output_array)
+    # Update clustering layer weights
+    weights = torch.from_numpy(km.cluster_centers_)
+    model.encoder.clustering.set_weight(weights.to(params['device']))
+    # torch.cuda.empty_cache()
+
+
+# Function forwarding data through network, collecting clustering weight output and returning prediciotns and labels
+def calculate_predictions(model, dataloader, params):
+    output_array = None
+    label_array = None
+    model.eval()
+    for data in dataloader:
+        inputs, labels = data
+        inputs = inputs.to(params['device'])
+        labels = labels.to(params['device'])
+        embedding, outputs, fcdown1, _ = model(inputs)
+        if output_array is not None:
+            output_array = np.concatenate((output_array, outputs.cpu().detach().numpy()), 0)
+            label_array = np.concatenate((label_array, labels.cpu().detach().numpy()), 0)
+        else:
+            output_array = outputs.cpu().detach().numpy()
+            label_array = labels.cpu().detach().numpy()
+
+    preds = np.argmax(output_array.data, axis=1)
+    # print(output_array.shape)
+    return output_array, label_array, preds
+
+
+# Calculate target distribution
+def target(out_distr):
+    tar_dist = out_distr ** 2 / np.sum(out_distr, axis=0)
+    tar_dist = np.transpose(np.transpose(tar_dist) / np.sum(tar_dist, axis=1))
+    return tar_dist

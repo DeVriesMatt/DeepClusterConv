@@ -5,7 +5,7 @@ import copy
 
 # Clustering layer definition (see DCEC article for equations)
 class ClusterlingLayer(nn.Module):
-    def __init__(self, in_features=10, out_features=10, alpha=1.0):
+    def __init__(self, in_features=100, out_features=10, alpha=1.0):
         super(ClusterlingLayer, self).__init__()
         self.in_features = in_features
         self.out_features = out_features
@@ -31,7 +31,7 @@ class ClusterlingLayer(nn.Module):
         x = torch.t(x) / torch.sum(x, dim=1)
         #         print('8:  ', x.shape)
         x = torch.t(x)
-        #         print('9:  ', x.shape)
+        # print('9:  ', x.shape)
         return x
 
     def extra_repr(self):
@@ -45,13 +45,14 @@ class ClusterlingLayer(nn.Module):
 
 # Convolutional autoencoder directly from DCEC article
 class CAE_3(nn.Module):
-    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=5, filters=[32, 64, 128], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=100):
         super(CAE_3, self).__init__()
         self.activations = activations
         # bias = True
         self.pretrained = False
         self.num_clusters = num_clusters
+        self.num_features = num_features
         self.input_shape = input_shape
         #         print(input_shape)
         self.filters = filters
@@ -68,8 +69,8 @@ class CAE_3(nn.Module):
         #         print(lin_features_len)
         #         self.fc_down1 = nn.Linear(lin_features_len, 1000)
         #         self.fc_down2 = nn.Linear(10000, 500)
-        self.embedding = nn.Linear(lin_features_len, num_clusters, bias=bias)
-        self.deembedding = nn.Linear(num_clusters, lin_features_len, bias=bias)
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         #         self.fc_up1 = nn.Linear(500, 10000)
         #         self.fc_up2 = nn.Linear(1000, lin_features_len)
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
@@ -80,7 +81,7 @@ class CAE_3(nn.Module):
                                           bias=bias)
         out_pad = 1 if input_shape[0] % 2 == 0 else 0
         self.deconv1 = nn.ConvTranspose3d(filters[0], 1, 5, stride=2, output_padding=out_pad, padding=2, bias=bias)
-        self.clustering = ClusterlingLayer(num_clusters, num_clusters)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
         # ReLU copies for graph representation in tensorboard
         self.relu1_1 = copy.deepcopy(self.relu)
         self.relu2_1 = copy.deepcopy(self.relu)

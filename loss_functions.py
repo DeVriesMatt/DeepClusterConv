@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import pytorch_lightning as pl
 
 
 class DiceBCELoss(nn.Module):
@@ -112,3 +113,26 @@ class FocalTverskyLoss(nn.Module):
         FocalTversky = (1 - Tversky) ** gamma
 
         return FocalTversky
+
+
+def combined_loss(outputs, inputs, tar_dist, clustering_out, gamma, batch_size):
+    rec_loss = FocalTverskyLoss(outputs, inputs)
+    clus_crit = nn.KLDivLoss(size_average=False)
+    clus_loss = gamma * clus_crit(torch.log(clustering_out), tar_dist) / batch_size
+    loss = rec_loss + clus_loss
+
+    return loss, rec_loss, clus_loss
+
+
+class CombinedLoss(nn.Module):
+    def __init__(self):
+        super(CombinedLoss, self).__init__()
+
+    def forward(self, outputs, inputs, tar_dist, clustering_out, gamma, batch_size):
+        loss, rec_loss, clus_loss = combined_loss(outputs,
+                                                  inputs,
+                                                  tar_dist,
+                                                  clustering_out,
+                                                  gamma,
+                                                  batch_size)
+        return loss, rec_loss, clus_loss

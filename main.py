@@ -17,6 +17,7 @@ from pytorch_lightning.loggers import TestTubeLogger
 from datasets import ImageFolder
 from loss_functions import *
 import pl_networks
+from training_functions import *
 
 
 if __name__ == "__main__":
@@ -61,13 +62,14 @@ if __name__ == "__main__":
     parser.add_argument('--update_interval', default=300, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
+    parser.add_argument('--num_features', default=100, type=int, help='number of features to extract')
     parser.add_argument('--custom_img_size', default=[64, 64, 64, 1], nargs=4, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
     parser.add_argument('--bias', default=True, type=str2bool)
     parser.add_argument('--output_dir', default='./', type=str)
-    parser.add_argument('--train_lightning', default=True, type=str2bool)
+    parser.add_argument('--train_lightning', default=False, type=str2bool)
     parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
     args = parser.parse_args()
     print(args)
@@ -77,6 +79,7 @@ if __name__ == "__main__":
         exit()
 
     board = args.tensorboard
+
 
     # Deal with pretraining option and way of showing network path
     pretrain = args.pretrain
@@ -94,6 +97,9 @@ if __name__ == "__main__":
     # Output directory
     output_dir = args.output_dir
     params['output_dir'] = output_dir
+
+    params['mode'] = args.mode
+
 
     # Directories
     # Create directories structure
@@ -179,13 +185,18 @@ if __name__ == "__main__":
     params['weight_pretrain'] = weight_pretrain
     # Scheduler steps for rate update
     sched_step = args.sched_step
+    params['sched_step'] = sched_step
     sched_step_pretrain = args.sched_step_pretrain
+    params['sched_step_pretrain'] = sched_step_pretrain
     # Scheduler gamma - multiplier for learning rate
     sched_gamma = args.sched_gamma
+    params['sched_gamma'] = sched_gamma
     sched_gamma_pretrain = args.sched_gamma_pretrain
+    params['sched_gamma_pretrain'] = sched_gamma_pretrain
 
     # Number of epochs
     epochs = args.epochs
+    params['epochs'] = epochs
     pretrain_epochs = args.epochs_pretrain
     params['pretrain_epochs'] = pretrain_epochs
 
@@ -207,6 +218,9 @@ if __name__ == "__main__":
 
     # Number of clusters
     num_clusters = args.num_clusters
+
+    # Number of clusters
+    num_features = args.num_features
 
     # Report for settings
     tmp = "Training the '" + model_name + "' architecture"
@@ -244,6 +258,8 @@ if __name__ == "__main__":
     tmp = "Stop criterium tolerance:\t" + str(tol)
     print_both(f, tmp)
     tmp = "Number of clusters:\t" + str(num_clusters)
+    print_both(f, tmp)
+    tmp = "Number of features:\t" + str(num_features)
     print_both(f, tmp)
     tmp = "Leaky relu:\t" + str(args.leaky)
     print_both(f, tmp)
@@ -284,23 +300,28 @@ if __name__ == "__main__":
             debug=False,
             create_git_tag=False
         )
+        tt_logger.log_hyperparams(args)
         # Evaluate the proper model
         model_name = 'Lit_' + model_name
-        to_eval = "pl_networks." + model_name + "(params, img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope)"
-        model = eval(to_eval)
-        # Tensorboard model representation
-        if board:
-            writer.add_graph(model, torch.autograd.Variable(
-                torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
-        dm = pl_networks.LitSingleCellData(params)
-        data_transforms = transforms.Compose([ transforms.ToTensor()])
+        data_transforms = transforms.Compose([transforms.ToTensor()])
         image_dataset = ImageFolder(root=data_dir, transform=data_transforms)
         dataloader = torch.utils.data.DataLoader(image_dataset,
                                                  batch_size=batch,
                                                  shuffle=True,
                                                  num_workers=workers)
-        trainer = pl.Trainer(gpus=args.num_gpus, max_epochs=300, progress_bar_refresh_rate=1,
-                             default_root_dir=args.output_dir, accelerator='dp', logger=tt_logger)
+        params['dataloader'] = dataloader
+
+        to_eval = "pl_networks." + model_name + "(params, img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope, num_features=num_features)"
+        model = eval(to_eval)
+        # Tensorboard model representation
+        if board:
+            tt_logger.experiment.add_graph(model, torch.autograd.Variable(
+                torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
+        dm = pl_networks.LitSingleCellData(params)
+
+        trainer = pl.Trainer(gpus=args.num_gpus, max_epochs=300,
+                             default_root_dir=args.output_dir, accelerator='ddp', logger=tt_logger)
+
         trainer.fit(model, dataloader)
 
     else:
@@ -326,7 +347,7 @@ if __name__ == "__main__":
         params['dataset_size'] = dataset_size
 
         # Evaluate the proper model
-        to_eval = "networks." + model_name + "(img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope)"
+        to_eval = "networks." + model_name + "(img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope, num_features=num_features)"
 
         model = eval(to_eval)
         # print(to_eval.input_shape)
@@ -365,6 +386,7 @@ if __name__ == "__main__":
             model = pretraining(model, dataloader, criteria[0], optimizers[1], schedulers[1], epochs, params)
 
     # Save final model
+    print('Saving model to:' + name_net + '.pt')
     torch.save(model.state_dict(), name_net + '.pt')
 
     # Close files
