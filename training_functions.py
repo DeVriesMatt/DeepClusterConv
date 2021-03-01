@@ -311,6 +311,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
     # Go through all epochs
     for epoch in range(num_epochs):
         print_both(txt_file, 'Pretraining:\tEpoch {}/{}'.format(epoch + 1, num_epochs))
+        print_both(txt_file, "Learning Rate: {}".format(optimizer.param_groups[0]['lr']))
         print_both(txt_file, '-' * 10)
 
         model.train(True)  # Set model to training mode

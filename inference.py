@@ -1,4 +1,4 @@
-from networks import CAE_3
+from networks import CAE_3, CAE_bn3, CAE_bn5
 from training_functions import *
 from datasets import ImageFolder
 from torchvision import transforms
@@ -10,11 +10,11 @@ from sklearn.decomposition import PCA
 from sklearn import manifold
 from sklearn.metrics import pairwise_distances_argmin_min
 from tqdm import tqdm
+from sklearn.preprocessing import StandardScaler
 
-model = CAE_3(input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True)
+model = CAE_bn5()
 model.cuda()
-model.load_state_dict(torch.load('/home/mvries/Documents/GitHub/DeepClusterConv/nets/CAE_3_001.pt'))
+model.load_state_dict(torch.load('./nets/CAE_bn5_003.pt'))
 model.eval()
 
 data_transforms = transforms.Compose([
@@ -24,24 +24,29 @@ data_transforms = transforms.Compose([
             # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 # Read data from selected folder and apply transformations
-image_dataset = ImageFolder(root='/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3',
+image_dataset = ImageFolder(root='/home/mvries/Documents/GitHub/cellAnalysis/'
+                                 'SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3',
                             transform=data_transforms)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
                                          batch_size=1,
-                                         shuffle=True,
+                                         shuffle=False,
                                          num_workers=4)
 features = []
-for data in tqdm(dataloader):
+for i, data in tqdm(enumerate(dataloader)):
     images, labels = data
     inputs = images.to("cuda:0")
     threshold = 0.0
     inputs = (inputs > threshold).type(torch.FloatTensor).to("cuda:0")
     x, clustering_out, extra_out, fcdown1 = model(inputs)
     features.append(torch.squeeze(extra_out).cpu().detach().numpy())
+    io.imsave('./reconstructed_img/' + str(i).zfill(4) + '.tif',
+              torch.sigmoid(torch.squeeze(x)).cpu().detach().numpy())
 
 output_array = np.asarray(features)
 print(output_array.shape)
+scalar = StandardScaler()
+output_array = scalar.fit_transform(output_array)
 
 # UMAP for vizualization
 reducer = umap.UMAP()

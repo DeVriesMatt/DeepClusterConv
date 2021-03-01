@@ -209,12 +209,13 @@ class CAE_bn3(nn.Module):
 
 # Convolutional autoencoder with 4 convolutional blocks
 class CAE_4(nn.Module):
-    def __init__(self, input_shape=[128, 128, 3], num_clusters=10, filters=[32, 64, 128, 256], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128, 256], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=100):
         super(CAE_4, self).__init__()
         self.activations = activations
         self.pretrained = False
         self.num_clusters = num_clusters
+        self.num_features = num_features
         self.input_shape = input_shape
         self.filters = filters
         if leaky:
@@ -222,28 +223,29 @@ class CAE_4(nn.Module):
         else:
             self.relu = nn.ReLU(inplace=False)
 
-        self.conv1 = nn.Conv2d(input_shape[2], filters[0], 5, stride=2, padding=2, bias=bias)
-        self.conv2 = nn.Conv2d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
-        self.conv3 = nn.Conv2d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
-        self.conv4 = nn.Conv2d(filters[2], filters[3], 3, stride=2, padding=0, bias=bias)
+        self.conv1 = nn.Conv3d(input_shape[3], filters[0], 5, stride=2, padding=2, bias=bias)
+        self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
+        self.conv3 = nn.Conv3d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
+        self.conv4 = nn.Conv3d(filters[2], filters[3], 3, stride=2, padding=0, bias=bias)
 
-        lin_features_len = ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * \
+        lin_features_len = ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * ((input_shape[1] // 2 // 2 // 2 - 1) // 2) \
+                           * ((input_shape[2] // 2 // 2 // 2 - 1) // 2) * \
                            filters[3]
-        self.embedding = nn.Linear(lin_features_len, num_clusters, bias=bias)
-        self.deembedding = nn.Linear(num_clusters, lin_features_len, bias=bias)
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 // 2 % 2 == 0 else 0
-        self.deconv4 = nn.ConvTranspose2d(filters[3], filters[2], 3, stride=2, padding=0, output_padding=out_pad,
+        self.deconv4 = nn.ConvTranspose3d(filters[3], filters[2], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
-        self.deconv3 = nn.ConvTranspose2d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
         out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
-        self.deconv2 = nn.ConvTranspose2d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv2 = nn.ConvTranspose3d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
         out_pad = 1 if input_shape[0] % 2 == 0 else 0
-        self.deconv1 = nn.ConvTranspose2d(filters[0], input_shape[2], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv1 = nn.ConvTranspose3d(filters[0], input_shape[3], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.clustering = ClusterlingLayer(num_clusters, num_clusters)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
         # ReLU copies for graph representation in tensorboard
         self.relu1_1 = copy.deepcopy(self.relu)
         self.relu2_1 = copy.deepcopy(self.relu)
@@ -269,13 +271,15 @@ class CAE_4(nn.Module):
         else:
             x = self.relu4_1(x)
         x = x.view(x.size(0), -1)
+        fc1down = x
         x = self.embedding(x)
         extra_out = x
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
         x = self.relu4_2(x)
         x = x.view(x.size(0), self.filters[3], ((self.input_shape[0] // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[0] // 2 // 2 // 2 - 1) // 2))
+                   ((self.input_shape[1] // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 // 2 - 1) // 2))
         x = self.deconv4(x)
         x = self.relu3_2(x)
         x = self.deconv3(x)
@@ -285,17 +289,18 @@ class CAE_4(nn.Module):
         x = self.deconv1(x)
         if self.activations:
             x = self.tanh(x)
-        return x, clustering_out, extra_out
+        return x, clustering_out, extra_out, fc1down
 
 
 # Convolutional autoencoder with 4 convolutional blocks (BN version)
 class CAE_bn4(nn.Module):
-    def __init__(self, input_shape=[128, 128, 3], num_clusters=10, filters=[32, 64, 128, 256], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128, 256], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=100):
         super(CAE_bn4, self).__init__()
         self.activations = activations
         self.pretrained = False
         self.num_clusters = num_clusters
+        self.num_features = num_features
         self.input_shape = input_shape
         self.filters = filters
         if leaky:
@@ -303,34 +308,35 @@ class CAE_bn4(nn.Module):
         else:
             self.relu = nn.ReLU(inplace=False)
 
-        self.conv1 = nn.Conv2d(input_shape[2], filters[0], 5, stride=2, padding=2, bias=bias)
-        self.bn1_1 = nn.BatchNorm2d(filters[0])
-        self.conv2 = nn.Conv2d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
-        self.bn2_1 = nn.BatchNorm2d(filters[1])
-        self.conv3 = nn.Conv2d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
-        self.bn3_1 = nn.BatchNorm2d(filters[2])
-        self.conv4 = nn.Conv2d(filters[2], filters[3], 3, stride=2, padding=0, bias=bias)
+        self.conv1 = nn.Conv3d(input_shape[3], filters[0], 5, stride=2, padding=2, bias=bias)
+        self.bn1_1 = nn.BatchNorm3d(filters[0])
+        self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
+        self.bn2_1 = nn.BatchNorm3d(filters[1])
+        self.conv3 = nn.Conv3d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
+        self.bn3_1 = nn.BatchNorm3d(filters[2])
+        self.conv4 = nn.Conv3d(filters[2], filters[3], 3, stride=2, padding=0, bias=bias)
 
-        lin_features_len = ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * \
+        lin_features_len = ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * ((input_shape[1] // 2 // 2 // 2 - 1) // 2) \
+                           * ((input_shape[2] // 2 // 2 // 2 - 1) // 2) * \
                            filters[3]
-        self.embedding = nn.Linear(lin_features_len, num_clusters, bias=bias)
-        self.deembedding = nn.Linear(num_clusters, lin_features_len, bias=bias)
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 // 2 % 2 == 0 else 0
-        self.deconv4 = nn.ConvTranspose2d(filters[3], filters[2], 3, stride=2, padding=0, output_padding=out_pad,
+        self.deconv4 = nn.ConvTranspose3d(filters[3], filters[2], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
-        self.bn4_2 = nn.BatchNorm2d(filters[2])
+        self.bn4_2 = nn.BatchNorm3d(filters[2])
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
-        self.deconv3 = nn.ConvTranspose2d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.bn3_2 = nn.BatchNorm2d(filters[1])
+        self.bn3_2 = nn.BatchNorm3d(filters[1])
         out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
-        self.deconv2 = nn.ConvTranspose2d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv2 = nn.ConvTranspose3d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.bn2_2 = nn.BatchNorm2d(filters[0])
+        self.bn2_2 = nn.BatchNorm3d(filters[0])
         out_pad = 1 if input_shape[0] % 2 == 0 else 0
-        self.deconv1 = nn.ConvTranspose2d(filters[0], input_shape[2], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv1 = nn.ConvTranspose3d(filters[0], input_shape[3], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.clustering = ClusterlingLayer(num_clusters, num_clusters)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
         # ReLU copies for graph representation in tensorboard
         self.relu1_1 = copy.deepcopy(self.relu)
         self.relu2_1 = copy.deepcopy(self.relu)
@@ -359,13 +365,15 @@ class CAE_bn4(nn.Module):
         else:
             x = self.relu4_1(x)
         x = x.view(x.size(0), -1)
+        fcdown1 = x
         x = self.embedding(x)
         extra_out = x
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
         x = self.relu4_2(x)
         x = x.view(x.size(0), self.filters[3], ((self.input_shape[0] // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[0] // 2 // 2 // 2 - 1) // 2))
+                   ((self.input_shape[1] // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 // 2 - 1) // 2))
         x = self.deconv4(x)
         x = self.relu3_2(x)
         x = self.bn4_2(x)
@@ -378,36 +386,36 @@ class CAE_bn4(nn.Module):
         x = self.deconv1(x)
         if self.activations:
             x = self.tanh(x)
-        return x, clustering_out, extra_out
+        return x, clustering_out, extra_out, fcdown1
 
 
 # Convolutional autoencoder with 5 convolutional blocks
 class CAE_5(nn.Module):
-    def __init__(self, input_shape=[64, 128, 128, 1], num_clusters=10, filters=[32, 64, 128, 256, 512], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128, 256, 512], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=100):
         super(CAE_5, self).__init__()
         self.activations = activations
         self.pretrained = False
         self.num_clusters = num_clusters
+        self.num_features = num_features
         self.input_shape = input_shape
         self.filters = filters
-        self.relu = nn.ReLU(inplace=False)
         if leaky:
             self.relu = nn.LeakyReLU(negative_slope=neg_slope)
         else:
             self.relu = nn.ReLU(inplace=False)
 
-        self.conv1 = nn.Conv3d(1, filters[0], 5, stride=2, padding=2, bias=bias)
+        self.conv1 = nn.Conv3d(input_shape[3], filters[0], 5, stride=2, padding=2, bias=bias)
         self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
         self.conv3 = nn.Conv3d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
         self.conv4 = nn.Conv3d(filters[2], filters[3], 5, stride=2, padding=2, bias=bias)
         self.conv5 = nn.Conv3d(filters[3], filters[4], 3, stride=2, padding=0, bias=bias)
 
-        #         lin_features_len = ((input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * (
-        #                     (input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * filters[4]
-        lin_features_len = 4608
-        self.embedding = nn.Linear(lin_features_len, num_clusters, bias=bias)
-        self.deembedding = nn.Linear(num_clusters, lin_features_len, bias=bias)
+        lin_features_len = ((input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * (
+                            (input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2) * (
+                            (input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2) * filters[4]
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 // 2 // 2 % 2 == 0 else 0
         self.deconv5 = nn.ConvTranspose3d(filters[4], filters[3], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
@@ -423,7 +431,7 @@ class CAE_5(nn.Module):
         out_pad = 1 if input_shape[0] % 2 == 0 else 0
         self.deconv1 = nn.ConvTranspose3d(filters[0], 1, 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.clustering = ClusterlingLayer(num_clusters, num_clusters)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
         # ReLU copies for graph representation in tensorboard
         self.relu1_1 = copy.deepcopy(self.relu)
         self.relu2_1 = copy.deepcopy(self.relu)
@@ -453,7 +461,7 @@ class CAE_5(nn.Module):
         else:
             x = self.relu5_1(x)
         x = x.view(x.size(0), -1)
-        #         print(x.shape)
+        fcdown1 = x
         x = self.embedding(x)
         extra_out = x
         clustering_out = self.clustering(x)
@@ -472,60 +480,60 @@ class CAE_5(nn.Module):
         x = self.deconv2(x)
         x = self.relu1_2(x)
         x = self.deconv1(x)
-        return x, clustering_out, extra_out
+        return x, clustering_out, extra_out, fcdown1
 
 
 # Convolutional autoencoder with 5 convolutional blocks (BN version)
 class CAE_bn5(nn.Module):
-    def __init__(self, input_shape=[128, 128, 3], num_clusters=10, filters=[32, 64, 128, 256, 512], leaky=True,
-                 neg_slope=0.01, activations=True, bias=True):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128, 256, 512], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=100):
         super(CAE_bn5, self).__init__()
         self.activations = activations
         self.pretrained = False
         self.num_clusters = num_clusters
+        self.num_features = num_features
         self.input_shape = input_shape
         self.filters = filters
-        self.relu = nn.ReLU(inplace=False)
         if leaky:
             self.relu = nn.LeakyReLU(negative_slope=neg_slope)
         else:
             self.relu = nn.ReLU(inplace=False)
 
-        self.conv1 = nn.Conv2d(input_shape[2], filters[0], 5, stride=2, padding=2, bias=bias)
-        self.bn1_1 = nn.BatchNorm2d(filters[0])
-        self.conv2 = nn.Conv2d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
-        self.bn2_1 = nn.BatchNorm2d(filters[1])
-        self.conv3 = nn.Conv2d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
-        self.bn3_1 = nn.BatchNorm2d(filters[2])
-        self.conv4 = nn.Conv2d(filters[2], filters[3], 5, stride=2, padding=2, bias=bias)
-        self.bn4_1 = nn.BatchNorm2d(filters[3])
-        self.conv5 = nn.Conv2d(filters[3], filters[4], 3, stride=2, padding=0, bias=bias)
+        self.conv1 = nn.Conv3d(input_shape[3], filters[0], 5, stride=2, padding=2, bias=bias)
+        self.bn1_1 = nn.BatchNorm3d(filters[0])
+        self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
+        self.bn2_1 = nn.BatchNorm3d(filters[1])
+        self.conv3 = nn.Conv3d(filters[1], filters[2], 5, stride=2, padding=2, bias=bias)
+        self.bn3_1 = nn.BatchNorm3d(filters[2])
+        self.conv4 = nn.Conv3d(filters[2], filters[3], 5, stride=2, padding=2, bias=bias)
+        self.bn4_1 = nn.BatchNorm3d(filters[3])
+        self.conv5 = nn.Conv3d(filters[3], filters[4], 3, stride=2, padding=0, bias=bias)
 
-        #         lin_features_len = ((input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * (
-        #                     (input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * filters[4]
-        lin_features_len = 4608
-        self.embedding = nn.Linear(lin_features_len, num_clusters, bias=bias)
-        self.deembedding = nn.Linear(num_clusters, lin_features_len, bias=bias)
+        lin_features_len = ((input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * (
+                            (input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2) * (
+                            (input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2) * filters[4]
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 // 2 // 2 % 2 == 0 else 0
-        self.deconv5 = nn.ConvTranspose2d(filters[4], filters[3], 3, stride=2, padding=0, output_padding=out_pad,
+        self.deconv5 = nn.ConvTranspose3d(filters[4], filters[3], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
-        self.bn5_2 = nn.BatchNorm2d(filters[3])
+        self.bn5_2 = nn.BatchNorm3d(filters[3])
         out_pad = 1 if input_shape[0] // 2 // 2 // 2 % 2 == 0 else 0
-        self.deconv4 = nn.ConvTranspose2d(filters[3], filters[2], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv4 = nn.ConvTranspose3d(filters[3], filters[2], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.bn4_2 = nn.BatchNorm2d(filters[2])
+        self.bn4_2 = nn.BatchNorm3d(filters[2])
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
-        self.deconv3 = nn.ConvTranspose2d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.bn3_2 = nn.BatchNorm2d(filters[1])
+        self.bn3_2 = nn.BatchNorm3d(filters[1])
         out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
-        self.deconv2 = nn.ConvTranspose2d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv2 = nn.ConvTranspose3d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.bn2_2 = nn.BatchNorm2d(filters[0])
+        self.bn2_2 = nn.BatchNorm3d(filters[0])
         out_pad = 1 if input_shape[0] % 2 == 0 else 0
         self.deconv1 = nn.ConvTranspose3d(filters[0], 1, 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
-        self.clustering = ClusterlingLayer(num_clusters, num_clusters)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
         # ReLU copies for graph representation in tensorboard
         self.relu1_1 = copy.deepcopy(self.relu)
         self.relu2_1 = copy.deepcopy(self.relu)
@@ -559,14 +567,16 @@ class CAE_bn5(nn.Module):
         else:
             x = self.relu5_1(x)
         x = x.view(x.size(0), -1)
+        fcdown1 = x
         x = self.embedding(x)
         extra_out = x
-        #         print(extra_out.shape)
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
         x = self.relu5_2(x)
-        x = x.view(x.size(0), self.filters[4], ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2))
+        x = x.view(x.size(0), self.filters[4],
+                   ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2))
         x = self.deconv5(x)
         x = self.relu4_2(x)
         x = self.bn5_2(x)
@@ -582,4 +592,4 @@ class CAE_bn5(nn.Module):
         x = self.deconv1(x)
         if self.activations:
             x = nn.Softmax(x)
-        return x, clustering_out, extra_out
+        return x, clustering_out, extra_out, fcdown1

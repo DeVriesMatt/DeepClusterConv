@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.optim import lr_scheduler
 from torchvision import datasets, models, transforms
+from torchsummary import summary
 import math
 import fnmatch
 import networks
@@ -37,7 +38,7 @@ if __name__ == "__main__":
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default=1, help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5'], help='network architecture used')
+    parser.add_argument('--net_architecture', default='CAE_bn5', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5'], help='network architecture used')
     parser.add_argument('--dataset', default='Single-Cell',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
                         help='custom or prepared dataset')
@@ -45,11 +46,11 @@ if __name__ == "__main__":
                         default='/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3',
                         help='path to dataset')
     parser.add_argument('--batch_size', default=16, type=int, help='batch size')
-    parser.add_argument('--rate', default=0.00002, type=float, help='learning rate for clustering')
+    parser.add_argument('--rate', default=0.0000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.00002, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
     parser.add_argument('--weight_pretrain', default=0.0, type=float, help='weight decay for clustering')
-    parser.add_argument('--sched_step', default=100, type=int, help='scheduler steps for rate update')
+    parser.add_argument('--sched_step', default=50, type=int, help='scheduler steps for rate update')
     parser.add_argument('--sched_step_pretrain', default=50, type=int,
                         help='scheduler steps for rate update - pretrain')
     parser.add_argument('--sched_gamma', default=0.1, type=float, help='scheduler gamma for rate update')
@@ -152,13 +153,13 @@ if __name__ == "__main__":
 
     # Delete tensorboard entry if exist (not to overlap as the charts become unreadable)
     try:
-        os.system("rm -rf runs/" + name)
+        os.system("rm -rf " + output_dir + "runs/" + name)
     except:
         pass
 
     # Initialize tensorboard writer
     if board:
-        writer = SummaryWriter('runs/' + name)
+        writer = SummaryWriter(output_dir + 'runs/' + name)
         params['writer'] = writer
     else:
         params['writer'] = None
@@ -358,6 +359,7 @@ if __name__ == "__main__":
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
 
         model = model.to(device)
+        print_both(f, '{}'.format(summary(model, input_size=(1, 64, 64, 64))))
         # Reconstruction loss
         criterion_1 = FocalTverskyLoss()  # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
         # Clustering loss
