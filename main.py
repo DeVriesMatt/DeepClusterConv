@@ -73,7 +73,7 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', default='./', type=str)
     parser.add_argument('--train_lightning', default=False, type=str2bool)
     parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
-    parser.add_argument('--resnet_layers', default=[1, 1, 1, 1], nargs=4, type=int,
+    parser.add_argument('--resnet_layers', default='[1, 1, 1, 1]', nargs=1, type=str,
                         help='Enter the number of blocks in each resnet layer')
     args = parser.parse_args()
     print(args)
@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     params['mode'] = args.mode
 
-    resnet_layers = args.resnet_layers
+    resnet_layers = eval(args.resnet_layers)
     params['resenet_layers'] = resnet_layers
 
 
