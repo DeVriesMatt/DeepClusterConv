@@ -19,6 +19,7 @@ from datasets import ImageFolder
 from loss_functions import *
 import pl_networks
 from training_functions import *
+import networks_resnet
 
 
 if __name__ == "__main__":
@@ -38,7 +39,7 @@ if __name__ == "__main__":
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default=1, help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn5', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5'], help='network architecture used')
+    parser.add_argument('--net_architecture', default='ResNet', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
     parser.add_argument('--dataset', default='Single-Cell',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
                         help='custom or prepared dataset')
@@ -63,7 +64,7 @@ if __name__ == "__main__":
     parser.add_argument('--update_interval', default=300, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
-    parser.add_argument('--num_features', default=100, type=int, help='number of features to extract')
+    parser.add_argument('--num_features', default=20, type=int, help='number of features to extract')
     parser.add_argument('--custom_img_size', default=[64, 64, 64, 1], nargs=4, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
@@ -72,6 +73,8 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', default='./', type=str)
     parser.add_argument('--train_lightning', default=False, type=str2bool)
     parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
+    parser.add_argument('--resnet_layers', default=[1, 1, 1, 1], nargs=4, type=int,
+                        help='Enter the number of blocks in each resnet layer')
     args = parser.parse_args()
     print(args)
 
@@ -80,7 +83,6 @@ if __name__ == "__main__":
         exit()
 
     board = args.tensorboard
-
 
     # Deal with pretraining option and way of showing network path
     pretrain = args.pretrain
@@ -101,6 +103,9 @@ if __name__ == "__main__":
 
     params['mode'] = args.mode
 
+    resnet_layers = args.resnet_layers
+    params['resenet_layers'] = resnet_layers
+
 
     # Directories
     # Create directories structure
@@ -109,6 +114,7 @@ if __name__ == "__main__":
 
     # Net architecture
     model_name = args.net_architecture
+    params['model_name'] = model_name
     # Indexing (for automated reports saving) - allows to run many trainings and get all the reports collected
     if pretrain or (not pretrain and net_is_path):
         reports_list = sorted(os.listdir(output_dir + 'reports'), reverse=True)
@@ -347,11 +353,24 @@ if __name__ == "__main__":
 
         params['dataset_size'] = dataset_size
 
-        # Evaluate the proper model
-        to_eval = "networks." + model_name + "(img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope, num_features=num_features)"
+        if model_name == 'ResNet':
+            # Evaluate the proper model
+            to_eval = "networks_resnet." + model_name + "(networks_resnet.BasicBlock," \
+                                                        "layers=resnet_layers, " \
+                                                        "networks_resnet.get_inplanes(), " \
+                                                        "input_shape=img_size, " \
+                                                        "num_clusters=num_clusters, " \
+                                                        "num_features=num_features)"
 
-        model = eval(to_eval)
-        # print(to_eval.input_shape)
+            model = eval(to_eval)
+
+        else:
+            # Evaluate the proper model
+            to_eval = "networks." + model_name + "(img_size, num_clusters=num_clusters, leaky = args.leaky, neg_slope = args.neg_slope, num_features=num_features)"
+
+            model = eval(to_eval)
+            # print(to_eval.input_shape)
+
 
         # Tensorboard model representation
         if board:

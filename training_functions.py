@@ -1,4 +1,5 @@
 # import packages
+import os
 import time
 import torch
 import numpy as np
@@ -256,7 +257,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         epoch_loss = running_loss / dataset_size
         epoch_loss_rec = running_loss_rec / dataset_size
         epoch_loss_clust = running_loss_clust / dataset_size
-        schedulers[0].step(epoch_loss)
+        schedulers[0].step()
 
         if board:
             writer.add_scalar('/Loss' + '/Epoch', epoch_loss, epoch + 1)
@@ -303,6 +304,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
     device = params['device']
     batch = params['batch']
     output_dir = params['output_dir']
+    model_name = params['model_name']
 
     # Prep variables for weights and accuracy of the best model
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -375,8 +377,8 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
                     img_counter += 1
 
         scheduler.step()
-        create_dir_if_not_exist(output_dir + '/reconstructed_img/')
-        io.imsave(output_dir + '/reconstructed_img/pretrain_epoch' + str(epoch) + '.tif',
+        create_dir_if_not_exist(output_dir + '/reconstructed_img/' + model_name + '/')
+        io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch' + str(epoch) + '.tif',
                   torch.sigmoid(outputs[0]).cpu().detach().numpy())
         epoch_loss = running_loss / dataset_size
         if epoch == 0: first_loss = epoch_loss

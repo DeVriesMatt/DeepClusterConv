@@ -1,4 +1,4 @@
-from networks import CAE_3, CAE_bn3, CAE_bn5
+from networks import CAE_3, CAE_bn3, CAE_bn5, CAE_bn4
 from training_functions import *
 from datasets import ImageFolder
 from torchvision import transforms
@@ -12,9 +12,9 @@ from sklearn.metrics import pairwise_distances_argmin_min
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 
-model = CAE_bn5()
+model = CAE_bn5(num_features=20)
 model.cuda()
-model.load_state_dict(torch.load('./nets/CAE_bn5_003.pt'))
+model.load_state_dict(torch.load('./ResultsHPC/DeepClusterConv/%jnets/CAE_bn5_001.pt'))
 model.eval()
 
 data_transforms = transforms.Compose([

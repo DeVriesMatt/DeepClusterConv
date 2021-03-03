@@ -7,6 +7,7 @@ reconstructed_imgs/
 lightning_logs/
 TestTube_lightning_logs/
 reconstructed_img/
+ResultsHPC/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
