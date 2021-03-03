@@ -4240,3 +4240,5 @@
   torch.sigmoid(outputs[0]).cpu().detach().numpy())
 /home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_4/pretrain_epoch71.tif is a low contrast image
   torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_4/pretrain_epoch77.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
