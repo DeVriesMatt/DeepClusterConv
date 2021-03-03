@@ -103,7 +103,7 @@ if __name__ == "__main__":
 
     params['mode'] = args.mode
 
-    resnet_layers = eval(args.resnet_layers)
+    resnet_layers = args.resnet_layers
     params['resenet_layers'] = resnet_layers
 
 
