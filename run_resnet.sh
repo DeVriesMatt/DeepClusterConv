@@ -14,7 +14,7 @@ source /opt/software/applications/anaconda/3/etc/profile.d/conda.sh
 
 conda activate dcfn
 
-for layers in '1,1,1,1' '2,2,2,2' '3,4,6,3' '3,4,23,3' '3,8,36,3' '3,24,36,3'
+for layers in "[1,1,1,1]" "[2,2,2,2]" "[3,4,6,3]" "[3,4,23,3]" "[3,8,36,3]" "[3,24,36,3]"
 do
         python main.py --net_architecture ResNet --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/OPM_Roi_Images_Full_646464_Cluster3/OPM_Roi_Images_Full_646464_Cluster3' --train_lightning False --num_gpus 1 --num_features 20 --num_clusters 3 --resnet_layers $layers
 done

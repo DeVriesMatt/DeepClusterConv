@@ -4234,3 +4234,9 @@
   warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
 /home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
   warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_4/pretrain_epoch42.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_4/pretrain_epoch44.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_4/pretrain_epoch71.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
