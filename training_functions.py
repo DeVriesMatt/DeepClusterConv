@@ -334,7 +334,9 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
             inputs = inputs.to(device)
             threshold = 0.0
             inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
-
+            # create_dir_if_not_exist(output_dir + '/input_img/' + model_name + '/')
+            # io.imsave(output_dir + '/input_img/' + model_name + '/pretrain_epoch' + str(epoch) + '.tif',
+            #           torch.sigmoid(inputs[0]).cpu().detach().numpy())
             # zero the parameter gradients
             optimizer.zero_grad()
 
@@ -380,6 +382,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         create_dir_if_not_exist(output_dir + '/reconstructed_img/' + model_name + '/')
         io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch' + str(epoch) + '.tif',
                   torch.sigmoid(outputs[0]).cpu().detach().numpy())
+        # torch.sigmoid(
         epoch_loss = running_loss / dataset_size
         if epoch == 0: first_loss = epoch_loss
         if epoch == 4 and epoch_loss / first_loss > 1:
@@ -391,7 +394,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         if board:
             writer.add_scalar('Pretraining/Loss' + '/Epoch', epoch_loss, epoch + 1)
 
-        print_both(txt_file, 'Pretraining:\t Loss: {:.4f}'.format(epoch_loss))
+        print_both(txt_file, 'Pretraining:\t Loss: {:.8f}'.format(epoch_loss))
 
         # If wanted to add some criterium in the future
         if epoch_loss < best_loss or epoch_loss >= best_loss:
