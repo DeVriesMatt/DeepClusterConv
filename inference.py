@@ -1,4 +1,5 @@
 from networks import CAE_3, CAE_bn3, CAE_bn5, CAE_bn4
+from networks_resnet import ResNet, BasicBlock, get_inplanes
 from training_functions import *
 from datasets import ImageFolder
 from torchvision import transforms
@@ -12,9 +13,14 @@ from sklearn.metrics import pairwise_distances_argmin_min
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 
-model = CAE_bn5(num_features=20)
+# model = CAE_bn4(num_features=100, num_clusters=9)
+model = ResNet(BasicBlock, layers=[3, 4, 23, 3],
+               block_inplanes=get_inplanes(),
+               input_shape=[64, 64, 64, 1],
+               num_clusters=3,
+               num_features=20)
 model.cuda()
-model.load_state_dict(torch.load('./ResultsHPC/DeepClusterConv/%jnets/CAE_bn5_001.pt'))
+model.load_state_dict(torch.load('./ResultsHPC/DeepClusterConv/nets/ResNet_034.pt'))
 model.eval()
 
 data_transforms = transforms.Compose([
@@ -24,8 +30,10 @@ data_transforms = transforms.Compose([
             # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 # Read data from selected folder and apply transformations
-image_dataset = ImageFolder(root='/home/mvries/Documents/GitHub/cellAnalysis/'
-                                 'SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3',
+sng_cell_path = '/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3/'
+pix_path = '/home/mvries/Documents/Datasets/Pix3DVoxels/'
+
+image_dataset = ImageFolder(root=sng_cell_path,
                             transform=data_transforms)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
@@ -33,8 +41,10 @@ dataloader = torch.utils.data.DataLoader(image_dataset,
                                          shuffle=False,
                                          num_workers=4)
 features = []
+labels = []
 for i, data in tqdm(enumerate(dataloader)):
-    images, labels = data
+    images, label = data
+    labels.append(label.numpy())
     inputs = images.to("cuda:0")
     threshold = 0.0
     inputs = (inputs > threshold).type(torch.FloatTensor).to("cuda:0")
@@ -44,6 +54,8 @@ for i, data in tqdm(enumerate(dataloader)):
               torch.sigmoid(torch.squeeze(x)).cpu().detach().numpy())
 
 output_array = np.asarray(features)
+labels = np.array(labels)
+print(labels.shape)
 print(output_array.shape)
 scalar = StandardScaler()
 output_array = scalar.fit_transform(output_array)
@@ -54,7 +66,7 @@ embedding = reducer.fit_transform(output_array)
 # print(embedding.shape)
 
 # K-means cluster on original data in order to see how UMAP preserves the original clusters
-km = KMeans(n_clusters=10, n_init=20)
+km = KMeans(n_clusters=3, n_init=20)
 predictions = km.fit_predict(output_array)
 
 cv_colours = fte_colors = {
@@ -78,23 +90,23 @@ km_colors = [fte_colors[label] for label in km.labels_]
 b = np.zeros((2598, 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
-b[:, 2] = km.labels_  # km.labels_
+b[:, 2] = labels[:, 0]  # km.labels_
 data = pd.DataFrame(b, columns=['Umap1','Umap2','label'])
 facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
-                   fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 10})
+                   fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 20})
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
 b = np.zeros((2598, 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
-b[:, 2] = km.labels_
+b[:, 2] = labels[:, 0]
 data = pd.DataFrame(b, columns=['PC1','PC2','label'])
 facet_pca = sns.lmplot(data=data, x='PC1', y='PC2', hue='label',
                        fit_reg=False,
                        legend=True,
                        legend_out=True,
-                       scatter_kws={"s": 5})
+                       scatter_kws={"s": 20})
 plt.show()
 
 
@@ -105,13 +117,13 @@ Y = manifold.TSNE(n_components=2, init='pca',
 b = np.zeros((2598, 3))
 b[:, 0] = Y[:, 0]
 b[:, 1] = Y[:, 1]
-b[:, 2] = km.labels_
+b[:, 2] = labels[:, 0]
 data = pd.DataFrame(b, columns=['tsne1','tsne2','label'])
 facet_tsne = sns.lmplot(data=data, x='tsne1', y='tsne2', hue='label',
                        fit_reg=False,
                        legend=True,
                        legend_out=True,
-                       scatter_kws={"s": 5})
+                       scatter_kws={"s": 20})
 plt.show()
 
 # pd.DataFrame(np.array(km.labels_), columns=['Labels']).to_csv('./OutputFiles/' + 'orig_km_labels.csv')

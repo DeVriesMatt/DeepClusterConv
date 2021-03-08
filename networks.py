@@ -149,7 +149,10 @@ class CAE_bn3(nn.Module):
         self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
         self.bn2_1 = nn.BatchNorm3d(filters[1])
         self.conv3 = nn.Conv3d(filters[1], filters[2], 3, stride=2, padding=0, bias=bias)
-        lin_features_len = 43904
+        lin_features_len = ((self.input_shape[0] // 2 // 2 - 1) // 2) * (
+                    (self.input_shape[1] // 2 // 2 - 1) // 2) \
+                           * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
+                           filters[2]
         self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
         self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
@@ -193,7 +196,9 @@ class CAE_bn3(nn.Module):
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
         x = self.relu1_2(x)
-        x = x.view(x.size(0), self.filters[2], 7, 7, 7)
+        x = x.view(x.size(0), self.filters[2], ((self.input_shape[0] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 - 1) // 2))
         x = self.deconv3(x)
         x = self.relu2_2(x)
         x = self.bn3_2(x)
@@ -316,16 +321,16 @@ class CAE_bn4(nn.Module):
         self.bn3_1 = nn.BatchNorm3d(filters[2])
         self.conv4 = nn.Conv3d(filters[2], filters[3], 3, stride=2, padding=0, bias=bias)
 
-        lin_features_len = ((input_shape[0] // 2 // 2 // 2 - 1) // 2) * ((input_shape[1] // 2 // 2 // 2 - 1) // 2) \
-                           * ((input_shape[2] // 2 // 2 // 2 - 1) // 2) * \
+        lin_features_len = ((self.input_shape[0] // 2 // 2 // 2 - 1) // 2) * ((self.input_shape[1] // 2 // 2 // 2 - 1) // 2) \
+                           * ((self.input_shape[2] // 2 // 2 // 2 - 1) // 2) * \
                            filters[3]
         self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
         self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
-        out_pad = 1 if input_shape[0] // 2 // 2 // 2 % 2 == 0 else 0
+        out_pad = 1 if self.input_shape[0] // 2 // 2 // 2 % 2 == 0 else 0
         self.deconv4 = nn.ConvTranspose3d(filters[3], filters[2], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
         self.bn4_2 = nn.BatchNorm3d(filters[2])
-        out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
+        out_pad = 1 if self.input_shape[0] // 2 // 2 % 2 == 0 else 0
         self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
         self.bn3_2 = nn.BatchNorm3d(filters[1])
@@ -333,7 +338,7 @@ class CAE_bn4(nn.Module):
         self.deconv2 = nn.ConvTranspose3d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
         self.bn2_2 = nn.BatchNorm3d(filters[0])
-        out_pad = 1 if input_shape[0] % 2 == 0 else 0
+        out_pad = 1 if self.input_shape[0] % 2 == 0 else 0
         self.deconv1 = nn.ConvTranspose3d(filters[0], input_shape[3], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
         self.clustering = ClusterlingLayer(num_features, num_clusters)
