@@ -1,0 +1,149 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch20.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch22.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch30.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch43.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch49.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch53.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch68.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch79.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch85.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch110.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch112.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch119.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch143.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch149.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch152.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch164.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch170.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch194.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch198.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:22: FutureWarning: The linear_assignment_ module is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch27.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch37.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch39.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch69.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch130.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch161.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch162.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch173.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch177.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:22: FutureWarning: The linear_assignment_ module is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch21.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch63.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch95.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch114.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch124.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch146.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch151.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch198.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:22: FutureWarning: The linear_assignment_ module is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch36.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch64.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch125.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch131.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch154.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch181.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch183.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:22: FutureWarning: The linear_assignment_ module is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:382: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/ResNet/pretrain_epoch54.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+slurmstepd: error: *** JOB 951393 ON gpu02 CANCELLED AT 2021-03-04T18:13:22 DUE TO TIME LIMIT ***
