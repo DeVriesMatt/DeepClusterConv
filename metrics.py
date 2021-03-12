@@ -41,5 +41,5 @@ class metrics:
             w[labels_pred[i], labels_true[i]] += 1
         from sklearn.utils.linear_assignment_ import linear_assignment
         ind = linear_assignment(w.max() - w)
-        print(ind)
+        # print(ind)
         return sum([w[i, j] for i, j in ind]) * 1.0 / labels_pred.size

@@ -176,7 +176,7 @@ class DatasetFolder(VisionDataset):
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
-def pad_img(img, new_size=(16, 64, 64)):
+def pad_img(img, new_size=(28, 28, 28)):
     new_z, new_y, new_x = new_size[0], new_size[1], new_size[2]
     z = img.shape[0]
     y = img.shape[1]

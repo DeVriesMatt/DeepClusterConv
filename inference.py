@@ -13,14 +13,15 @@ from sklearn.metrics import pairwise_distances_argmin_min
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 
-# model = CAE_bn4(num_features=100, num_clusters=9)
-model = ResNet(BasicBlock, layers=[3, 4, 23, 3],
-               block_inplanes=get_inplanes(),
-               input_shape=[64, 64, 64, 1],
-               num_clusters=3,
-               num_features=20)
+model = CAE_bn3(num_features=50, num_clusters=10, input_shape=[16, 64, 64, 1])
+
+# model = ResNet(BasicBlock, layers=[3, 4, 23, 3],
+#                block_inplanes=get_inplanes(),
+#                input_shape=[64, 64, 64, 1],
+#                num_clusters=3,
+#                num_features=20)
 model.cuda()
-model.load_state_dict(torch.load('./ResultsHPC/DeepClusterConv/nets/ResNet_034.pt'))
+model.load_state_dict(torch.load('./nets/CAE_bn3_047.pt'))
 model.eval()
 
 data_transforms = transforms.Compose([
@@ -32,8 +33,9 @@ data_transforms = transforms.Compose([
 # Read data from selected folder and apply transformations
 sng_cell_path = '/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3/'
 pix_path = '/home/mvries/Documents/Datasets/Pix3DVoxels/'
+vicky_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
 
-image_dataset = ImageFolder(root=sng_cell_path,
+image_dataset = ImageFolder(root=vicky_path,
                             transform=data_transforms)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
@@ -57,8 +59,8 @@ output_array = np.asarray(features)
 labels = np.array(labels)
 print(labels.shape)
 print(output_array.shape)
-scalar = StandardScaler()
-output_array = scalar.fit_transform(output_array)
+# scalar = StandardScaler()
+# output_array = scalar.fit_transform(output_array)
 
 # UMAP for vizualization
 reducer = umap.UMAP()
@@ -66,7 +68,7 @@ embedding = reducer.fit_transform(output_array)
 # print(embedding.shape)
 
 # K-means cluster on original data in order to see how UMAP preserves the original clusters
-km = KMeans(n_clusters=3, n_init=20)
+km = KMeans(n_clusters=10, n_init=20)
 predictions = km.fit_predict(output_array)
 
 cv_colours = fte_colors = {
@@ -87,20 +89,20 @@ fte_colors = {
  }
 # Plot of UMAP with clusters from unreduced data labelled
 km_colors = [fte_colors[label] for label in km.labels_]
-b = np.zeros((2598, 3))
+b = np.zeros((9284, 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
-b[:, 2] = labels[:, 0]  # km.labels_
+b[:, 2] = km.labels_  # labels[:, 0]
 data = pd.DataFrame(b, columns=['Umap1','Umap2','label'])
 facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
                    fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 20})
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
-b = np.zeros((2598, 3))
+b = np.zeros((9284, 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
-b[:, 2] = labels[:, 0]
+b[:, 2] = km.labels_
 data = pd.DataFrame(b, columns=['PC1','PC2','label'])
 facet_pca = sns.lmplot(data=data, x='PC1', y='PC2', hue='label',
                        fit_reg=False,
@@ -114,10 +116,10 @@ Y = manifold.TSNE(n_components=2, init='pca',
                                  random_state=0).fit_transform(output_array)
 
 
-b = np.zeros((2598, 3))
+b = np.zeros((9284, 3))
 b[:, 0] = Y[:, 0]
 b[:, 1] = Y[:, 1]
-b[:, 2] = labels[:, 0]
+b[:, 2] = km.labels_
 data = pd.DataFrame(b, columns=['tsne1','tsne2','label'])
 facet_tsne = sns.lmplot(data=data, x='tsne1', y='tsne2', hue='label',
                        fit_reg=False,

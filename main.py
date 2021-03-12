@@ -24,7 +24,8 @@ import networks_resnet
 # vuc_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
 
 # /data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/VickyPlates/Treatments_plate_002_166464
-
+# covid = '/home/mvries/Documents/Datasets/ChestCOVID_CT'
+mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 if __name__ == "__main__":
 
     # Translate string entries to bool for parser
@@ -41,16 +42,17 @@ if __name__ == "__main__":
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default=1, help='index or path of pretrained net')
+    parser.add_argument('--pretrained_net', default=1,
+                        help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
     parser.add_argument('--dataset', default='Single-Cell',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default='/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/',
+                        default='/home/mvries/Documents/Datasets/MNIST3D/Train/',
                         help='path to dataset')
     parser.add_argument('--batch_size', default=4, type=int, help='batch size')
-    parser.add_argument('--rate', default=0.00002, type=float, help='learning rate for clustering')
+    parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.0002, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
     parser.add_argument('--weight_pretrain', default=0.0, type=float, help='weight decay for clustering')
@@ -60,15 +62,15 @@ if __name__ == "__main__":
     parser.add_argument('--sched_gamma', default=0.1, type=float, help='scheduler gamma for rate update')
     parser.add_argument('--sched_gamma_pretrain', default=0.1, type=float,
                         help='scheduler gamma for rate update - pretrain')
-    parser.add_argument('--epochs', default=1000, type=int, help='clustering epochs')
+    parser.add_argument('--epochs', default=200, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=100, type=int, help='training stats printing frequency')
-    parser.add_argument('--gamma', default=0.3, type=float, help='clustering loss weight')
+    parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
     parser.add_argument('--update_interval', default=300, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
-    parser.add_argument('--num_clusters', default=9, type=int, help='number of clusters')
-    parser.add_argument('--num_features', default=100, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=[16, 64, 64, 1], nargs=4, type=int, help='size of custom images')
+    parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
+    parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
+    parser.add_argument('--custom_img_size', default=[28, 28, 28, 1], nargs=4, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
@@ -351,10 +353,14 @@ if __name__ == "__main__":
                                                  shuffle=True, num_workers=workers)
         # Size of data sets
         dataset_size = len(image_dataset)
+
         tmp = "Training set size:\t" + str(dataset_size)
         print_both(f, tmp)
 
         params['dataset_size'] = dataset_size
+
+        # params['update_interval'] = update_interval * dataset_size / batch
+
 
         if model_name == 'ResNet':
             # Evaluate the proper model
@@ -390,14 +396,15 @@ if __name__ == "__main__":
         criteria = [criterion_1, criterion_2]
 
         optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate, weight_decay=weight)
-
+        optimizer = torch.optim.SGD(model.parameters(), lr=rate, momentum=0.9)
         optimizer_pretrain = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate_pretrain,
                                         weight_decay=weight_pretrain)
 
         optimizers = [optimizer, optimizer_pretrain]
 
         scheduler = lr_scheduler.StepLR(optimizer, step_size=sched_step, gamma=sched_gamma)
-        #     lr_scheduler.ReduceLROnPlateau(optimizer)
+        scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True)
+        scheduler = lr_scheduler.CyclicLR(optimizer, 0.00000001, 0.1)
         scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
                                                  gamma=sched_gamma_pretrain)
 

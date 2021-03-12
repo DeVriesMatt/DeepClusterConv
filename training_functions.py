@@ -81,6 +81,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     pretrain_epochs = params['pretrain_epochs']
     gamma = params['gamma']
     update_interval = params['update_interval']
+    print(update_interval)
     tol = params['tol']
 
     dl = dataloader
@@ -99,7 +100,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         model = pretrained_model
     else:
         try:
-            model.load_state_dict(torch.load('/home/mvries/Documents/GitHub/cellAnalysis/nets/CAE_3_059_pretrained.pt'))
+            print(pretrained)
+            model.load_state_dict(torch.load(pretrained))
             trained_model = copy.deepcopy(model)
             model = trained_model
             print_both(txt_file, 'Pretrained weights loaded from file: ' + str(pretrained))
@@ -144,6 +146,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     for epoch in range(num_epochs):
 
         print_both(txt_file, 'Epoch {}/{}'.format(epoch + 1, num_epochs))
+        print_both(txt_file, "Learning Rate: {}".format(optimizers[0].param_groups[0]['lr']))
         print_both(txt_file, '-' * 10)
 
         model.train(True)  # Set model to training mode
@@ -167,7 +170,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
             #
 
-            # Uptade target distribution, chack and print performance
+            # Uptade target distribution, check and print performance
             if (batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0):
                 print(epoch)
                 print((batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0))
@@ -189,11 +192,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 # check stop criterion
                 delta_label = np.sum(preds != preds_prev).astype(np.float32) / preds.shape[0]
                 preds_prev = np.copy(preds)
-                if delta_label < tol:
-                    print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
-                    print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
-                    finished = True
-                    break
+                # if delta_label < tol:
+                #     print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
+                #     print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
+                #     finished = True
+                #     break
 
             tar_dist = target_distribution[((batch_num - 1) * batch):(batch_num * batch), :]
             tar_dist = torch.from_numpy(tar_dist).to(device)
@@ -242,7 +245,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     writer.add_scalar('/Loss_recovery', loss_accum_rec, niter)
                     writer.add_scalar('/Loss_clustering', loss_accum_clust, niter)
             batch_num = batch_num + 1
-
+            # TODO: scheduler.step goes here when using cyclic learning rate scheduler
+            schedulers[0].step()
             # Print image to tensorboard
             if batch_num == len(dataloader) and (epoch + 1) % 5:
                 inp = tensor2img(inputs)
@@ -257,7 +261,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         epoch_loss = running_loss / dataset_size
         epoch_loss_rec = running_loss_rec / dataset_size
         epoch_loss_clust = running_loss_clust / dataset_size
-        schedulers[0].step()
+        # TODO: scheduler.step goes here when using anything other than cyclic scheduler
+        # schedulers[0].step(epoch_loss)
 
         if board:
             writer.add_scalar('/Loss' + '/Epoch', epoch_loss, epoch + 1)
