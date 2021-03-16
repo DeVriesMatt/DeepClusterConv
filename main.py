@@ -62,11 +62,11 @@ if __name__ == "__main__":
     parser.add_argument('--sched_gamma', default=0.1, type=float, help='scheduler gamma for rate update')
     parser.add_argument('--sched_gamma_pretrain', default=0.1, type=float,
                         help='scheduler gamma for rate update - pretrain')
-    parser.add_argument('--epochs', default=200, type=int, help='clustering epochs')
+    parser.add_argument('--epochs', default=100, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=100, type=int, help='training stats printing frequency')
     parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
-    parser.add_argument('--update_interval', default=300, type=int, help='update interval for target distribution')
+    parser.add_argument('--update_interval', default=5000, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
@@ -172,6 +172,7 @@ if __name__ == "__main__":
     if board:
         writer = SummaryWriter(output_dir + 'runs/' + name)
         params['writer'] = writer
+        # writer.add_hparams(metric_dict=params)
     else:
         params['writer'] = None
 
@@ -387,7 +388,7 @@ if __name__ == "__main__":
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
 
         model = model.to(device)
-        print_both(f, '{}'.format(summary(model, input_size=(1, 16, 64, 64))))
+        print_both(f, '{}'.format(summary(model, input_size=(1, 28, 28, 28))))
         # Reconstruction loss
         criterion_1 = FocalTverskyLoss()  # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
         # Clustering loss
@@ -399,14 +400,16 @@ if __name__ == "__main__":
         optimizer = torch.optim.SGD(model.parameters(), lr=rate, momentum=0.9)
         optimizer_pretrain = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=rate_pretrain,
                                         weight_decay=weight_pretrain)
+        optimizer_pretrain = torch.optim.SGD(model.parameters(), lr=rate_pretrain, momentum=0.9)
 
         optimizers = [optimizer, optimizer_pretrain]
-
         scheduler = lr_scheduler.StepLR(optimizer, step_size=sched_step, gamma=sched_gamma)
         scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True)
         scheduler = lr_scheduler.CyclicLR(optimizer, 0.00000001, 0.1)
         scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
                                                  gamma=sched_gamma_pretrain)
+
+        scheduler_pretrain = lr_scheduler.CyclicLR(optimizer_pretrain, 0.00000001, 0.1)
 
         #     ReduceLROnPlateau()
         schedulers = [scheduler, scheduler_pretrain]
