@@ -12,8 +12,9 @@ from sklearn import manifold
 from sklearn.metrics import pairwise_distances_argmin_min
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
+import metrics
 
-model = CAE_bn3(num_features=50, num_clusters=10, input_shape=[16, 64, 64, 1])
+model = CAE_bn3(num_features=10, num_clusters=10, input_shape=[28, 28, 28, 1])
 
 # model = ResNet(BasicBlock, layers=[3, 4, 23, 3],
 #                block_inplanes=get_inplanes(),
@@ -21,7 +22,8 @@ model = CAE_bn3(num_features=50, num_clusters=10, input_shape=[16, 64, 64, 1])
 #                num_clusters=3,
 #                num_features=20)
 model.cuda()
-model.load_state_dict(torch.load('./nets/CAE_bn3_047.pt'))
+model.load_state_dict(torch.load('./nets/CAE_bn3_056.pt'))
+
 model.eval()
 
 data_transforms = transforms.Compose([
@@ -34,8 +36,9 @@ data_transforms = transforms.Compose([
 sng_cell_path = '/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3/'
 pix_path = '/home/mvries/Documents/Datasets/Pix3DVoxels/'
 vicky_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
+mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 
-image_dataset = ImageFolder(root=vicky_path,
+image_dataset = ImageFolder(root=mnist,
                             transform=data_transforms)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
@@ -52,15 +55,15 @@ for i, data in tqdm(enumerate(dataloader)):
     inputs = (inputs > threshold).type(torch.FloatTensor).to("cuda:0")
     x, clustering_out, extra_out, fcdown1 = model(inputs)
     features.append(torch.squeeze(extra_out).cpu().detach().numpy())
-    io.imsave('./reconstructed_img/' + str(i).zfill(4) + '.tif',
-              torch.sigmoid(torch.squeeze(x)).cpu().detach().numpy())
+    # io.imsave('./reconstructed_img/' + str(i).zfill(4) + '.tif',
+    #           torch.sigmoid(torch.squeeze(x)).cpu().detach().numpy())
 
 output_array = np.asarray(features)
 labels = np.array(labels)
 print(labels.shape)
 print(output_array.shape)
-# scalar = StandardScaler()
-# output_array = scalar.fit_transform(output_array)
+scalar = StandardScaler()
+output_array = scalar.fit_transform(output_array)
 
 # UMAP for vizualization
 reducer = umap.UMAP()
@@ -89,17 +92,17 @@ fte_colors = {
  }
 # Plot of UMAP with clusters from unreduced data labelled
 km_colors = [fte_colors[label] for label in km.labels_]
-b = np.zeros((9284, 3))
+b = np.zeros((60009, 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
 b[:, 2] = km.labels_  # labels[:, 0]
 data = pd.DataFrame(b, columns=['Umap1','Umap2','label'])
 facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
-                   fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 20})
+                   fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 6})
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
-b = np.zeros((9284, 3))
+b = np.zeros((60009, 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
 b[:, 2] = km.labels_
@@ -108,7 +111,7 @@ facet_pca = sns.lmplot(data=data, x='PC1', y='PC2', hue='label',
                        fit_reg=False,
                        legend=True,
                        legend_out=True,
-                       scatter_kws={"s": 20})
+                       scatter_kws={"s": 6})
 plt.show()
 
 
@@ -116,7 +119,7 @@ Y = manifold.TSNE(n_components=2, init='pca',
                                  random_state=0).fit_transform(output_array)
 
 
-b = np.zeros((9284, 3))
+b = np.zeros((60009, 3))
 b[:, 0] = Y[:, 0]
 b[:, 1] = Y[:, 1]
 b[:, 2] = km.labels_
@@ -125,7 +128,7 @@ facet_tsne = sns.lmplot(data=data, x='tsne1', y='tsne2', hue='label',
                        fit_reg=False,
                        legend=True,
                        legend_out=True,
-                       scatter_kws={"s": 20})
+                       scatter_kws={"s": 6})
 plt.show()
 
 # pd.DataFrame(np.array(km.labels_), columns=['Labels']).to_csv('./OutputFiles/' + 'orig_km_labels.csv')
@@ -134,3 +137,6 @@ plt.show()
 
 closest, _ = pairwise_distances_argmin_min(km.cluster_centers_, output_array)
 print(closest)
+acc = metrics.metrics.acc(labels, km.labels_)
+print('Accuracy: ' + str(acc))
+# After 10 clustering epochs, got acc 0.75708
