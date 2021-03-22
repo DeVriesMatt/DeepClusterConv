@@ -9,7 +9,7 @@ TestTube_lightning_logs/
 reconstructed_img/
 ResultsHPC/
 input_img/
-
+*.png
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
