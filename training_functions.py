@@ -4,8 +4,14 @@ import time
 import torch
 import numpy as np
 import copy
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn import manifold
 from sklearn.cluster import KMeans
 import torch.nn.functional as F
+
 
 # module visualizations.py
 from datetime import datetime
@@ -62,7 +68,7 @@ from utils import create_dir_if_not_exist
 
 
 # Training function (from my torch_DCEC implementation, kept for completeness)
-def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs, params):
+def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs, params, dataloader_inference):
     # Note the time
     since = time.time()
 
@@ -83,6 +89,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     update_interval = params['update_interval']
     print(update_interval)
     tol = params['tol']
+    tsne_epochs = params['tsne_epochs']
+    output_dir = params['output_dir']
 
     dl = dataloader
 
@@ -115,7 +123,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
 
     # Initialise clusters
     print_both(txt_file, '\nInitializing cluster centers based on K-means')
-    kmeans(model, copy.deepcopy(dl), params)
+    km = kmeans(model, copy.deepcopy(dl), params)
 
     print_both(txt_file, '\nBegin clusters training')
 
@@ -148,6 +156,46 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         print_both(txt_file, 'Epoch {}/{}'.format(epoch + 1, num_epochs))
         print_both(txt_file, "Learning Rate: {}".format(optimizers[0].param_groups[0]['lr']))
         print_both(txt_file, '-' * 10)
+
+        # Performs t-sne on extracted features
+        if epoch % tsne_epochs == 0:
+            print_both(txt_file, 'Performing t-SNE on extracted features')
+            model.eval()
+            features = []
+            for data in dataloader_inference:
+                images, label = data
+                # labels.append(label.numpy())
+                inputs = images.to("cuda:0")
+                threshold = 0.0
+                inputs = (inputs > threshold).type(torch.FloatTensor).to("cuda:0")
+                x, clustering_out, extra_out, fcdown1 = model(inputs)
+                # print(clustering_out)
+                features.append(torch.squeeze(extra_out).cpu().detach().numpy())
+
+            output_array = np.asarray(features)
+            # labels = np.array(labels)
+
+
+            predictions = km.fit_predict(output_array)
+
+            Y = manifold.TSNE(n_components=2, init='pca',
+                              random_state=0).fit_transform(output_array)
+
+            b = np.zeros((len(features), 3))
+            b[:, 0] = Y[:, 0]
+            b[:, 1] = Y[:, 1]
+            b[:, 2] = km.labels_
+            data = pd.DataFrame(b, columns=['tsne1', 'tsne2', 'label'])
+            facet_tsne = sns.lmplot(data=data, x='tsne1', y='tsne2', hue='label',
+                                    fit_reg=False,
+                                    legend=True,
+                                    legend_out=True,
+                                    scatter_kws={"s": 6})
+            facet_tsne.set_titles('t-SNE of extracted features at epoch {}'.format(epoch+1))
+
+            save_path = output_dir + "t_sne_epoch{}.png".format(epoch + 1)
+            facet_tsne.savefig(save_path)
+            print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
 
         model.train(True)  # Set model to training mode
 
@@ -385,8 +433,11 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
 
         scheduler.step()
         create_dir_if_not_exist(output_dir + '/reconstructed_img/' + model_name + '/')
-        io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch' + str(epoch) + '.tif',
+        io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
                   torch.sigmoid(outputs[0]).cpu().detach().numpy())
+        io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch_true' + str(epoch) + '.tif',
+                  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+
         # torch.sigmoid(
         epoch_loss = running_loss / dataset_size
         if epoch == 0: first_loss = epoch_loss
@@ -443,6 +494,7 @@ def kmeans(model, dataloader, params):
     weights = torch.from_numpy(km.cluster_centers_)
     model.clustering.set_weight(weights.to(params['device']))
     # torch.cuda.empty_cache()
+    return km
 
 
 # Function forwarding data through network, collecting clustering weight output and returning prediciotns and labels

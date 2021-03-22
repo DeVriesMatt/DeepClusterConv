@@ -14,6 +14,8 @@ import os
 import os.path
 from typing import Any, Callable, cast, Dict, List, Optional, Tuple
 
+from torchvision.transforms import transforms
+
 
 def has_file_allowed_extension(filename: str, extensions: Tuple[str, ...]) -> bool:
     """Checks if a file is an allowed extension.
@@ -161,9 +163,13 @@ class DatasetFolder(VisionDataset):
         path, target = self.samples[index]
         sample = self.loader(path)
         if self.transform is not None:
-            sample = self.transform(sample)
+            tensor = transforms.ToTensor()  # TODO: need to do this first because augmentstation on 3D needs a tensor of specified size first
+            tensor = transforms.Compose([tensor])
+            sample = tensor(sample)
             sample = sample.unsqueeze(0)
-            sample = sample.permute(0,2,3,1)
+            sample = sample.permute(0, 2, 3, 1)
+            sample = self.transform(sample)
+
             # sample = F.pad(sample, pad = (31, 32, 46, 47, 51, 52))
         if self.target_transform is not None:
             target = self.target_transform(target)
@@ -176,7 +182,7 @@ class DatasetFolder(VisionDataset):
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
-def pad_img(img, new_size=(28, 28, 28)):
+def pad_img(img, new_size=(64, 64, 64)):
     new_z, new_y, new_x = new_size[0], new_size[1], new_size[2]
     z = img.shape[0]
     y = img.shape[1]

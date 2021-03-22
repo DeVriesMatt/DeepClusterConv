@@ -14,6 +14,8 @@ from torch.utils.tensorboard import SummaryWriter
 import os
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TestTubeLogger
+import torchio as tio
+
 
 from datasets import ImageFolder
 from loss_functions import *
@@ -26,6 +28,7 @@ import networks_resnet
 # /data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/VickyPlates/Treatments_plate_002_166464
 # covid = '/home/mvries/Documents/Datasets/ChestCOVID_CT'
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
+shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
 if __name__ == "__main__":
 
     # Translate string entries to bool for parser
@@ -41,15 +44,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default=1,
+    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrained_net', default='./nets/CAE_bn3_059_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
     parser.add_argument('--dataset', default='Single-Cell',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default='/home/mvries/Documents/Datasets/MNIST3D/Train/',
+                        default='/home/mvries/Documents/Datasets/ShapeNetVoxel/',
                         help='path to dataset')
     parser.add_argument('--batch_size', default=4, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
@@ -64,13 +67,13 @@ if __name__ == "__main__":
                         help='scheduler gamma for rate update - pretrain')
     parser.add_argument('--epochs', default=100, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
-    parser.add_argument('--printing_frequency', default=100, type=int, help='training stats printing frequency')
+    parser.add_argument('--printing_frequency', default=1000, type=int, help='training stats printing frequency')
     parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
-    parser.add_argument('--update_interval', default=5000, type=int, help='update interval for target distribution')
+    parser.add_argument('--update_interval', default=10000, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=[28, 28, 28, 1], nargs=4, type=int, help='size of custom images')
+    parser.add_argument('--custom_img_size', default=[64, 64, 64, 1], nargs=4, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
@@ -80,6 +83,8 @@ if __name__ == "__main__":
     parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
     parser.add_argument('--resnet_layers', default='[1, 1, 1, 1]', nargs=1, type=str,
                         help='Enter the number of blocks in each resnet layer')
+    parser.add_argument('--tsne_epochs', default=20, nargs=1, type=str,
+                        help='Enter the epoch interval to perform t-sne and plot the results')
     args = parser.parse_args()
     print(args)
 
@@ -104,7 +109,12 @@ if __name__ == "__main__":
 
     # Output directory
     output_dir = args.output_dir
+    dataset = args.dataset
+    outpu_dir = output_dir + dataset + '/'
     params['output_dir'] = output_dir
+
+    tsne_epochs = args.tsne_epochs
+    params['tsne_epochs'] = tsne_epochs
 
     params['mode'] = args.mode
 
@@ -179,7 +189,7 @@ if __name__ == "__main__":
     # Hyperparameters
 
     # Used dataset
-    dataset = args.dataset
+
 
     # Batch size
     batch = args.batch_size
@@ -340,10 +350,13 @@ if __name__ == "__main__":
     else:
         # Transformations
         # TODO: look at adding in transforms
+        fpg = tio.datasets.FPG()
+        flip = tio.RandomFlip(axes=('LR',))
         data_transforms = transforms.Compose([
             # transforms.Resize(img_size[0:3]),
             # transforms.RandomHorizontalFlip(),
-            transforms.ToTensor(),
+            # transforms.ToTensor(), # TODO: removed this because added it directly in the DatasetFolder class
+            flip
             # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
@@ -352,6 +365,10 @@ if __name__ == "__main__":
         # Prepare data for network: schuffle and arrange batches
         dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
                                                  shuffle=True, num_workers=workers)
+
+        image_dataset_inference = ImageFolder(root=data_dir, transform=None)
+        dataloader_inference = torch.utils.data.DataLoader(image_dataset, batch_size=1,
+                                                           shuffle=True, num_workers=workers)
         # Size of data sets
         dataset_size = len(image_dataset)
 
@@ -388,7 +405,7 @@ if __name__ == "__main__":
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
 
         model = model.to(device)
-        print_both(f, '{}'.format(summary(model, input_size=(1, 28, 28, 28))))
+        print_both(f, '{}'.format(summary(model, input_size=(1, img_size[0], img_size[1], img_size[2]))))
         # Reconstruction loss
         criterion_1 = FocalTverskyLoss()  # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
         # Clustering loss
@@ -415,7 +432,7 @@ if __name__ == "__main__":
         schedulers = [scheduler, scheduler_pretrain]
 
         if args.mode == 'train_full':
-            model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params)
+            model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
         elif args.mode == 'pretrain':
             model = pretraining(model, dataloader, criteria[0], optimizers[1], schedulers[1], epochs, params)
 
