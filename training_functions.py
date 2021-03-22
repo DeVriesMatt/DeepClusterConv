@@ -192,19 +192,18 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 # check stop criterion
                 delta_label = np.sum(preds != preds_prev).astype(np.float32) / preds.shape[0]
                 preds_prev = np.copy(preds)
-<<<<<<< HEAD
+
 #                if delta_label < tol:
 #                    print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
 #                    print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
 #                    finished = True
 #                    break
-=======
+
                 # if delta_label < tol:
                 #     print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
                 #     print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
                 #     finished = True
                 #     break
->>>>>>> df54a4addc9f57db751c3f79ffeab0ea44e6baf8
 
             tar_dist = target_distribution[((batch_num - 1) * batch):(batch_num * batch), :]
             tar_dist = torch.from_numpy(tar_dist).to(device)
