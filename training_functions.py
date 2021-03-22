@@ -185,8 +185,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             b[:, 0] = Y[:, 0]
             b[:, 1] = Y[:, 1]
             b[:, 2] = km.labels_
-            data = pd.DataFrame(b, columns=['tsne1', 'tsne2', 'label'])
-            facet_tsne = sns.lmplot(data=data, x='tsne1', y='tsne2', hue='label',
+            tsne_data = pd.DataFrame(b, columns=['tsne1', 'tsne2', 'label'])
+            facet_tsne = sns.lmplot(data=tsne_data, x='tsne1', y='tsne2', hue='label',
                                     fit_reg=False,
                                     legend=True,
                                     legend_out=True,
