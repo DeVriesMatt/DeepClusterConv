@@ -175,9 +175,6 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             output_array = np.asarray(features)
             # labels = np.array(labels)
 
-
-            predictions = km.fit_predict(output_array)
-
             Y = manifold.TSNE(n_components=2, init='pca',
                               random_state=0).fit_transform(output_array)
 

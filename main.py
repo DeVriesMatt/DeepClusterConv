@@ -110,7 +110,7 @@ if __name__ == "__main__":
     # Output directory
     output_dir = args.output_dir
     dataset = args.dataset
-    outpu_dir = output_dir + dataset + '/'
+    output_dir = output_dir + dataset + '/'
     params['output_dir'] = output_dir
 
     tsne_epochs = args.tsne_epochs
@@ -367,8 +367,8 @@ if __name__ == "__main__":
                                                  shuffle=True, num_workers=workers)
 
         image_dataset_inference = ImageFolder(root=data_dir, transform=None)
-        dataloader_inference = torch.utils.data.DataLoader(image_dataset, batch_size=1,
-                                                           shuffle=True, num_workers=workers)
+        dataloader_inference = torch.utils.data.DataLoader(image_dataset_inference, batch_size=1,
+                                                           shuffle=False, num_workers=workers)
         # Size of data sets
         dataset_size = len(image_dataset)
 
