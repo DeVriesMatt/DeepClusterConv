@@ -44,12 +44,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default=1,
+    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrained_net', default=16,
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
     parser.add_argument('--dataset', default='Single-Cell',
-                        choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full'],
+                        choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
                         default='/home/mvries/Documents/Datasets/ShapeNetVoxel/',
