@@ -44,17 +44,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default=16,
+    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrained_net', default=1,
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn3', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
-    parser.add_argument('--dataset', default='Single-Cell',
+    parser.add_argument('--net_architecture', default='ResNet', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
+    parser.add_argument('--dataset', default='ShapeNetVoxel',
                         choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
                         default='/home/mvries/Documents/Datasets/ShapeNetVoxel/',
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=4, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=64, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.0002, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
@@ -67,7 +67,7 @@ if __name__ == "__main__":
                         help='scheduler gamma for rate update - pretrain')
     parser.add_argument('--epochs', default=100, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
-    parser.add_argument('--printing_frequency', default=1000, type=int, help='training stats printing frequency')
+    parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
     parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
     parser.add_argument('--update_interval', default=10000, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
@@ -81,12 +81,12 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', default='./', type=str)
     parser.add_argument('--train_lightning', default=False, type=str2bool)
     parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
-    parser.add_argument('--resnet_layers', default='[1, 1, 1, 1]', nargs=1, type=str,
+    parser.add_argument('--resnet_layers', default="[1, 1, 1, 1]", nargs=1, type=str,
                         help='Enter the number of blocks in each resnet layer')
     parser.add_argument('--tsne_epochs', default=20, nargs=1, type=str,
                         help='Enter the epoch interval to perform t-sne and plot the results')
     args = parser.parse_args()
-    print(args)
+
 
     if args.mode == 'pretrain' and not args.pretrain:
         print("Nothing to do :(")
@@ -118,7 +118,7 @@ if __name__ == "__main__":
 
     params['mode'] = args.mode
 
-    resnet_layers = eval(args.resnet_layers)
+    resnet_layers = args.resnet_layers
     params['resenet_layers'] = resnet_layers
 
 
@@ -366,7 +366,7 @@ if __name__ == "__main__":
         dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
                                                  shuffle=True, num_workers=workers)
 
-        image_dataset_inference = ImageFolder(root=data_dir, transform=None)
+        image_dataset_inference = ImageFolder(root=data_dir, transform=data_transforms)
         dataloader_inference = torch.utils.data.DataLoader(image_dataset_inference, batch_size=1,
                                                            shuffle=False, num_workers=workers)
         # Size of data sets

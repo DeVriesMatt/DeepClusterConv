@@ -10,6 +10,8 @@
       <excludeFolder url="file://$MODULE_DIR$/reconstructed_img" />
       <excludeFolder url="file://$MODULE_DIR$/ResultsHPC" />
       <excludeFolder url="file://$MODULE_DIR$/input_img" />
+      <excludeFolder url="file://$MODULE_DIR$/ShapeNetVoxel" />
+      <excludeFolder url="file://$MODULE_DIR$/Single-Cell" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
