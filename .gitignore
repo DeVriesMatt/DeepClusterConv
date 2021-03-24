@@ -10,6 +10,8 @@ reconstructed_img/
 ResultsHPC/
 input_img/
 *.png
+ShapeNetVoxel/
+Single-Cell/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
