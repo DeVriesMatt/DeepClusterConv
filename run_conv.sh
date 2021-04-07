@@ -14,4 +14,7 @@ source /opt/software/applications/anaconda/3/etc/profile.d/conda.sh
 
 conda activate dcfn
 
-python main.py  --epochs 500 --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/MNIST3D/Train/' --update_interval 15000
+for num_features in 10 50 100 200 512
+do
+  python main.py  --epochs 1000 --epochs_pretrain 300 --num_features $num_features --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/ModelNet10Voxel/Train/' --update_interval 1
+done
