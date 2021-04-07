@@ -13,16 +13,20 @@ from sklearn.metrics import pairwise_distances_argmin_min
 from tqdm import tqdm
 from sklearn.preprocessing import StandardScaler
 import metrics
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import make_pipeline
 
 model = CAE_bn3(num_features=10, num_clusters=10, input_shape=[64, 64, 64, 1])
 
-# model = ResNet(BasicBlock, layers=[3, 4, 23, 3],
+# model = ResNet(BasicBlock, layers=[1, 1, 1, 1],
 #                block_inplanes=get_inplanes(),
 #                input_shape=[64, 64, 64, 1],
-#                num_clusters=3,
-#                num_features=20)
+#                num_clusters=10,
+#                num_features=10)
 model.cuda()
-model.load_state_dict(torch.load('./nets/CAE_bn3_059.pt'))
+checkpoints = torch.load('./ModelNet10/nets/CAE_bn3_005_pretrained.pt')
+
+model.load_state_dict(checkpoints['model_state_dict'])
 
 model.eval()
 
@@ -38,8 +42,9 @@ pix_path = '/home/mvries/Documents/Datasets/Pix3DVoxels/'
 vicky_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
+model_net = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Train/'
 
-image_dataset = ImageFolder(root=shape_net,
+image_dataset = ImageFolder(root=model_net,
                             transform=data_transforms)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
@@ -93,7 +98,7 @@ fte_colors = {
  }
 # Plot of UMAP with clusters from unreduced data labelled
 km_colors = [fte_colors[label] for label in km.labels_]
-b = np.zeros((23117, 3))
+b = np.zeros((3991, 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
 b[:, 2] = labels[:, 0]
@@ -103,7 +108,7 @@ facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
-b = np.zeros((23117, 3))
+b = np.zeros((3991, 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
 b[:, 2] = labels[:, 0] # km.labels_
@@ -120,7 +125,7 @@ Y = manifold.TSNE(n_components=2, init='pca',
                                  random_state=0).fit_transform(output_array)
 
 
-b = np.zeros((23117, 3))
+b = np.zeros((3991, 3))
 b[:, 0] = Y[:, 0]
 b[:, 1] = Y[:, 1]
 b[:, 2] = labels[:, 0]  # km.labels_
@@ -140,4 +145,9 @@ closest, _ = pairwise_distances_argmin_min(km.cluster_centers_, output_array)
 print(closest)
 acc = metrics.metrics.acc(labels, km.labels_)
 print('Accuracy: ' + str(acc))
+labels = np.asarray(labels).ravel()
+clf = LinearSVC()
+clf.fit(output_array, labels)
+score = clf.score(output_array, labels)
+print('Score of linear svm: {}'.format(score))
 # After 10 clustering epochs, got acc 0.75708

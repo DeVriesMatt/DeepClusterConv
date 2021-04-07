@@ -45,18 +45,20 @@ if __name__ == "__main__":
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default=1,
+    parser.add_argument('--pretrained_net', default='./ShapeNetVoxel/nets/CAE_bn3_007_pretrained.pt',
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='ResNet', choices=['CAE_3', 'CAE_bn3', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'], help='network architecture used')
-    parser.add_argument('--dataset', default='ShapeNetVoxel',
-                        choices=['MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
+    parser.add_argument('--net_architecture', default='CAE_bn3',
+                        choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'],
+                        help='network architecture used')
+    parser.add_argument('--dataset', default='ModelNet10',
+                        choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default='/home/mvries/Documents/Datasets/ShapeNetVoxel/',
+                        default='/home/mvries/Documents/Datasets/ModelNet10Voxel/',
                         help='path to dataset')
     parser.add_argument('--batch_size', default=64, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
-    parser.add_argument('--rate_pretrain', default=0.0002, type=float, help='learning rate for pretraining')
+    parser.add_argument('--rate_pretrain', default=0.000002, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
     parser.add_argument('--weight_pretrain', default=0.0, type=float, help='weight decay for clustering')
     parser.add_argument('--sched_step', default=50, type=int, help='scheduler steps for rate update')
@@ -65,11 +67,11 @@ if __name__ == "__main__":
     parser.add_argument('--sched_gamma', default=0.1, type=float, help='scheduler gamma for rate update')
     parser.add_argument('--sched_gamma_pretrain', default=0.1, type=float,
                         help='scheduler gamma for rate update - pretrain')
-    parser.add_argument('--epochs', default=100, type=int, help='clustering epochs')
+    parser.add_argument('--epochs', default=500, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
-    parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
-    parser.add_argument('--update_interval', default=10000, type=int, help='update interval for target distribution')
+    parser.add_argument('--gamma', default=1, type=float, help='clustering loss weight')
+    parser.add_argument('--update_interval', default=1, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
@@ -86,7 +88,6 @@ if __name__ == "__main__":
     parser.add_argument('--tsne_epochs', default=20, nargs=1, type=str,
                         help='Enter the epoch interval to perform t-sne and plot the results')
     args = parser.parse_args()
-
 
     if args.mode == 'pretrain' and not args.pretrain:
         print("Nothing to do :(")
@@ -151,7 +152,7 @@ if __name__ == "__main__":
     name_txt = name + '.txt'
     name_net = name
     pretrained = name + '_pretrained.pt'
-
+    params['name'] = name
     # Arrange filenames for report, network weights, pretrained network weights
     name_txt = os.path.join(output_dir + 'reports', name_txt)
     name_net = os.path.join(output_dir + 'nets', name_net)
@@ -164,6 +165,7 @@ if __name__ == "__main__":
 
     model_files = [name_net, pretrained]
     params['model_files'] = model_files
+    params['name_idx'] = name
 
     # Open file
     if pretrain:
@@ -361,12 +363,12 @@ if __name__ == "__main__":
         ])
 
         # Read data from selected folder and apply transformations
-        image_dataset = ImageFolder(root=data_dir, transform=data_transforms)
+        image_dataset = ImageFolder(root=data_dir + 'Train/', transform=data_transforms)
         # Prepare data for network: schuffle and arrange batches
         dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
                                                  shuffle=True, num_workers=workers)
 
-        image_dataset_inference = ImageFolder(root=data_dir, transform=data_transforms)
+        image_dataset_inference = ImageFolder(root=data_dir + 'Train/', transform=data_transforms)
         dataloader_inference = torch.utils.data.DataLoader(image_dataset_inference, batch_size=1,
                                                            shuffle=False, num_workers=workers)
         # Size of data sets
@@ -403,6 +405,7 @@ if __name__ == "__main__":
         if board:
             writer.add_graph(model, torch.autograd.Variable(
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
+            writer.add_hparams(params)
 
         model = model.to(device)
         print_both(f, '{}'.format(summary(model, input_size=(1, img_size[0], img_size[1], img_size[2]))))
@@ -438,7 +441,13 @@ if __name__ == "__main__":
 
     # Save final model
     print('Saving model to:' + name_net + '.pt')
-    torch.save(model.state_dict(), name_net + '.pt')
+
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict()
+    }, name_net + '.pt')
+
+    # torch.save(model.state_dict(), name_net + '.pt')
 
     # Close files
     f.close()

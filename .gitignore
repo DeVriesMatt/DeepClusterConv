@@ -12,6 +12,7 @@ input_img/
 *.png
 ShapeNetVoxel/
 Single-Cell/
+ModelNet10/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
