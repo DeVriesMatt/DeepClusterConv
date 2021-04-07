@@ -1,0 +1,689 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true2.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true3.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true21.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true24.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred25.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true25.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true34.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true35.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred42.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true42.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true46.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true47.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true51.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred52.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true52.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true55.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true61.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true64.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true68.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true70.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true78.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true79.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true80.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred82.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true82.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true92.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true94.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true95.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true99.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred105.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true105.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true109.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true110.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true114.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred119.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true119.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred126.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true126.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred132.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true132.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true138.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true140.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true145.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred146.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true146.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true148.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true149.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred150.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true150.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true156.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true159.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred170.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true170.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred175.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true175.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred178.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true178.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred181.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true181.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true183.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred187.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true187.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:444: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_pred189.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true189.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:446: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv//reconstructed_img/CAE_bn3/pretrain_epoch_true199.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:22: FutureWarning: The linear_assignment_ module is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+slurmstepd: error: *** JOB 1038972 ON gpu01 CANCELLED AT 2021-03-23T14:17:19 DUE TO TIME LIMIT ***

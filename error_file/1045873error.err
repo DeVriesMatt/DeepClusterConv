@@ -1,0 +1,112 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true0.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true22.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true27.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true37.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true42.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true45.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true52.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true55.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true68.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true72.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true77.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true81.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true95.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true98.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true106.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true109.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true110.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true113.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true123.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true126.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:441: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_pred127.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true127.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true131.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true133.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true139.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true143.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true147.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true148.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true150.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true160.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true166.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:441: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_pred172.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true172.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:441: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_pred174.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true174.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true175.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:441: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_pred179.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true179.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:441: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_pred182.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true182.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true183.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true185.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true193.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:441: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_pred194.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true194.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:443: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ShapeNetVoxel//reconstructed_img/CAE_bn3/pretrain_epoch_true195.tif is a low contrast image
+  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:22: FutureWarning: The linear_assignment_ module is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/sklearn/utils/linear_assignment_.py:128: FutureWarning: The linear_assignment function is deprecated in 0.21 and will be removed from 0.23. Use scipy.optimize.linear_sum_assignment instead.
+  FutureWarning)
+Traceback (most recent call last):
+  File "main.py", line 435, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 171, in train_model
+    x, clustering_out, extra_out, fcdown1 = model(inputs)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/mvries/DeepClusterConv/networks.py", line 181, in forward
+    x = self.conv1(x)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/modules/conv.py", line 573, in forward
+    self.padding, self.dilation, self.groups)
+1045873error.errRuntimeError: Expected 5-dimensional input for 5-dimensional weight [32, 1, 5, 5, 5], but got 4-dimensional input of size [1, 64, 64, 64] instead

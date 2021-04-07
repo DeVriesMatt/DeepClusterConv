@@ -5,7 +5,7 @@ import copy
 
 # Clustering layer definition (see DCEC article for equations)
 class ClusterlingLayer(nn.Module):
-    def __init__(self, in_features=100, out_features=10, alpha=1.0):
+    def __init__(self, in_features=10, out_features=10, alpha=1.0):
         super(ClusterlingLayer, self).__init__()
         self.in_features = in_features
         self.out_features = out_features
@@ -189,6 +189,94 @@ class CAE_bn3(nn.Module):
             x = self.sig(x)
         else:
             x = self.relu3_1(x)
+        x = x.view(x.size(0), -1)
+        fcdown1 = x
+        x = self.embedding(x)
+        extra_out = x
+        clustering_out = self.clustering(x)
+        x = self.deembedding(x)
+        x = self.relu1_2(x)
+        x = x.view(x.size(0), self.filters[2], ((self.input_shape[0] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 - 1) // 2))
+        x = self.deconv3(x)
+        x = self.relu2_2(x)
+        x = self.bn3_2(x)
+        x = self.deconv2(x)
+        x = self.relu3_2(x)
+        x = self.bn2_2(x)
+        x = self.deconv1(x)
+        # print(x.shape)
+        if self.activations:
+            x = self.tanh(x)
+        return x, clustering_out, extra_out, fcdown1
+
+
+class CAE_bn3_maxpool(nn.Module):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=13):
+        super(CAE_bn3_maxpool, self).__init__()
+        self.activations = activations
+        self.pretrained = False
+        self.num_clusters = num_clusters
+        self.num_features = num_features
+        self.input_shape = input_shape
+        self.filters = filters
+        self.conv1 = nn.Conv3d(self.input_shape[3], filters[0], 5, stride=1, padding=2, bias=bias)
+        self.bn1_1 = nn.BatchNorm3d(filters[0])
+        if leaky:
+            self.relu = nn.LeakyReLU(negative_slope=neg_slope)
+        else:
+            self.relu = nn.ReLU(inplace=False)
+        self.maxpool1 = nn.MaxPool3d(2)
+        self.maxpool2 = nn.MaxPool3d(2)
+        self.maxpool3 = nn.MaxPool3d(2)
+        self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=1, padding=2, bias=bias)
+        self.bn2_1 = nn.BatchNorm3d(filters[1])
+        self.conv3 = nn.Conv3d(filters[1], filters[2], 3, stride=1, padding=0, bias=bias)
+        lin_features_len = ((self.input_shape[0] // 2 // 2 - 1) // 2) * (
+                    (self.input_shape[1] // 2 // 2 - 1) // 2) \
+                           * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
+                           filters[2]
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
+        out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
+        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 3, stride=2, padding=0, output_padding=out_pad,
+                                          bias=bias)
+        out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
+        self.bn3_2 = nn.BatchNorm3d(filters[1])
+        self.deconv2 = nn.ConvTranspose3d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
+                                          bias=bias)
+        out_pad = 1 if input_shape[0] % 2 == 0 else 0
+        self.bn2_2 = nn.BatchNorm3d(filters[0])
+        self.deconv1 = nn.ConvTranspose3d(filters[0], input_shape[3], 5, stride=2, padding=2, output_padding=out_pad,
+                                          bias=bias)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
+        # ReLU copies for graph representation in tensorboard
+        self.relu1_1 = copy.deepcopy(self.relu)
+        self.relu2_1 = copy.deepcopy(self.relu)
+        self.relu3_1 = copy.deepcopy(self.relu)
+        self.relu1_2 = copy.deepcopy(self.relu)
+        self.relu2_2 = copy.deepcopy(self.relu)
+        self.relu3_2 = copy.deepcopy(self.relu)
+        self.sig = nn.Sigmoid()
+        self.tanh = nn.Tanh()
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.relu1_1(x)
+        x = self.bn1_1(x)
+        x = self.maxpool1(x)
+        x = self.conv2(x)
+        x = self.relu2_1(x)
+        x = self.bn2_1(x)
+        x = self.maxpool2(x)
+        x = self.conv3(x)
+        if self.activations:
+            x = self.sig(x)
+        else:
+            x = self.relu3_1(x)
+        x = self.maxpool3(x)
         x = x.view(x.size(0), -1)
         fcdown1 = x
         x = self.embedding(x)

@@ -23,6 +23,10 @@ from skimage import io
 from metrics import print_both, tensor2img, metrics
 from utils import create_dir_if_not_exist
 
+from sklearn.svm import LinearSVC
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
 
 # class Visualizations:
 #     def __init__(self, env_name='main'):
@@ -91,6 +95,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     tol = params['tol']
     tsne_epochs = params['tsne_epochs']
     output_dir = params['output_dir']
+    name = params['name']
 
     dl = dataloader
 
@@ -106,20 +111,29 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     if hasattr(layer, 'reset_parameters'):
                         layer.reset_parameters()
         model = pretrained_model
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.0000002, momentum=0.9)
+        scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, 0.00000000001, 0.1)
     else:
         try:
             print(pretrained)
-            model.load_state_dict(torch.load(pretrained))
+            model.load_state_dict(torch.load(pretrained)['model_state_dict'])
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.0000002, momentum=0.9)
+            optimizer.load_state_dict(torch.load(pretrained)['optimizer_state_dict'])
+            scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, 0.00000000001, 0.1)
             trained_model = copy.deepcopy(model)
             model = trained_model
             print_both(txt_file, 'Pretrained weights loaded from file: ' + str(pretrained))
         except:
             print("Couldn't load pretrained weights")
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.0000002, momentum=0.9)
+            scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, 0.00000000001, 0.1)
 
         # Initialize the visualization environment
     # vis = Visualizations()
     # global plotter
     # plotter = VisdomLinePlotter()
+    # TODO: seems to be problem with model not training when loading from pretrained weights
+
 
     # Initialise clusters
     print_both(txt_file, '\nInitializing cluster centers based on K-means')
@@ -154,17 +168,20 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     for epoch in range(num_epochs):
 
         print_both(txt_file, 'Epoch {}/{}'.format(epoch + 1, num_epochs))
-        print_both(txt_file, "Learning Rate: {}".format(optimizers[0].param_groups[0]['lr']))
+        # TODO: check if the optimizer is not set correctly
+        print_both(txt_file, "Learning Rate: {}".format(optimizer.param_groups[0]['lr']))
+        # print_both(txt_file, "Learning Rate: {}".format(optimizers[0].param_groups[0]['lr']))
         print_both(txt_file, '-' * 10)
 
         # Performs t-sne on extracted features
-        if epoch % tsne_epochs == 0:
+        if (epoch + 1) % tsne_epochs == 0:
             print_both(txt_file, 'Performing t-SNE on extracted features')
             model.eval()
             features = []
+            labs = []
             for data in dataloader_inference:
                 images, label = data
-                # labels.append(label.numpy())
+                labs.append(label.cpu().detach().numpy())
                 inputs = images.to("cuda:0")
                 threshold = 0.0
                 inputs = (inputs > threshold).type(torch.FloatTensor).to("cuda:0")
@@ -173,7 +190,10 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 features.append(torch.squeeze(extra_out).cpu().detach().numpy())
 
             output_array = np.asarray(features)
-            # labels = np.array(labels)
+            scalar = StandardScaler()
+            output_array = scalar.fit_transform(output_array)
+
+            labs = np.array(labs)
 
             Y = manifold.TSNE(n_components=2, init='pca',
                               random_state=0).fit_transform(output_array)
@@ -181,7 +201,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             b = np.zeros((len(features), 3))
             b[:, 0] = Y[:, 0]
             b[:, 1] = Y[:, 1]
-            b[:, 2] = km.labels_
+            b[:, 2] = labs[:,0] # km.labels_
             tsne_data = pd.DataFrame(b, columns=['tsne1', 'tsne2', 'label'])
             facet_tsne = sns.lmplot(data=tsne_data, x='tsne1', y='tsne2', hue='label',
                                     fit_reg=False,
@@ -190,9 +210,31 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                                     scatter_kws={"s": 6})
             facet_tsne.set_titles('t-SNE of extracted features at epoch {}'.format(epoch+1))
 
-            save_path = output_dir + "t_sne_epoch{}.png".format(epoch + 1)
+            save_path = output_dir + name + '/' + "t_sne_epoch{}.png".format(epoch + 1)
+            create_dir_if_not_exist(save_path)
             facet_tsne.savefig(save_path)
             print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
+            clf = LinearSVC(random_state=0, tol=1e-5)
+            scalar = StandardScaler()
+            output_array = scalar.fit_transform(output_array)
+            clf.fit(output_array, labs)
+            score = clf.score(output_array, labs)
+            print_both(txt_file, 'Linear SVM score: {}'.format(score))
+
+
+            output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
+            nmi = metrics.nmi(labels, preds)
+            ari = metrics.ari(labels, preds)
+            acc = metrics.acc(labels, preds)
+            print_both(txt_file,
+                       'NMI: {0:.5f}\tARI: {1:.5f}\tAcc {2:.5f}\t'.format(nmi, ari, acc))
+            if board:
+                niter = update_iter
+                writer.add_scalar('/NMI_test', nmi, niter)
+                writer.add_scalar('/ARI_test', ari, niter)
+                writer.add_scalar('/Acc_test', acc, niter)
+                writer.add_scalar('/SVM_test_Score', score, niter)
+                update_iter += 1
 
         model.train(True)  # Set model to training mode
 
@@ -216,56 +258,57 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             #
 
             # Uptade target distribution, check and print performance
-            if (batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0):
-                print(epoch)
-                print((batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0))
-                print_both(txt_file, '\nUpdating target distribution:')
-                output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
-                target_distribution = target(output_distribution)
-                nmi = metrics.nmi(labels, preds)
-                ari = metrics.ari(labels, preds)
-                acc = metrics.acc(labels, preds)
-                print_both(txt_file,
-                           'NMI: {0:.5f}\tARI: {1:.5f}\tAcc {2:.5f}\t'.format(nmi, ari, acc))
-                if board:
-                    niter = update_iter
-                    writer.add_scalar('/NMI', nmi, niter)
-                    writer.add_scalar('/ARI', ari, niter)
-                    writer.add_scalar('/Acc', acc, niter)
-                    update_iter += 1
+            if update_interval > 1:
+                if (batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0):
+                    print(epoch)
+                    print((batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0))
+                    print_both(txt_file, '\nUpdating target distribution:')
+                    output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
+                    target_distribution = target(output_distribution)
+                    nmi = metrics.nmi(labels, preds)
+                    ari = metrics.ari(labels, preds)
+                    acc = metrics.acc(labels, preds)
+                    print_both(txt_file,
+                               'NMI: {0:.5f}\tARI: {1:.5f}\tAcc {2:.5f}\t'.format(nmi, ari, acc))
+                    if board:
+                        niter = update_iter
+                        writer.add_scalar('/NMI', nmi, niter)
+                        writer.add_scalar('/ARI', ari, niter)
+                        writer.add_scalar('/Acc', acc, niter)
+                        update_iter += 1
 
-                # check stop criterion
-                delta_label = np.sum(preds != preds_prev).astype(np.float32) / preds.shape[0]
-                preds_prev = np.copy(preds)
+                    # check stop criterion
+                    delta_label = np.sum(preds != preds_prev).astype(np.float32) / preds.shape[0]
+                    preds_prev = np.copy(preds)
+                    # if delta_label < tol:
+                    #     print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
+                    #     print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
+                    #     finished = True
+                    #     break
 
-#                if delta_label < tol:
-#                    print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
-#                    print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
-#                    finished = True
-#                    break
-
-                # if delta_label < tol:
-                #     print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
-                #     print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
-                #     finished = True
-                #     break
-
-            tar_dist = target_distribution[((batch_num - 1) * batch):(batch_num * batch), :]
-            tar_dist = torch.from_numpy(tar_dist).to(device)
+                tar_dist = target_distribution[((batch_num - 1) * batch):(batch_num * batch), :]
+                tar_dist = torch.from_numpy(tar_dist).to(device)
             # print(tar_dist)
 
             # zero the parameter gradients
-            optimizers[0].zero_grad()
+            # TODO: checking if optimiser not working properly
+            optimizer.zero_grad()
+            # optimizers[0].zero_grad()
 
             # Calculate losses and backpropagate
             with torch.set_grad_enabled(True):
                 outputs, clusters, _, _ = model(inputs)
+                if update_interval == 1:
+                    tar_dist = target_torch(clusters)
                 # added threshold
-                loss_rec = criteria[0](outputs, inputs)
+                # TODO: added (1-gamma) to the reconstruction loss
+                loss_rec = (1-gamma) * criteria[0](outputs, inputs)
                 loss_clust = gamma * criteria[1](torch.log(clusters), tar_dist) / batch
                 loss = loss_rec + loss_clust
                 loss.backward()
-                optimizers[0].step()
+                # TODO: checking if optimiser not working properly
+                optimizer.step()
+                # optimizers[0].step()
 
             # For keeping statistics
             running_loss += loss.item() * inputs.size(0)
@@ -296,9 +339,12 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     writer.add_scalar('/Loss', loss_accum, niter)
                     writer.add_scalar('/Loss_recovery', loss_accum_rec, niter)
                     writer.add_scalar('/Loss_clustering', loss_accum_clust, niter)
+                    writer.add_scaler('/Learning_rate', optimizer.param_groups[0]['lr'])
             batch_num = batch_num + 1
             # TODO: scheduler.step goes here when using cyclic learning rate scheduler
-            schedulers[0].step()
+            # TODO: checking if optimiser and scheduler not working
+            scheduler.step()
+            # schedulers[0].step()
             # Print image to tensorboard
             if batch_num == len(dataloader) and (epoch + 1) % 5:
                 inp = tensor2img(inputs)
@@ -362,6 +408,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
     batch = params['batch']
     output_dir = params['output_dir']
     model_name = params['model_name']
+    name = params['name_idx']
 
     # Prep variables for weights and accuracy of the best model
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -436,10 +483,10 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
                     img_counter += 1
 
         scheduler.step()
-        create_dir_if_not_exist(output_dir + '/reconstructed_img/' + model_name + '/')
-        io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
+        create_dir_if_not_exist(output_dir + '/reconstructed_img/' + name + '/')
+        io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
                   torch.sigmoid(outputs[0]).cpu().detach().numpy())
-        io.imsave(output_dir + '/reconstructed_img/' + model_name + '/pretrain_epoch_true' + str(epoch) + '.tif',
+        io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_true' + str(epoch) + '.tif',
                   torch.sigmoid(inputs[0]).cpu().detach().numpy())
 
         # torch.sigmoid(
@@ -470,7 +517,13 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
     # load best model weights
     model.load_state_dict(best_model_wts)
     model.pretrained = True
-    torch.save(model.state_dict(), pretrained)
+    torch.save({
+        'epoch': epoch,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': epoch_loss
+    }, pretrained)
+    # torch.save(model.state_dict(), pretrained)
 
     return model
 
@@ -527,4 +580,10 @@ def calculate_predictions(model, dataloader, params):
 def target(out_distr):
     tar_dist = out_distr ** 2 / np.sum(out_distr, axis=0)
     tar_dist = np.transpose(np.transpose(tar_dist) / np.sum(tar_dist, axis=1))
+    return tar_dist
+
+
+def target_torch(out_distr):
+    tar_dist = out_distr ** 2 / torch.sum(out_distr, dim=0)
+    tar_dist = torch.t(torch.t(tar_dist) / torch.sum(tar_dist, dim=1))
     return tar_dist
