@@ -168,7 +168,7 @@ class DatasetFolder(VisionDataset):
             sample = tensor(sample)
             sample = sample.unsqueeze(0)
             sample = sample.permute(0, 2, 3, 1)
-            # sample = self.transform(sample)
+            sample = self.transform(sample)
 
             # sample = F.pad(sample, pad = (31, 32, 46, 47, 51, 52))
         if self.target_transform is not None:
