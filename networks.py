@@ -3,6 +3,17 @@ import torch.nn as nn
 import copy
 
 
+class Flatten(nn.Module):
+    def forward(self, input):
+        '''
+        Note that input.size(0) is usually the batch size.
+        So what it does is that given any input with input.size(0) # of batches,
+        will flatten to be 1 * nb_elements.
+        '''
+        batch_size = input.size(0)
+        out = input.view(batch_size, -1)
+        return out # (batch_size, *size)
+
 # Clustering layer definition (see DCEC article for equations)
 class ClusterlingLayer(nn.Module):
     def __init__(self, in_features=10, out_features=10, alpha=1.0):
@@ -222,6 +233,7 @@ class CAE_bn3_maxpool(nn.Module):
         self.num_features = num_features
         self.input_shape = input_shape
         self.filters = filters
+
         self.conv1 = nn.Conv3d(self.input_shape[3], filters[0], 5, stride=1, padding=2, bias=bias)
         self.bn1_1 = nn.BatchNorm3d(filters[0])
         if leaky:
@@ -239,6 +251,8 @@ class CAE_bn3_maxpool(nn.Module):
                            * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
                            filters[2]
         self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.flatten = Flatten()
+
         self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
         self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 3, stride=2, padding=0, output_padding=out_pad,
@@ -261,25 +275,12 @@ class CAE_bn3_maxpool(nn.Module):
         self.relu3_2 = copy.deepcopy(self.relu)
         self.sig = nn.Sigmoid()
         self.tanh = nn.Tanh()
+        self.encoder = nn.Sequential(self.conv1, self.relu1_1, self.bn1_1, self.maxpool1, self.conv2, self.relu2_1,
+                                     self.bn2_1, self.maxpool2, self.conv3, self.relu3_1, self.maxpool3, self.flatten,
+                                     self.embedding)
 
     def forward(self, x):
-        x = self.conv1(x)
-        x = self.relu1_1(x)
-        x = self.bn1_1(x)
-        x = self.maxpool1(x)
-        x = self.conv2(x)
-        x = self.relu2_1(x)
-        x = self.bn2_1(x)
-        x = self.maxpool2(x)
-        x = self.conv3(x)
-        if self.activations:
-            x = self.sig(x)
-        else:
-            x = self.relu3_1(x)
-        x = self.maxpool3(x)
-        x = x.view(x.size(0), -1)
-        fcdown1 = x
-        x = self.embedding(x)
+        x = self.encoder(x)
         extra_out = x
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
@@ -297,7 +298,7 @@ class CAE_bn3_maxpool(nn.Module):
         # print(x.shape)
         if self.activations:
             x = self.tanh(x)
-        return x, clustering_out, extra_out, fcdown1
+        return x, clustering_out, extra_out, x
 
 
 # Convolutional autoencoder with 4 convolutional blocks
