@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./ShapeNetVoxel/nets/CAE_bn3_007_pretrained.pt',
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn3',
+    parser.add_argument('--net_architecture', default='CAE_bn3_maxpool',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'],
                         help='network architecture used')
     parser.add_argument('--dataset', default='ModelNet10',
@@ -405,7 +405,8 @@ if __name__ == "__main__":
         if board:
             writer.add_graph(model, torch.autograd.Variable(
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
-            writer.add_hparams(params)
+            # writer.add_hparams(params) # TODO: Look how to incorporate hparams for grid search
+            # TODO: may need a function which creates the model when passed the hparams
 
         model = model.to(device)
         print_both(f, '{}'.format(summary(model, input_size=(1, img_size[0], img_size[1], img_size[2]))))
