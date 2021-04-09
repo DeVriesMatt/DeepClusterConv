@@ -45,7 +45,7 @@ if __name__ == "__main__":
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default='./ShapeNetVoxel/nets/CAE_bn3_007_pretrained.pt',
+    parser.add_argument('--pretrained_net', default='./ModelNet10/nets/CAE_bn3_maxpool_009_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3_maxpool',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'],
@@ -400,7 +400,6 @@ if __name__ == "__main__":
             model = eval(to_eval)
             # print(to_eval.input_shape)
 
-
         # Tensorboard model representation
         if board:
             writer.add_graph(model, torch.autograd.Variable(
@@ -411,7 +410,8 @@ if __name__ == "__main__":
         model = model.to(device)
         print_both(f, '{}'.format(summary(model, input_size=(1, img_size[0], img_size[1], img_size[2]))))
         # Reconstruction loss
-        criterion_1 = FocalTverskyLoss()  # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
+        criterion_1 = FocalTverskyLoss()
+        # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
         # Clustering loss
         criterion_2 = nn.KLDivLoss(size_average=False)
 
@@ -424,11 +424,11 @@ if __name__ == "__main__":
         optimizer_pretrain = torch.optim.SGD(model.parameters(), lr=rate_pretrain, momentum=0.9)
 
         optimizers = [optimizer, optimizer_pretrain]
-        scheduler = lr_scheduler.StepLR(optimizer, step_size=sched_step, gamma=sched_gamma)
-        scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True)
+        # scheduler = lr_scheduler.StepLR(optimizer, step_size=sched_step, gamma=sched_gamma)
+        # scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, verbose=True)
         scheduler = lr_scheduler.CyclicLR(optimizer, 0.00000001, 0.1)
-        scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
-                                                 gamma=sched_gamma_pretrain)
+        # scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
+        #                                          gamma=sched_gamma_pretrain)
 
         scheduler_pretrain = lr_scheduler.CyclicLR(optimizer_pretrain, 0.00000001, 0.1)
 

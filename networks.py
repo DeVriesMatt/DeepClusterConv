@@ -225,7 +225,7 @@ class CAE_bn3(nn.Module):
 
 class CAE_bn3_maxpool(nn.Module):
     def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
-                 neg_slope=0.01, activations=False, bias=True, num_features=13):
+                 neg_slope=0.01, activations=False, bias=True, num_features=10):
         super(CAE_bn3_maxpool, self).__init__()
         self.activations = activations
         self.pretrained = False

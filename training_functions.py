@@ -209,9 +209,9 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                                     legend_out=True,
                                     scatter_kws={"s": 6})
             facet_tsne.set_titles('t-SNE of extracted features at epoch {}'.format(epoch+1))
-
-            save_path = output_dir + name + '/' + "t_sne_epoch{}.png".format(epoch + 1)
-            create_dir_if_not_exist(save_path)
+            save_dir = output_dir + 't_sne/' + name + '/'
+            save_path = save_dir + "t_sne_epoch{}.png".format(epoch + 1)
+            create_dir_if_not_exist(save_dir)
             facet_tsne.savefig(save_path)
             print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
             clf = LinearSVC(random_state=0, tol=1e-5)
@@ -220,8 +220,6 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             clf.fit(output_array, labs)
             score = clf.score(output_array, labs)
             print_both(txt_file, 'Linear SVM score: {}'.format(score))
-
-
             output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
             nmi = metrics.nmi(labels, preds)
             ari = metrics.ari(labels, preds)
@@ -339,7 +337,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     writer.add_scalar('/Loss', loss_accum, niter)
                     writer.add_scalar('/Loss_recovery', loss_accum_rec, niter)
                     writer.add_scalar('/Loss_clustering', loss_accum_clust, niter)
-                    writer.add_scaler('/Learning_rate', optimizer.param_groups[0]['lr'])
+                    # writer.add_scaler('/Learning_rate', optimizer.param_groups[0]['lr'])
             batch_num = batch_num + 1
             # TODO: scheduler.step goes here when using cyclic learning rate scheduler
             # TODO: checking if optimiser and scheduler not working
