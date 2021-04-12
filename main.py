@@ -47,8 +47,8 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./ModelNet10/nets/CAE_bn3_maxpool_009_pretrained.pt',
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn3_maxpool',
-                        choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet'],
+    parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
+                        choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq'],
                         help='network architecture used')
     parser.add_argument('--dataset', default='ModelNet10',
                         choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     parser.add_argument('--sched_gamma', default=0.1, type=float, help='scheduler gamma for rate update')
     parser.add_argument('--sched_gamma_pretrain', default=0.1, type=float,
                         help='scheduler gamma for rate update - pretrain')
-    parser.add_argument('--epochs', default=500, type=int, help='clustering epochs')
+    parser.add_argument('--epochs', default=1000, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
     parser.add_argument('--gamma', default=1, type=float, help='clustering loss weight')

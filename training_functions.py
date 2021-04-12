@@ -482,10 +482,10 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
 
         scheduler.step()
         create_dir_if_not_exist(output_dir + '/reconstructed_img/' + name + '/')
-        io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
-                  torch.sigmoid(outputs[0]).cpu().detach().numpy())
-        io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_true' + str(epoch) + '.tif',
-                  torch.sigmoid(inputs[0]).cpu().detach().numpy())
+        # io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
+        #           torch.sigmoid(outputs[0]).cpu().detach().numpy())
+        # io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_true' + str(epoch) + '.tif',
+        #           torch.sigmoid(inputs[0]).cpu().detach().numpy())
 
         # torch.sigmoid(
         epoch_loss = running_loss / dataset_size
