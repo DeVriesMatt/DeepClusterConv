@@ -3,6 +3,63 @@ import torch.nn as nn
 import copy
 
 
+class EncoderMaxPoolBN3(nn.Module):
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=10):
+        super(EncoderMaxPoolBN3, self).__init__()
+        self.activations = activations
+        self.pretrained = False
+        self.num_clusters = num_clusters
+        self.num_features = num_features
+        self.input_shape = input_shape
+        self.filters = filters
+
+        self.conv1 = nn.Conv3d(self.input_shape[3], filters[0], 5, stride=1, padding=2, bias=bias)
+        self.bn1_1 = nn.BatchNorm3d(filters[0])
+        if leaky:
+            self.relu = nn.LeakyReLU(negative_slope=neg_slope)
+        else:
+            self.relu = nn.ReLU(inplace=False)
+        self.maxpool1 = nn.MaxPool3d(2)
+        self.maxpool2 = nn.MaxPool3d(2)
+        self.maxpool3 = nn.MaxPool3d(2)
+        self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=1, padding=2, bias=bias)
+        self.bn2_1 = nn.BatchNorm3d(filters[1])
+        self.conv3 = nn.Conv3d(filters[1], filters[2], 3, stride=1, padding=0, bias=bias)
+        lin_features_len = ((self.input_shape[0] // 2 // 2 - 1) // 2) * (
+                (self.input_shape[1] // 2 // 2 - 1) // 2) \
+                           * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
+                           filters[2]
+        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
+        self.flatten = Flatten()
+        self.relu1_1 = copy.deepcopy(self.relu)
+        self.relu2_1 = copy.deepcopy(self.relu)
+        self.relu3_1 = copy.deepcopy(self.relu)
+
+        self.encoder = nn.Sequential(self.conv1, self.relu1_1, self.bn1_1, self.maxpool1, self.conv2, self.relu2_1,
+                                     self.bn2_1, self.maxpool2, self.conv3, self.relu3_1, self.maxpool3, self.flatten,
+                                     self.embedding)
+
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.relu1_1(x)
+        x = self.bn1_1(x)
+        x = self.maxpool1(x)
+        x = self.conv2(x)
+        x = self.relu2_1(x)
+        x = self.bn2_1(x)
+        x = self.maxpool2(x)
+        x = self.conv3(x)
+        x = self.relu3_1(x)
+        x = self.maxpool3(x)
+        x = x.view(x.size(0), -1)
+        x = self.embedding(x)
+
+        return x
+
+
+
+
 class Flatten(nn.Module):
     def forward(self, input):
         '''
@@ -13,6 +70,7 @@ class Flatten(nn.Module):
         batch_size = input.size(0)
         out = input.view(batch_size, -1)
         return out # (batch_size, *size)
+
 
 # Clustering layer definition (see DCEC article for equations)
 class ClusterlingLayer(nn.Module):
@@ -223,10 +281,10 @@ class CAE_bn3(nn.Module):
         return x, clustering_out, extra_out, fcdown1
 
 
-class CAE_bn3_maxpool(nn.Module):
+class CAE_bn3_Seq(nn.Module):
     def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
                  neg_slope=0.01, activations=False, bias=True, num_features=10):
-        super(CAE_bn3_maxpool, self).__init__()
+        super(CAE_bn3_Seq, self).__init__()
         self.activations = activations
         self.pretrained = False
         self.num_clusters = num_clusters
@@ -234,24 +292,14 @@ class CAE_bn3_maxpool(nn.Module):
         self.input_shape = input_shape
         self.filters = filters
 
-        self.conv1 = nn.Conv3d(self.input_shape[3], filters[0], 5, stride=1, padding=2, bias=bias)
-        self.bn1_1 = nn.BatchNorm3d(filters[0])
         if leaky:
             self.relu = nn.LeakyReLU(negative_slope=neg_slope)
         else:
             self.relu = nn.ReLU(inplace=False)
-        self.maxpool1 = nn.MaxPool3d(2)
-        self.maxpool2 = nn.MaxPool3d(2)
-        self.maxpool3 = nn.MaxPool3d(2)
-        self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=1, padding=2, bias=bias)
-        self.bn2_1 = nn.BatchNorm3d(filters[1])
-        self.conv3 = nn.Conv3d(filters[1], filters[2], 3, stride=1, padding=0, bias=bias)
         lin_features_len = ((self.input_shape[0] // 2 // 2 - 1) // 2) * (
                     (self.input_shape[1] // 2 // 2 - 1) // 2) \
                            * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
                            filters[2]
-        self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
-        self.flatten = Flatten()
 
         self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
@@ -275,9 +323,19 @@ class CAE_bn3_maxpool(nn.Module):
         self.relu3_2 = copy.deepcopy(self.relu)
         self.sig = nn.Sigmoid()
         self.tanh = nn.Tanh()
-        self.encoder = nn.Sequential(self.conv1, self.relu1_1, self.bn1_1, self.maxpool1, self.conv2, self.relu2_1,
-                                     self.bn2_1, self.maxpool2, self.conv3, self.relu3_1, self.maxpool3, self.flatten,
-                                     self.embedding)
+        self.encoder = nn.Sequential(nn.Conv3d(self.input_shape[3], filters[0], 5, stride=2, padding=2, bias=bias),
+                                     self.relu1_1,
+                                     nn.BatchNorm3d(filters[0]),
+                                     # nn.MaxPool3d(2),
+                                     nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias),
+                                     self.relu2_1,
+                                     nn.BatchNorm3d(filters[1]),
+                                     # nn.MaxPool3d(2),
+                                     nn.Conv3d(filters[1], filters[2], 3, stride=2, padding=0, bias=bias),
+                                     self.relu3_1,
+                                     # nn.MaxPool3d(2),
+                                     Flatten(),
+                                     nn.Linear(lin_features_len, num_features, bias=bias))
 
     def forward(self, x):
         x = self.encoder(x)
