@@ -21,6 +21,9 @@ from datasets import ImageFolder
 from loss_functions import *
 import pl_networks
 from training_functions import *
+import torch.multiprocessing
+
+torch.multiprocessing.set_sharing_strategy('file_system')
 import networks_resnet
 # path = '/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3/'
 # vuc_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
