@@ -1,4 +1,4 @@
-from networks import CAE_3, CAE_bn3, CAE_bn5, CAE_bn4
+from networks import CAE_3, CAE_bn3, CAE_bn5, CAE_bn4, CAE_bn3_Seq
 from networks_resnet import ResNet, BasicBlock, get_inplanes
 from training_functions import *
 from datasets import ImageFolder
@@ -16,7 +16,7 @@ import metrics
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import make_pipeline
 
-model = CAE_bn3(num_features=10, num_clusters=10, input_shape=[64, 64, 64, 1])
+model = CAE_bn3_Seq(num_features=512, num_clusters=10, input_shape=[64, 64, 64, 1])
 
 # model = ResNet(BasicBlock, layers=[1, 1, 1, 1],
 #                block_inplanes=get_inplanes(),
@@ -24,7 +24,7 @@ model = CAE_bn3(num_features=10, num_clusters=10, input_shape=[64, 64, 64, 1])
 #                num_clusters=10,
 #                num_features=10)
 model.cuda()
-checkpoints = torch.load('./ModelNet10/nets/CAE_bn3_005_pretrained.pt')
+checkpoints = torch.load('./ResultsHPC/DeepClusterConv/ModelNet10/nets/CAE_bn3_Seq_008.pt')
 
 model.load_state_dict(checkpoints['model_state_dict'])
 
@@ -42,7 +42,7 @@ pix_path = '/home/mvries/Documents/Datasets/Pix3DVoxels/'
 vicky_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
-model_net = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Train/'
+model_net = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Test/'
 
 image_dataset = ImageFolder(root=model_net,
                             transform=data_transforms)
@@ -98,7 +98,7 @@ fte_colors = {
  }
 # Plot of UMAP with clusters from unreduced data labelled
 km_colors = [fte_colors[label] for label in km.labels_]
-b = np.zeros((3991, 3))
+b = np.zeros((908, 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
 b[:, 2] = labels[:, 0]
@@ -108,7 +108,7 @@ facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
-b = np.zeros((3991, 3))
+b = np.zeros((908, 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
 b[:, 2] = labels[:, 0] # km.labels_
@@ -125,7 +125,7 @@ Y = manifold.TSNE(n_components=2, init='pca',
                                  random_state=0).fit_transform(output_array)
 
 
-b = np.zeros((3991, 3))
+b = np.zeros((908, 3))
 b[:, 0] = Y[:, 0]
 b[:, 1] = Y[:, 1]
 b[:, 2] = labels[:, 0]  # km.labels_
