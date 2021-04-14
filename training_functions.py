@@ -7,9 +7,12 @@ import copy
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import PIL.Image
+import torchvision
 
 from sklearn import manifold
 from sklearn.cluster import KMeans
+import io as inout
 import torch.nn.functional as F
 
 
@@ -96,6 +99,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     tsne_epochs = params['tsne_epochs']
     output_dir = params['output_dir']
     name = params['name']
+    q_power = params['q_power']
 
     dl = dataloader
 
@@ -213,6 +217,15 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             save_path = save_dir + "t_sne_epoch{}.png".format(epoch + 1)
             create_dir_if_not_exist(save_dir)
             facet_tsne.savefig(save_path)
+
+            # Turn plot into tensor to save on tensorboard
+            buf = inout.BytesIO()
+            facet_tsne.savefig(buf, format='jpeg')
+            buf.seek(0)
+            plot_buf = buf
+            tsne_image_tensor = PIL.Image.open((plot_buf))
+            tsne_image_tensor = torchvision.transforms.ToTensor()(tsne_image_tensor)
+
             print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
             clf = LinearSVC(random_state=0, tol=1e-5)
             scalar = StandardScaler()
@@ -232,6 +245,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 writer.add_scalar('/ARI_test', ari, niter)
                 writer.add_scalar('/Acc_test', acc, niter)
                 writer.add_scalar('/SVM_test_Score', score, niter)
+                writer.add_image("t_sne_epoch{}_png".format(epoch + 1), tsne_image_tensor, niter)
                 update_iter += 1
 
         model.train(True)  # Set model to training mode
@@ -297,7 +311,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             with torch.set_grad_enabled(True):
                 outputs, clusters, _, _ = model(inputs)
                 if update_interval == 1:
-                    tar_dist = target_torch(clusters)
+                    tar_dist = target_torch(clusters, q_power)
                 # added threshold
                 # TODO: added (1-gamma) to the reconstruction loss
                 loss_rec = (1-gamma) * criteria[0](outputs, inputs)
@@ -581,7 +595,7 @@ def target(out_distr):
     return tar_dist
 
 
-def target_torch(out_distr):
-    tar_dist = out_distr ** 2 / torch.sum(out_distr, dim=0)
+def target_torch(out_distr, q_pow):
+    tar_dist = out_distr ** q_pow / torch.sum(out_distr, dim=0)
     tar_dist = torch.t(torch.t(tar_dist) / torch.sum(tar_dist, dim=1))
     return tar_dist

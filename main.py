@@ -47,7 +47,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./ModelNet10/nets/CAE_bn3_maxpool_009_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
@@ -88,8 +88,10 @@ if __name__ == "__main__":
     parser.add_argument('--num_gpus', default=1, type=int, help='Enter the number of GPUs to train on')
     parser.add_argument('--resnet_layers', default="[1, 1, 1, 1]", nargs=1, type=str,
                         help='Enter the number of blocks in each resnet layer')
-    parser.add_argument('--tsne_epochs', default=20, nargs=1, type=str,
+    parser.add_argument('--tsne_epochs', default=1, nargs=1, type=str,
                         help='Enter the epoch interval to perform t-sne and plot the results')
+    parser.add_argument('--q_power', default=2, nargs=1, type=int,
+                        help='Enter the power to raise the Students t-distribution to for the target distribution')
     args = parser.parse_args()
 
     if args.mode == 'pretrain' and not args.pretrain:
@@ -119,6 +121,9 @@ if __name__ == "__main__":
 
     tsne_epochs = args.tsne_epochs
     params['tsne_epochs'] = tsne_epochs
+
+    q_power = args.q_power
+    params['q_power'] = q_power
 
     params['mode'] = args.mode
 
@@ -183,13 +188,6 @@ if __name__ == "__main__":
     except:
         pass
 
-    # Initialize tensorboard writer
-    if board:
-        writer = SummaryWriter(output_dir + 'runs/' + name)
-        params['writer'] = writer
-        # writer.add_hparams(metric_dict=params)
-    else:
-        params['writer'] = None
 
     # Hyperparameters
 
@@ -249,6 +247,18 @@ if __name__ == "__main__":
 
     # Number of clusters
     num_features = args.num_features
+
+    # Initialize tensorboard writer
+    if board:
+        writer = SummaryWriter(log_dir=output_dir + 'runs/' + name + '_numcl={0}_numfeat={1}_updateint={2}_cluslossw={3}_qpow={4}'.format(num_clusters,
+                                                                                                           num_features,
+                                                                                                           update_interval,
+                                                                                                           gamma,
+                                                                                                           q_power))
+        params['writer'] = writer
+        # writer.add_hparams(metric_dict=params)
+    else:
+        params['writer'] = None
 
     # Report for settings
     tmp = "Training the '" + model_name + "' architecture"
