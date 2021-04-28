@@ -85,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=64, nargs=1, type=int, help='size of custom images')
+    parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
