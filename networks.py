@@ -296,9 +296,9 @@ class CAE_bn3_Seq(nn.Module):
             self.relu = nn.LeakyReLU(negative_slope=neg_slope)
         else:
             self.relu = nn.ReLU(inplace=False)
-        lin_features_len = ((int(str(self.input_shape[0]) )// 2 // 2 - 1) // 2) * (
-                    (int(str(self.input_shape[1]) )// 2 // 2 - 1) // 2) \
-                           * ((int(str(self.input_shape[2])) // 2 // 2 - 1) // 2) * \
+        lin_features_len = (((self.input_shape[0] )// 2 // 2 - 1) // 2) * (
+                    (self.input_shape[1]// 2 // 2 - 1) // 2) \
+                           * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
                            filters[2]
 
         self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
