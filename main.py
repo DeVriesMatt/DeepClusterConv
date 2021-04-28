@@ -85,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=[128, 128, 128, 1], nargs=4, type=int, help='size of custom images')
+    parser.add_argument('--custom_img_size', default=64, nargs=1, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
@@ -333,10 +333,14 @@ if __name__ == "__main__":
     print_both(f, tmp)
 
     # Image size
-    custom_size = math.nan
-    custom_size = args.custom_img_size
+    custom_size = []
+    for i in range(3):
+        custom_size.append(args.custom_img_size)
+
+    custom_size.append(1)
     if isinstance(custom_size, list):
         img_size = custom_size
+    else: img_size = [64, 64, 64, 1]
 
     tmp = "Image size used:\t{0}x{1}x{2}".format(img_size[0], img_size[1], img_size[2])
     print_both(f, tmp)
