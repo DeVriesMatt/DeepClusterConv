@@ -64,9 +64,9 @@ if __name__ == "__main__":
                                  'SingleCellERK'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default=single_cell_erk_rmNuc,
+                        default=single_cell_erk_128,
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=64, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=8, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.000002, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
+    parser.add_argument('--custom_img_size', default=128, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)

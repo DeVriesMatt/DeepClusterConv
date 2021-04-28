@@ -196,7 +196,7 @@ class DatasetFolder(VisionDataset):
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
 
-def pad_img(img, new_size=64):
+def pad_img(img, new_size):
     new_z, new_y, new_x = new_size, new_size, new_size
     z = img.shape[0]
     y = img.shape[1]
@@ -228,26 +228,26 @@ def pil_loader(path: str, size) -> Image.Image:
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     # with open(path, 'rb') as f:
     img = io.imread(path).astype(np.uint8)
-    img = pad_img(img)
+    img = pad_img(img, size)
 #     print(img.shape)
 
     return img
 
 
 # TODO: specify the return type
-def accimage_loader(path: str) -> Any:
+def accimage_loader(path: str, size) -> Any:
     import accimage
     try:
         return accimage.Image(path)
     except IOError:
         # Potentially a decoding problem, fall back to PIL.Image
-        return pil_loader(path)
+        return pil_loader(path, size)
 
 
 def default_loader(path: str, size) -> Any:
     from torchvision import get_image_backend
     if get_image_backend() == 'accimage':
-        return accimage_loader(path)
+        return accimage_loader(path, size)
     else:
         return pil_loader(path, size)
 
@@ -278,16 +278,17 @@ class ImageFolder(DatasetFolder):
     def __init__(
             self,
             root: str,
+            size,
             transform: Optional[Callable] = None,
             target_transform: Optional[Callable] = None,
             loader: Callable[[str], Any] = default_loader,
-            is_valid_file: Optional[Callable[[str], bool]] = None,
-            size=64
+            is_valid_file: Optional[Callable[[str], bool]] = None
+
     ):
         super(ImageFolder, self).__init__(root, loader, IMG_EXTENSIONS if is_valid_file is None else None,
                                           transform=transform,
                                           target_transform=target_transform,
                                           is_valid_file=is_valid_file,
-                                          size=64)
+                                          size=size)
         self.imgs = self.samples
         self.size = size
