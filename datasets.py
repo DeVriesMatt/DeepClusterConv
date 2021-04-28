@@ -121,6 +121,7 @@ class DatasetFolder(VisionDataset):
             transform: Optional[Callable] = None,
             target_transform: Optional[Callable] = None,
             is_valid_file: Optional[Callable[[str], bool]] = None,
+            size: int = 64
     ) -> None:
         super(DatasetFolder, self).__init__(root, transform=transform,
                                             target_transform=target_transform)
@@ -134,6 +135,7 @@ class DatasetFolder(VisionDataset):
 
         self.loader = loader
         self.extensions = extensions
+        self.size = size
 
         self.classes = classes
         self.class_to_idx = class_to_idx
@@ -163,7 +165,7 @@ class DatasetFolder(VisionDataset):
             tuple: (sample, target) where target is class_index of the target class.
         """
         path, target = self.samples[index]
-        sample = self.loader(path)
+        sample = self.loader(path, self.size)
         sample_rot = copy.deepcopy(sample)
         if self.transform is not None:
             tensor = transforms.ToTensor()  # TODO: need to do this first because augmentstation on 3D needs a tensor of specified size first
@@ -194,8 +196,8 @@ class DatasetFolder(VisionDataset):
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
 
-def pad_img(img, new_size=(128, 128, 128)):
-    new_z, new_y, new_x = new_size[0], new_size[1], new_size[2]
+def pad_img(img, new_size=64):
+    new_z, new_y, new_x = new_size, new_size, new_size
     z = img.shape[0]
     y = img.shape[1]
     x = img.shape[2]
@@ -222,7 +224,7 @@ def pad_img(img, new_size=(128, 128, 128)):
     return padded_data
 
 
-def pil_loader(path: str) -> Image.Image:
+def pil_loader(path: str, size) -> Image.Image:
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
     # with open(path, 'rb') as f:
     img = io.imread(path).astype(np.uint8)
@@ -242,12 +244,12 @@ def accimage_loader(path: str) -> Any:
         return pil_loader(path)
 
 
-def default_loader(path: str) -> Any:
+def default_loader(path: str, size) -> Any:
     from torchvision import get_image_backend
     if get_image_backend() == 'accimage':
         return accimage_loader(path)
     else:
-        return pil_loader(path)
+        return pil_loader(path, size)
 
 
 class ImageFolder(DatasetFolder):
@@ -280,9 +282,12 @@ class ImageFolder(DatasetFolder):
             target_transform: Optional[Callable] = None,
             loader: Callable[[str], Any] = default_loader,
             is_valid_file: Optional[Callable[[str], bool]] = None,
+            size=64
     ):
         super(ImageFolder, self).__init__(root, loader, IMG_EXTENSIONS if is_valid_file is None else None,
                                           transform=transform,
                                           target_transform=target_transform,
-                                          is_valid_file=is_valid_file)
+                                          is_valid_file=is_valid_file,
+                                          size=64)
         self.imgs = self.samples
+        self.size = size
