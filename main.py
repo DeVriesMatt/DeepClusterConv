@@ -341,7 +341,6 @@ if __name__ == "__main__":
     if isinstance(custom_size, list):
         img_size = custom_size
     else: img_size = [64, 64, 64, 1]
-
     tmp = "Image size used:\t{0}x{1}x{2}".format(img_size[0], img_size[1], img_size[2])
     print_both(f, tmp)
 

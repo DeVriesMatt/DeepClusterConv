@@ -26,9 +26,9 @@ class EncoderMaxPoolBN3(nn.Module):
         self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=1, padding=2, bias=bias)
         self.bn2_1 = nn.BatchNorm3d(filters[1])
         self.conv3 = nn.Conv3d(filters[1], filters[2], 3, stride=1, padding=0, bias=bias)
-        lin_features_len = ((self.input_shape[0] // 2 // 2 - 1) // 2) * (
-                (self.input_shape[1] // 2 // 2 - 1) // 2) \
-                           * ((self.input_shape[2] // 2 // 2 - 1) // 2) * \
+        lin_features_len = ((int(self.input_shape[0]) // 2 // 2 - 1) // 2) * (
+                (int(self.input_shape[1]) // 2 // 2 - 1) // 2) \
+                           * ((int(self.input_shape[2]) // 2 // 2 - 1) // 2) * \
                            filters[2]
         self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
         self.flatten = Flatten()
@@ -338,6 +338,7 @@ class CAE_bn3_Seq(nn.Module):
                                      nn.Linear(lin_features_len, num_features, bias=bias))
 
     def forward(self, x):
+        print(self.input_shape)
         x = self.encoder(x)
         extra_out = x
         clustering_out = self.clustering(x)
