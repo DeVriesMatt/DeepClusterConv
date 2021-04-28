@@ -18,7 +18,7 @@ for num_features in 10 50 100 200 512
 do
   for gam in 0.1 0.25 0.5 1
   do
-    python main.py  --epochs 500 --epochs_pretrain 300 --num_features $num_features --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SingleCell_ERK_Cell_RmNuc/' --update_interval 1 --gamma $gam --dataset 'SingleCellERK_rmNuc'
+	  python main.py  --epochs 500 --epochs_pretrain 300 --num_features $num_features --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SingleCell_ERK_Cell_RmNuc/' --custom_img_size 64 --update_interval 1 --gamma $gam --dataset 'SingleCellERK_rmNuc'
   done
 done
 
