@@ -338,7 +338,6 @@ class CAE_bn3_Seq(nn.Module):
                                      nn.Linear(lin_features_len, num_features, bias=bias))
 
     def forward(self, x):
-        print(self.input_shape)
         x = self.encoder(x)
         extra_out = x
         clustering_out = self.clustering(x)
