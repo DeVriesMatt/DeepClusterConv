@@ -13,6 +13,9 @@ input_img/
 ShapeNetVoxel/
 Single-Cell/
 ModelNet10/
+SingleCellERK/
+SingleCellERK_128/
+SingleCellERK_rmNuc/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

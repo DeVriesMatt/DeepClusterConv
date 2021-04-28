@@ -108,7 +108,7 @@ facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
-b = np.zeros((908, 3))
+b = np.zeros((3991, 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
 b[:, 2] = labels[:, 0] # km.labels_

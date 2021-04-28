@@ -15,6 +15,8 @@ from sklearn.cluster import KMeans
 import io as inout
 import torch.nn.functional as F
 
+from sklearn.decomposition import PCA
+
 
 # module visualizations.py
 from datetime import datetime
@@ -23,6 +25,7 @@ from datetime import datetime
 from skimage import io
 
 # import from files
+import loss_functions
 from metrics import print_both, tensor2img, metrics
 from utils import create_dir_if_not_exist
 
@@ -100,6 +103,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     output_dir = params['output_dir']
     name = params['name']
     q_power = params['q_power']
+    rot_loss_weight = params['rot_loss_weight']
 
     dl = dataloader
 
@@ -121,11 +125,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         try:
             print(pretrained)
             model.load_state_dict(torch.load(pretrained)['model_state_dict'])
-            optimizer = torch.optim.SGD(model.parameters(), lr=0.0000002, momentum=0.9)
-            optimizer.load_state_dict(torch.load(pretrained)['optimizer_state_dict'])
-            scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, 0.00000000001, 0.1)
             trained_model = copy.deepcopy(model)
             model = trained_model
+            optimizer = torch.optim.SGD(model.parameters(), lr=0.0000002, momentum=0.9)
+            # optimizer.load_state_dict(torch.load(pretrained)['optimizer_state_dict'])
+            scheduler = torch.optim.lr_scheduler.CyclicLR(optimizer, 0.00000000001, 0.1)
             print_both(txt_file, 'Pretrained weights loaded from file: ' + str(pretrained))
         except:
             print("Couldn't load pretrained weights")
@@ -141,7 +145,19 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
 
     # Initialise clusters
     print_both(txt_file, '\nInitializing cluster centers based on K-means')
-    km = kmeans(model, copy.deepcopy(dl), params)
+    km, reduced_pca = kmeans(model, copy.deepcopy(dl), params)
+    b = np.zeros((11021, 3))
+    b[:, 0] = reduced_pca[:, 0]
+    b[:, 1] = reduced_pca[:, 1]
+    b[:, 2] = km.labels_ # km.labels_
+    print(km.labels_)
+    data = pd.DataFrame(b, columns=['PC1', 'PC2', 'label'])
+    facet_pca = sns.lmplot(data=data, x='PC1', y='PC2', hue='label',
+                           fit_reg=False,
+                           legend=True,
+                           legend_out=True,
+                           scatter_kws={"s": 6})
+    plt.show()
 
     print_both(txt_file, '\nBegin clusters training')
 
@@ -184,7 +200,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             features = []
             labs = []
             for data in dataloader_inference:
-                images, label = data
+                images, label, _ = data
                 labs.append(label.cpu().detach().numpy())
                 inputs = images.to("cuda:0")
                 threshold = 0.0
@@ -205,7 +221,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             b = np.zeros((len(features), 3))
             b[:, 0] = Y[:, 0]
             b[:, 1] = Y[:, 1]
-            b[:, 2] = labs[:,0] # km.labels_
+            b[:, 2] = km.labels_  #labs[:,0] #
             tsne_data = pd.DataFrame(b, columns=['tsne1', 'tsne2', 'label'])
             facet_tsne = sns.lmplot(data=tsne_data, x='tsne1', y='tsne2', hue='label',
                                     fit_reg=False,
@@ -227,12 +243,12 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             tsne_image_tensor = torchvision.transforms.ToTensor()(tsne_image_tensor)
 
             print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
-            clf = LinearSVC(random_state=0, tol=1e-5)
+            # clf = LinearSVC(random_state=0, tol=1e-5)
             scalar = StandardScaler()
             output_array = scalar.fit_transform(output_array)
-            clf.fit(output_array, labs)
-            score = clf.score(output_array, labs)
-            print_both(txt_file, 'Linear SVM score: {}'.format(score))
+            # clf.fit(output_array, labs)
+            # score = clf.score(output_array, labs)
+            # print_both(txt_file, 'Linear SVM score: {}'.format(score))
             output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
             nmi = metrics.nmi(labels, preds)
             ari = metrics.ari(labels, preds)
@@ -244,7 +260,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 writer.add_scalar('/NMI_test', nmi, niter)
                 writer.add_scalar('/ARI_test', ari, niter)
                 writer.add_scalar('/Acc_test', acc, niter)
-                writer.add_scalar('/SVM_test_Score', score, niter)
+                # writer.add_scalar('/SVM_test_Score', score, niter)
                 writer.add_image("t_sne_epoch{}_png".format(epoch + 1), tsne_image_tensor, niter)
                 update_iter += 1
 
@@ -253,6 +269,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         running_loss = 0.0
         running_loss_rec = 0.0
         running_loss_clust = 0.0
+        running_loss_rot = 0.0
 
         # Keep the batch number for inter-phase statistics
         batch_num = 1
@@ -261,12 +278,14 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         # Iterate over data.
         for data in dataloader:
             # Get the inputs and labels
-            inputs, _ = data
+            inputs, _, inputs_rot = data
             #             print(inputs.size)
 
             inputs = inputs.to(device)
             threshold = 0.0
             inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
+            inputs_rot = inputs_rot.to(device)
+            inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)
             #
 
             # Uptade target distribution, check and print performance
@@ -309,14 +328,25 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
 
             # Calculate losses and backpropagate
             with torch.set_grad_enabled(True):
-                outputs, clusters, _, _ = model(inputs)
+                outputs, clusters, feats, _ = model(inputs)
+                _, clusters_rot, feats_rot, _ = model(inputs_rot)
+                preds = torch.argmax(clusters, dim=1)
+
                 if update_interval == 1:
                     tar_dist = target_torch(clusters, q_power)
+
+                # print('Cluster output from clustering layer: {}'.format(clusters))
+                # print('Cluster prediction from function: {}'.format(preds))
+                # print('Cluster target distribution: {}'.format(tar_dist))
+
                 # added threshold
+                # TODO: add distance loss for rotation
+                criterion_rot = torch.nn.CrossEntropyLoss() # loss_functions.EuclideanDistLoss()#
+                loss_rot = rot_loss_weight * criterion_rot(clusters_rot, preds)
                 # TODO: added (1-gamma) to the reconstruction loss
                 loss_rec = (1-gamma) * criteria[0](outputs, inputs)
                 loss_clust = gamma * criteria[1](torch.log(clusters), tar_dist) / batch
-                loss = loss_rec + loss_clust
+                loss = loss_rec + loss_clust + loss_rot
                 loss.backward()
                 # TODO: checking if optimiser not working properly
                 optimizer.step()
@@ -326,6 +356,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             running_loss += loss.item() * inputs.size(0)
             running_loss_rec += loss_rec.item() * inputs.size(0)
             running_loss_clust += loss_clust.item() * inputs.size(0)
+            running_loss_rot = loss_rot.item() * inputs.size(0)
 
             # Some current stats
             loss_batch = loss.item()
@@ -335,22 +366,32 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             loss_accum_rec = running_loss_rec / ((batch_num - 1) * batch + inputs.size(0))
             loss_accum_clust = running_loss_clust / ((batch_num - 1) * batch + inputs.size(0))
 
+            # TODO: loss_rot recording
+            loss_batch_rot = loss_rot.item()
+            loss_accum_rot = running_loss_rot / ((batch_num - 1) * batch + inputs.size(0))
+
+
             if batch_num % print_freq == 0:
                 print_both(txt_file, 'Epoch: [{0}][{1}/{2}]\t'
                                      'Loss {3:.4f} ({4:.4f})\t'
                                      'Loss_recovery {5:.4f} ({6:.4f})\t'
-                                     'Loss clustering {7:.8f} ({8:.8f})\t'.format(epoch + 1, batch_num,
-                                                                                  len(dataloader),
-                                                                                  loss_batch,
-                                                                                  loss_accum, loss_batch_rec,
-                                                                                  loss_accum_rec,
-                                                                                  loss_batch_clust,
-                                                                                  loss_accum_clust))
+                                     'Loss clustering {7:.8f} ({8:.8f})\t'
+                                     'Loss rotation {9:.8f} ({10:.8f})\t'.format(epoch + 1, batch_num,
+                                                                                 len(dataloader),
+                                                                                 loss_batch,
+                                                                                 loss_accum,
+                                                                                 loss_batch_rec,
+                                                                                 loss_accum_rec,
+                                                                                 loss_batch_clust,
+                                                                                 loss_accum_clust,
+                                                                                 loss_batch_rot,
+                                                                                 loss_accum_rot))
                 if board:
                     niter = epoch * len(dataloader) + batch_num
                     writer.add_scalar('/Loss', loss_accum, niter)
                     writer.add_scalar('/Loss_recovery', loss_accum_rec, niter)
                     writer.add_scalar('/Loss_clustering', loss_accum_clust, niter)
+                    writer.add_scalar('/Loss_rotation', loss_accum_rot, niter)
                     # writer.add_scaler('/Learning_rate', optimizer.param_groups[0]['lr'])
             batch_num = batch_num + 1
             # TODO: scheduler.step goes here when using cyclic learning rate scheduler
@@ -358,30 +399,35 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             scheduler.step()
             # schedulers[0].step()
             # Print image to tensorboard
-            if batch_num == len(dataloader) and (epoch + 1) % 5:
-                inp = tensor2img(inputs)
-                out = tensor2img(outputs)
-                if board:
-                    img = np.concatenate((inp, out), axis=1)
-                    # writer.add_image('Clustering/Epoch_' + str(epoch + 1).zfill(3) + '/Sample_' + str(img_counter).zfill(4), img)
-                    img_counter += 1
+            # if batch_num == len(dataloader) and (epoch + 1) % 5:
+            #     inp = tensor2img(inputs)
+            #     out = tensor2img(outputs)
+            #     if board:
+            #         img = np.concatenate((inp, out), axis=1)
+            #         # writer.add_image('Clustering/Epoch_' + str(epoch + 1).zfill(3) + '/Sample_' + str(img_counter).zfill(4), img)
+            #         img_counter += 1
 
         if finished: break
 
         epoch_loss = running_loss / dataset_size
         epoch_loss_rec = running_loss_rec / dataset_size
         epoch_loss_clust = running_loss_clust / dataset_size
+        epoch_loss_rot = running_loss_rot / dataset_size
+
         # TODO: scheduler.step goes here when using anything other than cyclic scheduler
         # schedulers[0].step(epoch_loss)
 
         if board:
-            writer.add_scalar('/Loss' + '/Epoch', epoch_loss, epoch + 1)
-            writer.add_scalar('/Loss_rec' + '/Epoch', epoch_loss_rec, epoch + 1)
-            writer.add_scalar('/Loss_clust' + '/Epoch', epoch_loss_clust, epoch + 1)
+            writer.add_scalar('/Loss' + 'Epoch', epoch_loss, epoch + 1)
+            writer.add_scalar('/Loss_rec' + 'Epoch', epoch_loss_rec, epoch + 1)
+            writer.add_scalar('/Loss_clust' + 'Epoch', epoch_loss_clust, epoch + 1)
+            writer.add_scalar('/Loss_rot_' + 'Epoch', epoch_loss_rot, epoch + 1)
 
-        print_both(txt_file, 'Loss: {0:.4f}\tLoss_recovery: {1:.4f}\tLoss_clustering: {2:.4f}'.format(epoch_loss,
+        print_both(txt_file,
+                   'Loss: {0:.4f}\tLoss_recovery: {1:.4f}\tLoss_clustering: {2:.4f}\tLoss_clustering: {3:.4f}'.format(epoch_loss,
                                                                                                       epoch_loss_rec,
-                                                                                                      epoch_loss_clust))
+                                                                                                      epoch_loss_clust,
+                                                                                                      epoch_loss_rot))
         # plotter.plot('loss', 'train', 'Train Loss', epoch, epoch_loss)
         # If wanted to do some criterium in the future (for now useless)
         if epoch_loss < best_loss or epoch_loss >= best_loss:
@@ -421,6 +467,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
     output_dir = params['output_dir']
     model_name = params['model_name']
     name = params['name_idx']
+    rot_loss_weight = params['rot_loss_weight_pre']
 
     # Prep variables for weights and accuracy of the best model
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -435,6 +482,8 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         model.train(True)  # Set model to training mode
 
         running_loss = 0.0
+        running_loss_rec = 0.0
+        running_loss_rot = 0.0
 
         # Keep the batch number for inter-phase statistics
         batch_num = 1
@@ -445,38 +494,60 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         # Iterate over data.
         for step, data in enumerate(dataloader):
             # Get the inputs and labels
-            inputs, _ = data
+            inputs, _, inputs_rot = data
             # print(inputs.shape)
             inputs = inputs.to(device)
             threshold = 0.0
-            inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
-            # create_dir_if_not_exist(output_dir + '/input_img/' + model_name + '/')
-            # io.imsave(output_dir + '/input_img/' + model_name + '/pretrain_epoch' + str(epoch) + '.tif',
-            #           torch.sigmoid(inputs[0]).cpu().detach().numpy())
+            # inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
+
+            inputs_rot = inputs_rot.to(device)
+            # inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
 
             with torch.set_grad_enabled(True):
-                outputs, _, _, _ = model(inputs)
+                outputs, _, feats, _ = model(inputs)
+                _, _, feats_rot, _ = model(inputs_rot)
                 #                 print(torch.unique(F.sigmoid(outputs).detach()))
                 #                 print(torch.unique(outputs.detach()))
-                loss = criterion(outputs, inputs)
+                criterion_rot = loss_functions.EuclideanDistLoss()
+                loss_rot = criterion_rot(feats, feats_rot)
+                loss_rot = (rot_loss_weight * loss_rot)
+                loss_rec = criterion(outputs, inputs)
+                loss = loss_rec + (rot_loss_weight * loss_rot)
                 loss.backward()
                 loss_values.append(loss.item())
                 optimizer.step()
 
             # For keeping statistics
             running_loss += loss.item() * inputs.size(0)
+            running_loss_rec += loss_rec.item() * inputs.size(0)
+            running_loss_rot += loss_rot.item() * inputs.size(0)
 
             # Some current stats
             loss_batch = loss.item()
             loss_accum = running_loss / ((batch_num - 1) * batch + inputs.size(0))
 
+            loss_batch_rec = loss_rec.item()
+            loss_accum_rec = running_loss_rec / ((batch_num - 1) * batch + inputs.size(0))
+
+            loss_batch_rot = loss_rot.item()
+            loss_accum_rot = running_loss_rot / ((batch_num - 1) * batch + inputs.size(0))
+
             if batch_num % print_freq == 0:
                 print_both(txt_file, 'Pretraining:\tEpoch: [{0}][{1}/{2}]\t'
-                                     'Loss {3:.8f} ({4:.8f})\t'.format(epoch + 1, batch_num, len(dataloader),
-                                                                       loss_batch,
-                                                                       loss_accum))
+                                     'Loss {3:.8f} ({4:.8f})\t'
+                                     'Reconstruction Loss {5:.8f} ({6:.8f})\t'
+                                     'Rotation Loss {7:.8f} ({8:.8f})\t'.format(epoch + 1,
+                                                                                batch_num,
+                                                                                len(dataloader),
+                                                                                loss_batch,
+                                                                                loss_accum,
+                                                                                loss_batch_rec,
+                                                                                loss_accum_rec,
+                                                                                loss_batch_rot,
+                                                                                loss_accum_rot
+                                                                                ))
 
                 # vis.plot_loss(np.mean(loss_values), step)
                 loss_values.clear()
@@ -484,25 +555,29 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
                 if board:
                     niter = epoch * len(dataloader) + batch_num
                     writer.add_scalar('Pretraining/Loss', loss_accum, niter)
+                    writer.add_scalar('Pretraining/Loss_Reconstruction', loss_accum_rec, niter)
+                    writer.add_scalar('Pretraining/Loss_Rotation', loss_accum_rot, niter)
             batch_num = batch_num + 1
 
-            if batch_num in [len(dataloader), len(dataloader) // 2, len(dataloader) // 4, 3 * len(dataloader) // 4]:
-                inp = tensor2img(inputs)
-                out = tensor2img(outputs)
-                if board:
-                    img = np.concatenate((inp, out), axis=1)
-                    # writer.add_image('Pretraining/Epoch_' + str(epoch + 1).zfill(3) + '/Sample_' + str(img_counter).zfill(5), img)
-                    img_counter += 1
+            # if batch_num in [len(dataloader), len(dataloader) // 2, len(dataloader) // 4, 3 * len(dataloader) // 4]:
+            #     inp = tensor2img(inputs)
+            #     out = tensor2img(outputs)
+            #     if board:
+            #         img = np.concatenate((inp, out), axis=1)
+            #         # writer.add_image('Pretraining/Epoch_' + str(epoch + 1).zfill(3) + '/Sample_' + str(img_counter).zfill(5), img)
+            #         img_counter += 1
 
         scheduler.step()
         create_dir_if_not_exist(output_dir + '/reconstructed_img/' + name + '/')
-        # io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
-        #           torch.sigmoid(outputs[0]).cpu().detach().numpy())
-        # io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_true' + str(epoch) + '.tif',
-        #           torch.sigmoid(inputs[0]).cpu().detach().numpy())
+        io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_pred' + str(epoch) + '.tif',
+                  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+        io.imsave(output_dir + '/reconstructed_img/' + name + '/pretrain_epoch_true' + str(epoch) + '.tif',
+                  torch.sigmoid(inputs[0]).cpu().detach().numpy())
 
         # torch.sigmoid(
         epoch_loss = running_loss / dataset_size
+        epoch_loss_rec = running_loss_rec / dataset_size
+        epoch_loss_rot = running_loss_rot / dataset_size
         if epoch == 0: first_loss = epoch_loss
         if epoch == 4 and epoch_loss / first_loss > 1:
             print_both(txt_file, "\nLoss not converging, starting pretraining again\n")
@@ -511,7 +586,9 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         # plotter.plot('loss', 'train', 'Class Loss', epoch, epoch_loss)
 
         if board:
-            writer.add_scalar('Pretraining/Loss' + '/Epoch', epoch_loss, epoch + 1)
+            writer.add_scalar('Pretraining/Loss' + '_Epoch', epoch_loss, epoch + 1)
+            writer.add_scalar('Pretraining/Loss' + '_Epoch_Reconstruction', epoch_loss_rec, epoch + 1)
+            writer.add_scalar('Pretraining/Loss' + '_Epoch_Rotation', epoch_loss_rot, epoch + 1)
 
         print_both(txt_file, 'Pretraining:\t Loss: {:.8f}'.format(epoch_loss))
 
@@ -547,7 +624,7 @@ def kmeans(model, dataloader, params):
     model.eval()
     # Itarate throught the data and concatenate the latent space representations of images
     for data in dataloader:
-        inputs, _ = data
+        inputs, _, _ = data
         inputs = inputs.to(params['device'])
         _, _, outputs, _ = model(inputs)
         if output_array is not None:
@@ -563,7 +640,9 @@ def kmeans(model, dataloader, params):
     weights = torch.from_numpy(km.cluster_centers_)
     model.clustering.set_weight(weights.to(params['device']))
     # torch.cuda.empty_cache()
-    return km
+
+    pca = manifold.TSNE(n_components=2).fit_transform(output_array)
+    return km, pca
 
 
 # Function forwarding data through network, collecting clustering weight output and returning prediciotns and labels
@@ -572,7 +651,7 @@ def calculate_predictions(model, dataloader, params):
     label_array = None
     model.eval()
     for data in dataloader:
-        inputs, labels = data
+        inputs, labels, _ = data
         inputs = inputs.to(params['device'])
         labels = labels.to(params['device'])
         _, outputs, _, _ = model(inputs)

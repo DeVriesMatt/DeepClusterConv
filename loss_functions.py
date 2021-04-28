@@ -136,3 +136,13 @@ class CombinedLoss(nn.Module):
                                                   gamma,
                                                   batch_size)
         return loss, rec_loss, clus_loss
+
+
+class EuclideanDistLoss(nn.Module):
+    def __init__(self):
+        super(EuclideanDistLoss, self).__init__()
+
+    def forward(self, inputs, inputs_rot):
+        dist = torch.dist(inputs, inputs_rot, p=2.0)
+
+        return dist

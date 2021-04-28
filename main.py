@@ -32,6 +32,9 @@ import networks_resnet
 # covid = '/home/mvries/Documents/Datasets/ChestCOVID_CT'
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
+single_cell_erk = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell/'
+single_cell_erk_128 = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_128/'
+single_cell_erk_rmNuc = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_RmNuc/'
 if __name__ == "__main__":
 
     # Translate string entries to bool for parser
@@ -48,16 +51,16 @@ if __name__ == "__main__":
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default='./ModelNet10/nets/CAE_bn3_maxpool_009_pretrained.pt',
+    parser.add_argument('--pretrained_net', default='./SingleCellERK/nets/CAE_bn3_Seq_006_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq'],
                         help='network architecture used')
-    parser.add_argument('--dataset', default='ModelNet10',
+    parser.add_argument('--dataset', default='SingleCellERK_rmNuc',
                         choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default='/home/mvries/Documents/Datasets/ModelNet10Voxel/',
+                        default=single_cell_erk_rmNuc,
                         help='path to dataset')
     parser.add_argument('--batch_size', default=64, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
@@ -73,7 +76,7 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', default=1000, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
-    parser.add_argument('--gamma', default=1, type=float, help='clustering loss weight')
+    parser.add_argument('--gamma', default=0.999, type=float, help='clustering loss weight')
     parser.add_argument('--update_interval', default=1, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
@@ -90,8 +93,12 @@ if __name__ == "__main__":
                         help='Enter the number of blocks in each resnet layer')
     parser.add_argument('--tsne_epochs', default=20, nargs=1, type=str,
                         help='Enter the epoch interval to perform t-sne and plot the results')
-    parser.add_argument('--q_power', default=2, nargs=1, type=int,
+    parser.add_argument('--q_power', default=4, nargs=1, type=int,
                         help='Enter the power to raise the Students t-distribution to for the target distribution')
+    parser.add_argument('--rot_loss_weight', default=0.0, nargs=1, type=float,
+                        help='Enter the weighting for the rotation loss for training')
+    parser.add_argument('--rot_loss_weight_pre', default=0.0, nargs=1, type=float,
+                        help='Enter the weighting for the rotation loss for pretraining')
     args = parser.parse_args()
 
     if args.mode == 'pretrain' and not args.pretrain:
@@ -121,6 +128,12 @@ if __name__ == "__main__":
 
     tsne_epochs = args.tsne_epochs
     params['tsne_epochs'] = tsne_epochs
+
+    rot_loss_weight = args.rot_loss_weight
+    params['rot_loss_weight'] = rot_loss_weight
+
+    rot_loss_weight_pre = args.rot_loss_weight_pre
+    params['rot_loss_weight_pre'] = rot_loss_weight_pre
 
     q_power = args.q_power
     params['q_power'] = q_power
@@ -367,21 +380,23 @@ if __name__ == "__main__":
         # TODO: look at adding in transforms
         fpg = tio.datasets.FPG()
         flip = tio.RandomFlip(axes=('LR',))
+        flip1 = tio.RandomFlip(axes=('P',))
         data_transforms = transforms.Compose([
             # transforms.Resize(img_size[0:3]),
             # transforms.RandomHorizontalFlip(),
             # transforms.ToTensor(), # TODO: removed this because added it directly in the DatasetFolder class
-            flip
+            flip,
+            flip1
             # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
         # Read data from selected folder and apply transformations
-        image_dataset = ImageFolder(root=data_dir + 'Train/', transform=data_transforms)
+        image_dataset = ImageFolder(root=data_dir, transform=data_transforms)
         # Prepare data for network: schuffle and arrange batches
         dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
                                                  shuffle=True, num_workers=workers)
 
-        image_dataset_inference = ImageFolder(root=data_dir + 'Train/', transform=data_transforms)
+        image_dataset_inference = ImageFolder(root=data_dir, transform=data_transforms)
         dataloader_inference = torch.utils.data.DataLoader(image_dataset_inference, batch_size=1,
                                                            shuffle=False, num_workers=workers)
         # Size of data sets
@@ -393,7 +408,6 @@ if __name__ == "__main__":
         params['dataset_size'] = dataset_size
 
         # params['update_interval'] = update_interval * dataset_size / batch
-
 
         if model_name == 'ResNet':
             # Evaluate the proper model

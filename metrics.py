@@ -39,7 +39,9 @@ class metrics:
         w = np.zeros((D, D), dtype=np.int64)
         for i in range(labels_pred.size):
             w[labels_pred[i], labels_true[i]] += 1
-        from sklearn.utils.linear_assignment_ import linear_assignment
-        ind = linear_assignment(w.max() - w)
+        from scipy.optimize import linear_sum_assignment
+        ind = linear_sum_assignment(w.max() - w)
+        ind = np.asarray(ind)
+        ind = np.transpose(ind)
         # print(ind)
         return sum([w[i, j] for i, j in ind]) * 1.0 / labels_pred.size

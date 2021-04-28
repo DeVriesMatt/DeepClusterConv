@@ -1,6 +1,8 @@
 """
 Override the ImageFolder class to read tiff stacks
 """
+import copy
+
 from torchvision.datasets.vision import VisionDataset
 import os
 import os.path
@@ -153,7 +155,7 @@ class DatasetFolder(VisionDataset):
         class_to_idx = {cls_name: i for i, cls_name in enumerate(classes)}
         return classes, class_to_idx
 
-    def __getitem__(self, index: int) -> Tuple[Any, Any]:
+    def __getitem__(self, index: int) -> Tuple[Any, Any, Any]:
         """
         Args:
             index (int): Index
@@ -162,19 +164,28 @@ class DatasetFolder(VisionDataset):
         """
         path, target = self.samples[index]
         sample = self.loader(path)
+        sample_rot = copy.deepcopy(sample)
         if self.transform is not None:
             tensor = transforms.ToTensor()  # TODO: need to do this first because augmentstation on 3D needs a tensor of specified size first
             tensor = transforms.Compose([tensor])
             sample = tensor(sample)
             sample = sample.unsqueeze(0)
-            sample = sample.permute(0, 2, 3, 1)
+            # sample = sample.permute(0, 2, 3, 1)
             # sample = self.transform(sample)
+            # TODO: We want to make these rotation invariant.
+            #  - The latent code of a volume must be close to the latent
+            #  code of that same volume when it has been rotated.
+            #  - We can do this by adding another loss which minimizes the distance between x and transform(x).
+            sample_rot = tensor(sample_rot)
+            sample_rot = sample_rot.unsqueeze(0)
+            sample_rot = self.transform(sample_rot)
+            # TODO: end of changes to incorporate rotation minimisation
 
             # sample = F.pad(sample, pad = (31, 32, 46, 47, 51, 52))
         if self.target_transform is not None:
             target = self.target_transform(target)
 
-        return sample, target
+        return sample, target, sample_rot
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -182,7 +193,8 @@ class DatasetFolder(VisionDataset):
 
 IMG_EXTENSIONS = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
-def pad_img(img, new_size=(64, 64, 64)):
+
+def pad_img(img, new_size=(128, 128, 128)):
     new_z, new_y, new_x = new_size[0], new_size[1], new_size[2]
     z = img.shape[0]
     y = img.shape[1]
@@ -208,6 +220,7 @@ def pad_img(img, new_size=(64, 64, 64)):
 
     padded_data = np.pad(img, (z_padding, y_padding, x_padding), 'constant')
     return padded_data
+
 
 def pil_loader(path: str) -> Image.Image:
     # open path as file to avoid ResourceWarning (https://github.com/python-pillow/Pillow/issues/835)
