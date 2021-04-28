@@ -57,7 +57,11 @@ if __name__ == "__main__":
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq'],
                         help='network architecture used')
     parser.add_argument('--dataset', default='SingleCellERK_rmNuc',
-                        choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell', 'ShapeNetVoxel'],
+                        choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell',
+                                 'ShapeNetVoxel',
+                                 'SingleCellERK_rmNuc',
+                                 'SingleCellERK_128',
+                                 'SingleCellERK'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
                         default=single_cell_erk_rmNuc,

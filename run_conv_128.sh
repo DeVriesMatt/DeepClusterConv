@@ -16,5 +16,5 @@ conda activate dcfn
 
 for num_features in 10 50 100 200 512
 do
-    python main.py  --epochs 500 --epochs_pretrain 300 --num_features $num_features --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SinglecellERK_128/' --update_interval 1 --gamma 0.999 --dataset 'SinglecellERK_128'
+    python main.py  --epochs 500 --epochs_pretrain 300 --num_features $num_features --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SinglecellERK_128/' --custom_img_size [128,128,128,1] --update_interval 1 --gamma 0.999 --dataset 'SinglecellERK_128'
 done
