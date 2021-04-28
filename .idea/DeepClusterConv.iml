@@ -14,6 +14,8 @@
       <excludeFolder url="file://$MODULE_DIR$/Single-Cell" />
       <excludeFolder url="file://$MODULE_DIR$/ModelNet10" />
       <excludeFolder url="file://$MODULE_DIR$/SingleCellERK" />
+      <excludeFolder url="file://$MODULE_DIR$/SingleCellERK_128" />
+      <excludeFolder url="file://$MODULE_DIR$/SingleCellERK_rmNuc" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
