@@ -3,6 +3,82 @@ import torch.nn as nn
 import copy
 
 
+class CAE_bn3_Seq_2D(nn.Module):
+    def __init__(self, input_shape=[64, 64, 64], num_clusters=10, filters=[32, 64, 128], leaky=True,
+                 neg_slope=0.01, activations=False, bias=True, num_features=10):
+        super(CAE_bn3_Seq_2D, self).__init__()
+        self.activations = activations
+        self.pretrained = False
+        self.num_clusters = num_clusters
+        self.num_features = num_features
+        self.input_shape = input_shape
+        self.filters = filters
+
+        if leaky:
+            self.relu = nn.LeakyReLU(negative_slope=neg_slope)
+        else:
+            self.relu = nn.ReLU(inplace=False)
+        lin_features_len = (((self.input_shape[0] )// 2 // 2 - 1) // 2) * (
+                    (self.input_shape[1]// 2 // 2 - 1) // 2) \
+                           * filters[2]
+
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
+        out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
+        self.deconv3 = nn.ConvTranspose2d(filters[2], filters[1], 3, stride=2, padding=0, output_padding=out_pad,
+                                          bias=bias)
+        out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
+        self.bn3_2 = nn.BatchNorm2d(filters[1])
+        self.deconv2 = nn.ConvTranspose2d(filters[1], filters[0], 5, stride=2, padding=2, output_padding=out_pad,
+                                          bias=bias)
+        out_pad = 1 if input_shape[0] % 2 == 0 else 0
+        self.bn2_2 = nn.BatchNorm2d(filters[0])
+        self.deconv1 = nn.ConvTranspose2d(filters[0], input_shape[2], 5, stride=2, padding=2, output_padding=out_pad,
+                                          bias=bias)
+        self.clustering = ClusterlingLayer(num_features, num_clusters)
+        # ReLU copies for graph representation in tensorboard
+        self.relu1_1 = copy.deepcopy(self.relu)
+        self.relu2_1 = copy.deepcopy(self.relu)
+        self.relu3_1 = copy.deepcopy(self.relu)
+        self.relu1_2 = copy.deepcopy(self.relu)
+        self.relu2_2 = copy.deepcopy(self.relu)
+        self.relu3_2 = copy.deepcopy(self.relu)
+        self.sig = nn.Sigmoid()
+        self.tanh = nn.Tanh()
+        self.encoder = nn.Sequential(nn.Conv2d(self.input_shape[2], filters[0], 5, stride=2, padding=2, bias=bias),
+                                     self.relu1_1,
+                                     nn.BatchNorm2d(filters[0]),
+                                     # nn.MaxPool3d(2),
+                                     nn.Conv2d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias),
+                                     self.relu2_1,
+                                     nn.BatchNorm2d(filters[1]),
+                                     # nn.MaxPool3d(2),
+                                     nn.Conv2d(filters[1], filters[2], 3, stride=2, padding=0, bias=bias),
+                                     self.relu3_1,
+                                     # nn.MaxPool3d(2),
+                                     Flatten(),
+                                     nn.Linear(lin_features_len, num_features, bias=bias))
+
+    def forward(self, x):
+        x = self.encoder(x)
+        extra_out = x
+        clustering_out = self.clustering(x)
+        x = self.deembedding(x)
+        x = self.relu1_2(x)
+        x = x.view(x.size(0), self.filters[2], ((self.input_shape[0] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 - 1) // 2))
+        x = self.deconv3(x)
+        x = self.relu2_2(x)
+        x = self.bn3_2(x)
+        x = self.deconv2(x)
+        x = self.relu3_2(x)
+        x = self.bn2_2(x)
+        x = self.deconv1(x)
+        # print(x.shape)
+        if self.activations:
+            x = self.tanh(x)
+        return x, clustering_out, extra_out, x
+
+
 class EncoderMaxPoolBN3(nn.Module):
     def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128], leaky=True,
                  neg_slope=0.01, activations=False, bias=True, num_features=10):
@@ -56,8 +132,6 @@ class EncoderMaxPoolBN3(nn.Module):
         x = self.embedding(x)
 
         return x
-
-
 
 
 class Flatten(nn.Module):

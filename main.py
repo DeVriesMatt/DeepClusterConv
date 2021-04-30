@@ -50,11 +50,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./SingleCellERK/nets/CAE_bn3_Seq_006_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
-                        choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool', 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq'],
+                        choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool',
+                                 'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq',
+                                 'CAE_bn3_Seq_2D'],
                         help='network architecture used')
     parser.add_argument('--dataset', default='SingleCellERK_rmNuc',
                         choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell',
@@ -66,9 +68,9 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path',
                         default=single_cell_erk_rmNuc,
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=8, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=64, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
-    parser.add_argument('--rate_pretrain', default=0.000002, type=float, help='learning rate for pretraining')
+    parser.add_argument('--rate_pretrain', default=0.02, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
     parser.add_argument('--weight_pretrain', default=0.0, type=float, help='weight decay for clustering')
     parser.add_argument('--sched_step', default=50, type=int, help='scheduler steps for rate update')
@@ -438,11 +440,13 @@ if __name__ == "__main__":
         if board:
             writer.add_graph(model, torch.autograd.Variable(
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
+            # writer.add_graph(model, torch.autograd.Variable(
+            #     torch.Tensor(batch, img_size[0], img_size[1], img_size[2])))
             # writer.add_hparams(params) # TODO: Look how to incorporate hparams for grid search
             # TODO: may need a function which creates the model when passed the hparams
 
         model = model.to(device)
-        print_both(f, '{}'.format(summary(model, input_size=(1, img_size[0], img_size[1], img_size[2]))))
+        print_both(f, '{}'.format(summary(model, input_size=(img_size[3], img_size[0], img_size[1], img_size[2]))))
         # Reconstruction loss
         criterion_1 = FocalTverskyLoss()
         # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
@@ -464,7 +468,7 @@ if __name__ == "__main__":
         # scheduler_pretrain = lr_scheduler.StepLR(optimizer_pretrain, step_size=sched_step_pretrain,
         #                                          gamma=sched_gamma_pretrain)
 
-        scheduler_pretrain = lr_scheduler.CyclicLR(optimizer_pretrain, 0.00000001, 0.1)
+        scheduler_pretrain = lr_scheduler.CyclicLR(optimizer_pretrain, 0.000000001, 0.1)
 
         #     ReduceLROnPlateau()
         schedulers = [scheduler, scheduler_pretrain]
