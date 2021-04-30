@@ -171,7 +171,10 @@ class DatasetFolder(VisionDataset):
             tensor = transforms.ToTensor()  # TODO: need to do this first because augmentstation on 3D needs a tensor of specified size first
             tensor = transforms.Compose([tensor])
             sample = tensor(sample)
+
+            # TODO: no need to unsqueeze when using 2D convolution
             sample = sample.unsqueeze(0)
+
             # sample = sample.permute(0, 2, 3, 1)
             # sample = self.transform(sample)
             # TODO: We want to make these rotation invariant.
@@ -179,7 +182,10 @@ class DatasetFolder(VisionDataset):
             #  code of that same volume when it has been rotated.
             #  - We can do this by adding another loss which minimizes the distance between x and transform(x).
             sample_rot = tensor(sample_rot)
+
+            # TODO: no need to unsqueeze when using 2D convolution
             sample_rot = sample_rot.unsqueeze(0)
+
             sample_rot = self.transform(sample_rot)
             # TODO: end of changes to incorporate rotation minimisation
 

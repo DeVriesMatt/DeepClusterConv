@@ -145,7 +145,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
 
     # Initialise clusters
     print_both(txt_file, '\nInitializing cluster centers based on K-means')
-    # km, reduced_pca = kmeans(model, copy.deepcopy(dl), params)
+    km, reduced_pca = kmeans(model, copy.deepcopy(dl), params)
     # b = np.zeros((11021, 3))
     # b[:, 0] = reduced_pca[:, 0]
     # b[:, 1] = reduced_pca[:, 1]
