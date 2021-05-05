@@ -33,8 +33,11 @@ import networks_resnet
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
 single_cell_erk = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell/'
-single_cell_erk_128 = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_128/'
+single_cell_erk_128 = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_128/'
 single_cell_erk_rmNuc = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_RmNuc/'
+modelnet10 = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Train/'
+all_erk = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_All/'
+
 if __name__ == "__main__":
 
     # Translate string entries to bool for parser
@@ -58,17 +61,18 @@ if __name__ == "__main__":
                                  'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq',
                                  'CAE_bn3_Seq_2D'],
                         help='network architecture used')
-    parser.add_argument('--dataset', default='SingleCellERK_rmNuc',
+    parser.add_argument('--dataset', default='SingleCellERK_128',
                         choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell',
                                  'ShapeNetVoxel',
                                  'SingleCellERK_rmNuc',
                                  'SingleCellERK_128',
-                                 'SingleCellERK'],
+                                 'SingleCellERK',
+                                 'SingleCellERK_Full'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default=single_cell_erk_rmNuc,
+                        default=single_cell_erk_128,
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=64, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=8, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.02, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
@@ -87,7 +91,7 @@ if __name__ == "__main__":
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
+    parser.add_argument('--custom_img_size', default=128, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)

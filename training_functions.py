@@ -243,11 +243,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             tsne_image_tensor = torchvision.transforms.ToTensor()(tsne_image_tensor)
 
             print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
-            # clf = LinearSVC(random_state=0, tol=1e-5)
+            clf = LinearSVC(random_state=0, tol=1e-5)
             scalar = StandardScaler()
             output_array = scalar.fit_transform(output_array)
-            # clf.fit(output_array, labs)
-            # score = clf.score(output_array, labs)
+            clf.fit(output_array, labs)
+            score = clf.score(output_array, labs)
             # print_both(txt_file, 'Linear SVM score: {}'.format(score))
             output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
             nmi = metrics.nmi(labels, preds)
@@ -260,8 +260,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 writer.add_scalar('/NMI_test', nmi, niter)
                 writer.add_scalar('/ARI_test', ari, niter)
                 writer.add_scalar('/Acc_test', acc, niter)
-                # writer.add_scalar('/SVM_test_Score', score, niter)
-                writer.add_image("t_sne_epoch{}_png".format(epoch + 1), tsne_image_tensor, niter)
+                writer.add_scalar('/SVM_test_Score', score, niter)
+                writer.add_image("/t_sne_epoch{}_png".format(epoch + 1), tsne_image_tensor, niter)
                 update_iter += 1
 
         model.train(True)  # Set model to training mode
@@ -498,7 +498,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
             # print(inputs.shape)
             inputs = inputs.to(device)
             threshold = 0.0
-            # inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
+            inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
 
             inputs_rot = inputs_rot.to(device)
             # inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)

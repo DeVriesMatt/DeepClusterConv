@@ -4,7 +4,7 @@ import copy
 
 
 class CAE_bn3_Seq_2D(nn.Module):
-    def __init__(self, input_shape=[64, 64, 64], num_clusters=10, filters=[32, 64, 128], leaky=True,
+    def __init__(self, input_shape=[64, 64, 64], num_clusters=10, filters=[128, 256, 512], leaky=True,
                  neg_slope=0.01, activations=False, bias=True, num_features=10):
         super(CAE_bn3_Seq_2D, self).__init__()
         self.activations = activations
