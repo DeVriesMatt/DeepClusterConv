@@ -186,7 +186,7 @@ class DatasetFolder(VisionDataset):
             # TODO: no need to unsqueeze when using 2D convolution
             sample_rot = sample_rot.unsqueeze(0)
 
-            sample_rot = self.transform(sample_rot)
+            # sample_rot = self.transform(sample_rot)
             # TODO: end of changes to incorporate rotation minimisation
 
             # sample = F.pad(sample, pad = (31, 32, 46, 47, 51, 52))

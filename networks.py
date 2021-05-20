@@ -4,7 +4,7 @@ import copy
 
 
 class CAE_bn3_Seq_2D(nn.Module):
-    def __init__(self, input_shape=[64, 64, 64], num_clusters=10, filters=[32, 64, 128], leaky=True,
+    def __init__(self, input_shape=[64, 64, 64], num_clusters=10, filters=[64, 128, 256], leaky=True,
                  neg_slope=0.01, activations=False, bias=True, num_features=10):
         super(CAE_bn3_Seq_2D, self).__init__()
         self.activations = activations
@@ -158,23 +158,14 @@ class ClusterlingLayer(nn.Module):
         self.weight = nn.init.xavier_uniform_(self.weight)
 
     def forward(self, x):
-        #         print('1:  ', x)
         x = x.unsqueeze(1) - self.weight
-        #         print('2:  ', x.unsqueeze(1))
         x = torch.mul(x, x)
-        #         print('3:  ', x.shape)
         x = torch.sum(x, dim=2)
-        #         print('4:  ', x.shape)
         x = 1.0 + (x / self.alpha)
-        #         print('5:  ', x.shape)
         x = 1.0 / x
-        #         print('6:  ', x.shape)
         x = x ** ((self.alpha + 1.0) / 2.0)
-        #         print('7:  ', x.shape)
         x = torch.t(x) / torch.sum(x, dim=1)
-        #         print('8:  ', x.shape)
         x = torch.t(x)
-        # print('9:  ', x.shape)
         return x
 
     def extra_repr(self):
@@ -207,7 +198,10 @@ class CAE_3(nn.Module):
         self.conv2 = nn.Conv3d(filters[0], filters[1], 5, stride=2, padding=2, bias=bias)
         self.conv3 = nn.Conv3d(filters[1], filters[2], 3, stride=2, padding=0, bias=bias)
         #         lin_features_len = 18432
-        lin_features_len = 43904  # 946176 #3813248
+        lin_features_len = ((int(self.input_shape[0]) // 2 // 2 - 1) // 2) * (
+                (int(self.input_shape[1]) // 2 // 2 - 1) // 2) \
+                           * ((int(self.input_shape[2]) // 2 // 2 - 1) // 2) * \
+                           filters[2]  # 946176 #3813248
         # ((input_shape[0]//2//2-1) // 2) * ((input_shape[1]//2//2-1) // 2) * ((input_shape[2]//2//2-1) // 2) * filters[2]
         #         print(lin_features_len)
         #         self.fc_down1 = nn.Linear(lin_features_len, 1000)
@@ -259,7 +253,7 @@ class CAE_3(nn.Module):
         #         x = self.fc_up1(x)
         #         x = self.fc_up2(x)
         x = self.relu1_2(x)
-        x = x.view(x.size(0), 128, 7, 7, 7)
+        x = x.view(x.size(0), 128, 15, 15, 15)
         #  self.filters[2], ((self.input_shape[0]//2//2-1) // 2), ((self.input_shape[0]//2//2-1) // 2))
         x = self.deconv3(x)
         x = self.relu2_2(x)

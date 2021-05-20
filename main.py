@@ -33,8 +33,11 @@ import networks_resnet
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
 single_cell_erk = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell/'
-single_cell_erk_128 = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_128/'
+single_cell_erk_128 = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_128/'
 single_cell_erk_rmNuc = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_RmNuc/'
+modelnet10 = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Train/'
+all_erk = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_All/'
+
 if __name__ == "__main__":
 
     # Translate string entries to bool for parser
@@ -51,24 +54,25 @@ if __name__ == "__main__":
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default='./SingleCellERK/nets/CAE_bn3_Seq_006_pretrained.pt',
+    parser.add_argument('--pretrained_net', default='./SingleCellERK_128/nets/CAE_bn3_Seq_2D_003_pretrained.pt',
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
+    parser.add_argument('--net_architecture', default='ResNet',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool',
                                  'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq',
                                  'CAE_bn3_Seq_2D'],
                         help='network architecture used')
-    parser.add_argument('--dataset', default='SingleCellERK_rmNuc',
+    parser.add_argument('--dataset', default='SingleCellERK_128',
                         choices=['ModelNet10', 'MNIST-train', 'custom', 'MNIST-test', 'MNIST-full', 'Single-Cell',
                                  'ShapeNetVoxel',
                                  'SingleCellERK_rmNuc',
                                  'SingleCellERK_128',
-                                 'SingleCellERK'],
+                                 'SingleCellERK',
+                                 'SingleCellERK_Full'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default=single_cell_erk_rmNuc,
+                        default=single_cell_erk_128,
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=64, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=8, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.02, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
@@ -86,8 +90,8 @@ if __name__ == "__main__":
     parser.add_argument('--update_interval', default=1, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
-    parser.add_argument('--num_features', default=10, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
+    parser.add_argument('--num_features', default=128, type=int, help='number of features to extract')
+    parser.add_argument('--custom_img_size', default=128, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
@@ -99,7 +103,7 @@ if __name__ == "__main__":
                         help='Enter the number of blocks in each resnet layer')
     parser.add_argument('--tsne_epochs', default=20, nargs=1, type=str,
                         help='Enter the epoch interval to perform t-sne and plot the results')
-    parser.add_argument('--q_power', default=4, nargs=1, type=int,
+    parser.add_argument('--q_power', default=2, nargs=1, type=int,
                         help='Enter the power to raise the Students t-distribution to for the target distribution')
     parser.add_argument('--rot_loss_weight', default=0.0, nargs=1, type=float,
                         help='Enter the weighting for the rotation loss for training')
@@ -421,13 +425,18 @@ if __name__ == "__main__":
         if model_name == 'ResNet':
             # Evaluate the proper model
             to_eval = "networks_resnet." + model_name + "(networks_resnet.BasicBlock," \
-                                                        "layers=" + resnet_layers[0] + "," \
+                                                        "layers=" + resnet_layers + "," \
                                                         "block_inplanes=networks_resnet.get_inplanes(), " \
                                                         "input_shape=img_size, " \
                                                         "num_clusters=num_clusters, " \
                                                         "num_features=num_features)"
 
             model = eval(to_eval)
+            print(img_size)
+            # if board:
+            #     writer.add_graph(model, torch.autograd.Variable(
+            #         torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
+
 
         else:
             # Evaluate the proper model
@@ -437,7 +446,7 @@ if __name__ == "__main__":
             # print(to_eval.input_shape)
 
         # Tensorboard model representation
-        if board:
+        if board and not (model_name == 'ResNet'):
             writer.add_graph(model, torch.autograd.Variable(
                 torch.Tensor(batch, img_size[3], img_size[0], img_size[1], img_size[2])))
             # writer.add_graph(model, torch.autograd.Variable(
@@ -449,6 +458,8 @@ if __name__ == "__main__":
         print_both(f, '{}'.format(summary(model, input_size=(img_size[3], img_size[0], img_size[1], img_size[2]))))
         # Reconstruction loss
         criterion_1 = FocalTverskyLoss()
+        # nn.MSELoss(size_average=True)
+        # FocalTverskyLoss()
         # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
         # Clustering loss
         criterion_2 = nn.KLDivLoss(size_average=False)

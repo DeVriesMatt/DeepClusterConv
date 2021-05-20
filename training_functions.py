@@ -124,7 +124,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     else:
         try:
             print(pretrained)
-            model.load_state_dict(torch.load(pretrained)['model_state_dict'])
+            checkpoint = torch.load(pretrained)
+            model.load_state_dict(checkpoint['model_state_dict'])
             trained_model = copy.deepcopy(model)
             model = trained_model
             optimizer = torch.optim.SGD(model.parameters(), lr=0.0000002, momentum=0.9)
@@ -194,7 +195,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         print_both(txt_file, '-' * 10)
 
         # Performs t-sne on extracted features
-        if (epoch + 1) % tsne_epochs == 0:
+        if epoch % tsne_epochs == 0:
             print_both(txt_file, 'Performing t-SNE on extracted features')
             model.eval()
             features = []
@@ -244,8 +245,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
 
             print_both(txt_file, 't-SNE plot of two components saved to' + save_path)
             # clf = LinearSVC(random_state=0, tol=1e-5)
-            scalar = StandardScaler()
-            output_array = scalar.fit_transform(output_array)
+            # scalar = StandardScaler()
+            # output_array = scalar.fit_transform(output_array)
             # clf.fit(output_array, labs)
             # score = clf.score(output_array, labs)
             # print_both(txt_file, 'Linear SVM score: {}'.format(score))
@@ -261,7 +262,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 writer.add_scalar('/ARI_test', ari, niter)
                 writer.add_scalar('/Acc_test', acc, niter)
                 # writer.add_scalar('/SVM_test_Score', score, niter)
-                writer.add_image("t_sne_epoch{}_png".format(epoch + 1), tsne_image_tensor, niter)
+                writer.add_image("/t_sne_epoch{}_png".format(epoch + 1), tsne_image_tensor, niter)
                 update_iter += 1
 
         model.train(True)  # Set model to training mode
@@ -311,11 +312,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     # check stop criterion
                     delta_label = np.sum(preds != preds_prev).astype(np.float32) / preds.shape[0]
                     preds_prev = np.copy(preds)
-                    # if delta_label < tol:
-                    #     print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
-                    #     print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
-                    #     finished = True
-                    #     break
+                    if delta_label < tol:
+                        print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
+                        print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
+                        finished = True
+                        break
 
                 tar_dist = target_distribution[((batch_num - 1) * batch):(batch_num * batch), :]
                 tar_dist = torch.from_numpy(tar_dist).to(device)
@@ -342,11 +343,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 # added threshold
                 # TODO: add distance loss for rotation
                 criterion_rot = torch.nn.CrossEntropyLoss() # loss_functions.EuclideanDistLoss()#
-                loss_rot = rot_loss_weight * criterion_rot(clusters_rot, preds)
+                loss_rot = criterion_rot(clusters_rot, preds)
                 # TODO: added (1-gamma) to the reconstruction loss
-                loss_rec = (1-gamma) * criteria[0](outputs, inputs)
-                loss_clust = gamma * criteria[1](torch.log(clusters), tar_dist) / batch
-                loss = loss_rec + loss_clust + loss_rot
+                loss_rec = criteria[0](outputs, inputs)
+                loss_clust = criteria[1](torch.log(clusters), tar_dist) / batch
+                loss = ((1-gamma) * loss_rec) + (gamma * loss_clust) + (rot_loss_weight * loss_rot)
                 loss.backward()
                 # TODO: checking if optimiser not working properly
                 optimizer.step()
@@ -433,6 +434,10 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         if epoch_loss < best_loss or epoch_loss >= best_loss:
             best_loss = epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
+            torch.save({
+                'model_state_dict': best_model_wts,
+                'optimizer_state_dict': optimizer.state_dict()
+            }, params['model_files'][0] + '.pt')
 
         print_both(txt_file, '')
 
@@ -498,7 +503,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
             # print(inputs.shape)
             inputs = inputs.to(device)
             threshold = 0.0
-            # inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
+            inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
 
             inputs_rot = inputs_rot.to(device)
             # inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)
