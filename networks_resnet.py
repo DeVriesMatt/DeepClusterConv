@@ -162,13 +162,16 @@ class ResNet(nn.Module):
                                        stride=2)
 
         self.avgpool = nn.AdaptiveAvgPool3d((1, 1, 1))
-        self.fc = nn.Linear(block_inplanes[3] * block.expansion, n_classes)
+        self.fc = nn.Linear(block_inplanes[3] * block.expansion, num_features)
 
         lin_features_len = ((input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2) * (
                 (input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2) * (
                                    (input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2) * filters[4]
         self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
-        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
+        deemb_lin_features_len = ((input_shape[0] // 2 // 2 - 1) // 2) * (
+                                (input_shape[1]  // 2 // 2 - 1) // 2) * (
+                                (input_shape[2]  // 2 // 2 - 1) // 2) * filters[2]
+        self.deembedding = nn.Linear(num_features, deemb_lin_features_len, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 // 2 // 2 % 2 == 0 else 0
         self.deconv5 = nn.ConvTranspose3d(filters[4], filters[3], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
@@ -178,7 +181,7 @@ class ResNet(nn.Module):
                                           bias=bias)
         self.bn4_2 = nn.BatchNorm3d(filters[2])
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
-        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
+        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
         self.bn3_2 = nn.BatchNorm3d(filters[1])
         out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
@@ -262,21 +265,22 @@ class ResNet(nn.Module):
         x = self.avgpool(x)
 
         x = x.view(x.size(0), -1)
+        # print(x.shape)
         fcdown1 = x
-        x = self.embedding(x)
+        x = self.fc(x)
         extra_out = x
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
         x = self.relu5_2(x)
-        x = x.view(x.size(0), self.filters[4],
-                   ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2))
-        x = self.deconv5(x)
-        x = self.relu4_2(x)
-        x = self.bn5_2(x)
-        x = self.deconv4(x)
-        x = self.relu3_2(x)
+        x = x.view(x.size(0), self.filters[2],
+                   ((self.input_shape[0] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 - 1) // 2))
+        # x = self.deconv5(x)
+        # x = self.relu4_2(x)
+        # x = self.bn5_2(x)
+        # x = self.deconv4(x)
+        # x = self.relu3_2(x)
         x = self.bn4_2(x)
         x = self.deconv3(x)
         x = self.relu2_2(x)
@@ -293,4 +297,4 @@ class ResNet(nn.Module):
 if __name__ == '__main__':
     model = CAE_5().to('cuda:0')
     print(summary(model, input_size=(1, 64, 64, 64)))
-    print(summary(ResNet(BasicBlock, [1, 1, 1, 1], get_inplanes()).to('cuda:0'), input_size=(1, 64, 64, 64)))
+    print(summary(ResNet(BasicBlock, [1, 1, 1, 1], get_inplanes()).to('cuda:0'), input_size=(1, 128, 128, 128)))

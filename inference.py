@@ -16,7 +16,7 @@ import metrics
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import make_pipeline
 
-model = CAE_bn3_Seq(num_features=512, num_clusters=10, input_shape=[64, 64, 64, 1])
+model = CAE_bn3_Seq(num_features=10, num_clusters=10, input_shape=[128, 128, 128, 1])
 
 # model = ResNet(BasicBlock, layers=[1, 1, 1, 1],
 #                block_inplanes=get_inplanes(),
@@ -24,7 +24,7 @@ model = CAE_bn3_Seq(num_features=512, num_clusters=10, input_shape=[64, 64, 64, 
 #                num_clusters=10,
 #                num_features=10)
 model.cuda()
-checkpoints = torch.load('./ResultsHPC/DeepClusterConv/ModelNet10/nets/CAE_bn3_Seq_008.pt')
+checkpoints = torch.load('./ResultsHPC/DeepClusterConv/SingleCellERK_128/nets/CAE_bn3_Seq_004_pretrained.pt')
 
 model.load_state_dict(checkpoints['model_state_dict'])
 
@@ -43,9 +43,11 @@ vicky_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate
 mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
 model_net = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Test/'
+single_cell_erk_128 = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_128/'
 
-image_dataset = ImageFolder(root=model_net,
-                            transform=data_transforms)
+
+image_dataset = ImageFolder(root=single_cell_erk_128,
+                            transform=data_transforms, size=128)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
                                          batch_size=1,
@@ -54,7 +56,7 @@ dataloader = torch.utils.data.DataLoader(image_dataset,
 features = []
 labels = []
 for i, data in tqdm(enumerate(dataloader)):
-    images, label = data
+    images, label, _ = data
     labels.append(label.numpy())
     inputs = images.to("cuda:0")
     threshold = 0.0
@@ -98,20 +100,20 @@ fte_colors = {
  }
 # Plot of UMAP with clusters from unreduced data labelled
 km_colors = [fte_colors[label] for label in km.labels_]
-b = np.zeros((908, 3))
+b = np.zeros((len(embedding), 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
-b[:, 2] = labels[:, 0]
+b[:, 2] = km.labels_
 data = pd.DataFrame(b, columns=['Umap1','Umap2','label'])
 facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
                    fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 6})
 plt.show()
 
 reduced_pca = PCA(n_components=2).fit_transform(output_array)
-b = np.zeros((3991, 3))
+b = np.zeros((len(embedding), 3))
 b[:, 0] = reduced_pca[:, 0]
 b[:, 1] = reduced_pca[:, 1]
-b[:, 2] = labels[:, 0] # km.labels_
+b[:, 2] = km.labels_
 data = pd.DataFrame(b, columns=['PC1','PC2','label'])
 facet_pca = sns.lmplot(data=data, x='PC1', y='PC2', hue='label',
                        fit_reg=False,
@@ -125,10 +127,10 @@ Y = manifold.TSNE(n_components=2, init='pca',
                                  random_state=0).fit_transform(output_array)
 
 
-b = np.zeros((908, 3))
+b = np.zeros((len(embedding), 3))
 b[:, 0] = Y[:, 0]
 b[:, 1] = Y[:, 1]
-b[:, 2] = labels[:, 0]  # km.labels_
+b[:, 2] = km.labels_
 data = pd.DataFrame(b, columns=['tsne1','tsne2','label'])
 facet_tsne = sns.lmplot(data=data, x='tsne1', y='tsne2', hue='label',
                        fit_reg=False,
@@ -142,12 +144,12 @@ plt.show()
 # centres_df.to_csv('./OutputFiles/' + 'orig_cluster_centers.csv')
 
 closest, _ = pairwise_distances_argmin_min(km.cluster_centers_, output_array)
-print(closest)
-acc = metrics.metrics.acc(labels, km.labels_)
-print('Accuracy: ' + str(acc))
-labels = np.asarray(labels).ravel()
-clf = LinearSVC()
-clf.fit(output_array, labels)
-score = clf.score(output_array, labels)
-print('Score of linear svm: {}'.format(score))
+# print(closest)
+# acc = metrics.metrics.acc(labels, km.labels_)
+# print('Accuracy: ' + str(acc))
+# labels = np.asarray(labels).ravel()
+# clf = LinearSVC()
+# clf.fit(output_array, labels)
+# score = clf.score(output_array, labels)
+# print('Score of linear svm: {}'.format(score))
 # After 10 clustering epochs, got acc 0.75708
