@@ -1,0 +1,40 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 114, in train_model
+    pretrain_epochs, params)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 495, in pretraining
+    for step, data in enumerate(dataloader):
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 435, in __next__
+    data = self._next_data()
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1085, in _next_data
+    return self._process_data(data)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1111, in _process_data
+    data.reraise()
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/_utils.py", line 428, in reraise
+    raise self.exc_type(msg)
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/_utils/worker.py", line 198, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/mvries/DeepClusterConv/datasets.py", line 168, in __getitem__
+    sample = self.loader(path, self.size)
+  File "/home/mvries/DeepClusterConv/datasets.py", line 252, in default_loader
+    return pil_loader(path, size)
+  File "/home/mvries/DeepClusterConv/datasets.py", line 231, in pil_loader
+    img = pad_img(img)
+  File "/home/mvries/DeepClusterConv/datasets.py", line 223, in pad_img
+    padded_data = np.pad(img, (z_padding, y_padding, x_padding), 'constant')
+  File "<__array_function__ internals>", line 6, in pad
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/numpy/lib/arraypad.py", line 746, in pad
+    pad_width = _as_pairs(pad_width, array.ndim, as_index=True)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/numpy/lib/arraypad.py", line 517, in _as_pairs
+    raise ValueError("index can't contain negative values")
+ValueError: index can't contain negative values
+

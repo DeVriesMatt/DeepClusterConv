@@ -1,0 +1,2 @@
+/tmp/slurmd/job1463799/slurm_script: line 21: syntax error near unexpected token `('
+/tmp/slurmd/job1463799/slurm_script: line 21: `	  python main.py  --epochs 500 --epochs_pretrain 300 --num_features $num_features --output_dir '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/' --dataset_path '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SingleCell_ERK_Cell_RmNuc/' --custom_img_size (64,64,64,1) --update_interval 1 --gamma $gam --dataset 'SingleCellERK_rmNuc''

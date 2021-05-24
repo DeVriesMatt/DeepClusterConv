@@ -1,0 +1,160 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 473, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 224, in train_model
+    b[:, 2] = km.labels_  #labs[:,0] #
+NameError: name 'km' is not defined
