@@ -425,7 +425,7 @@ if __name__ == "__main__":
         if model_name == 'ResNet':
             # Evaluate the proper model
             to_eval = "networks_resnet." + model_name + "(networks_resnet.BasicBlock," \
-                                                        "layers=" + resnet_layers + "," \
+                                                        "layers=" + "[1,1,1,1]" + "," \
                                                         "block_inplanes=networks_resnet.get_inplanes(), " \
                                                         "input_shape=img_size, " \
                                                         "num_clusters=num_clusters, " \
