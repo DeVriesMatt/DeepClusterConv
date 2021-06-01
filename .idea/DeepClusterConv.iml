@@ -17,7 +17,7 @@
       <excludeFolder url="file://$MODULE_DIR$/SingleCellERK_128" />
       <excludeFolder url="file://$MODULE_DIR$/SingleCellERK_rmNuc" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (dcc)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

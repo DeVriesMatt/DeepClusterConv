@@ -86,7 +86,7 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', default=1000, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
-    parser.add_argument('--gamma', default=0.999, type=float, help='clustering loss weight')
+    parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
     parser.add_argument('--update_interval', default=1, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
