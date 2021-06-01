@@ -346,7 +346,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 loss_rot = criterion_rot(clusters_rot, preds)
                 # TODO: added (1-gamma) to the reconstruction loss
                 loss_rec = criteria[0](outputs, inputs)
-                loss_clust = criteria[1](torch.log(clusters), tar_dist) / batch
+                loss_clust = criteria[1](torch.log(clusters), tar_dist)
                 loss = ((1-gamma) * loss_rec) + (gamma * loss_clust) + (rot_loss_weight * loss_rot)
                 loss.backward()
                 # TODO: checking if optimiser not working properly
