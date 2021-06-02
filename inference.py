@@ -16,7 +16,7 @@ import metrics
 from sklearn.svm import LinearSVC
 from sklearn.pipeline import make_pipeline
 
-model = CAE_bn3_Seq(num_features=10, num_clusters=10, input_shape=[128, 128, 128, 1])
+model = CAE_bn3_Seq(num_features=50, num_clusters=10, input_shape=[128, 128, 128, 1])
 
 # model = ResNet(BasicBlock, layers=[1, 1, 1, 1],
 #                block_inplanes=get_inplanes(),
@@ -24,7 +24,7 @@ model = CAE_bn3_Seq(num_features=10, num_clusters=10, input_shape=[128, 128, 128
 #                num_clusters=10,
 #                num_features=10)
 model.cuda()
-checkpoints = torch.load('./ResultsHPC/DeepClusterConv/SingleCellERK_128/nets/CAE_bn3_Seq_004_pretrained.pt')
+checkpoints = torch.load('./ResultsHPC/DeepClusterConv/SingleCellERK_128/SingleCellERK_128/nets/CAE_bn3_Seq_016.pt')
 
 model.load_state_dict(checkpoints['model_state_dict'])
 
@@ -44,9 +44,9 @@ mnist = '/home/mvries/Documents/Datasets/MNIST3D/Train/'
 shape_net = '/home/mvries/Documents/Datasets/ShapeNetVoxel/'
 model_net = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Test/'
 single_cell_erk_128 = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_128/'
+sng128 = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_128/'
 
-
-image_dataset = ImageFolder(root=single_cell_erk_128,
+image_dataset = ImageFolder(root=sng128,
                             transform=data_transforms, size=128)
 # Prepare data for network: schuffle and arrange batches
 dataloader = torch.utils.data.DataLoader(image_dataset,
