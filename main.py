@@ -74,7 +74,8 @@ if __name__ == "__main__":
                                  'SingleCellERK_rmNuc',
                                  'SingleCellERK_128',
                                  'SingleCellERK',
-                                 'SingleCellERK_Full'],
+                                 'SingleCellERK_Full',
+                                 'SingleCellERK_RmNuc_64'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
                         default=sng128,
