@@ -186,6 +186,10 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
     finished = False
 
     # Go through all epochs
+    # TODO: batch_num Changed batch number to not be reset to 1 for each eppch so that can update
+    #  target distribution only after a few epochs
+
+    batch_num = 1
     for epoch in range(num_epochs):
 
         print_both(txt_file, 'Epoch {}/{}'.format(epoch + 1, num_epochs))
@@ -273,20 +277,22 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         running_loss_rot = 0.0
 
         # Keep the batch number for inter-phase statistics
-        batch_num = 1
+
+        # TODO: batch_num
+        # batch_num = 1
         img_counter = 0
 
         # Iterate over data.
         for data in dataloader:
             # Get the inputs and labels
-            inputs, _, inputs_rot = data
+            inputs, _, _ = data
             #             print(inputs.size)
 
             inputs = inputs.to(device)
             threshold = 0.0
             inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
-            inputs_rot = inputs_rot.to(device)
-            inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)
+            # inputs_rot = inputs_rot.to(device)
+            # inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)
             #
 
             # Uptade target distribution, check and print performance
@@ -330,7 +336,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             # Calculate losses and backpropagate
             with torch.set_grad_enabled(True):
                 outputs, clusters, feats, _ = model(inputs)
-                _, clusters_rot, feats_rot, _ = model(inputs_rot)
+                # _, clusters_rot, feats_rot, _ = model(inputs_rot)
                 preds = torch.argmax(clusters, dim=1)
 
                 if update_interval == 1:
@@ -343,11 +349,12 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 # added threshold
                 # TODO: add distance loss for rotation
                 criterion_rot = torch.nn.CrossEntropyLoss() # loss_functions.EuclideanDistLoss()#
-                loss_rot = criterion_rot(clusters_rot, preds)
+                # loss_rot = criterion_rot(clusters_rot, preds)
                 # TODO: added (1-gamma) to the reconstruction loss
                 loss_rec = criteria[0](outputs, inputs)
-                loss_clust = criteria[1](torch.log(clusters), tar_dist) / batch
-                loss = ((1-gamma) * loss_rec) + (gamma * loss_clust) + (rot_loss_weight * loss_rot)
+                loss_clust = criteria[1](torch.log(clusters), tar_dist)
+                loss = ((1-gamma) * loss_rec) + (gamma * loss_clust)
+                       # + (rot_loss_weight * loss_rot)
                 loss.backward()
                 # TODO: checking if optimiser not working properly
                 optimizer.step()
@@ -357,7 +364,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             running_loss += loss.item() * inputs.size(0)
             running_loss_rec += loss_rec.item() * inputs.size(0)
             running_loss_clust += loss_clust.item() * inputs.size(0)
-            running_loss_rot = loss_rot.item() * inputs.size(0)
+            # running_loss_rot = loss_rot.item() * inputs.size(0)
 
             # Some current stats
             loss_batch = loss.item()
@@ -368,8 +375,8 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             loss_accum_clust = running_loss_clust / ((batch_num - 1) * batch + inputs.size(0))
 
             # TODO: loss_rot recording
-            loss_batch_rot = loss_rot.item()
-            loss_accum_rot = running_loss_rot / ((batch_num - 1) * batch + inputs.size(0))
+            # loss_batch_rot = loss_rot.item()
+            # loss_accum_rot = running_loss_rot / ((batch_num - 1) * batch + inputs.size(0))
 
 
             if batch_num % print_freq == 0:
@@ -385,14 +392,14 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                                                                                  loss_accum_rec,
                                                                                  loss_batch_clust,
                                                                                  loss_accum_clust,
-                                                                                 loss_batch_rot,
-                                                                                 loss_accum_rot))
+                                                                                 1.,
+                                                                                 1.))
                 if board:
                     niter = epoch * len(dataloader) + batch_num
                     writer.add_scalar('/Loss', loss_accum, niter)
                     writer.add_scalar('/Loss_recovery', loss_accum_rec, niter)
                     writer.add_scalar('/Loss_clustering', loss_accum_clust, niter)
-                    writer.add_scalar('/Loss_rotation', loss_accum_rot, niter)
+                    writer.add_scalar('/Loss_rotation', 1., niter)
                     # writer.add_scaler('/Learning_rate', optimizer.param_groups[0]['lr'])
             batch_num = batch_num + 1
             # TODO: scheduler.step goes here when using cyclic learning rate scheduler
@@ -413,7 +420,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
         epoch_loss = running_loss / dataset_size
         epoch_loss_rec = running_loss_rec / dataset_size
         epoch_loss_clust = running_loss_clust / dataset_size
-        epoch_loss_rot = running_loss_rot / dataset_size
+        # epoch_loss_rot = running_loss_rot / dataset_size
 
         # TODO: scheduler.step goes here when using anything other than cyclic scheduler
         # schedulers[0].step(epoch_loss)
@@ -422,13 +429,13 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
             writer.add_scalar('/Loss' + 'Epoch', epoch_loss, epoch + 1)
             writer.add_scalar('/Loss_rec' + 'Epoch', epoch_loss_rec, epoch + 1)
             writer.add_scalar('/Loss_clust' + 'Epoch', epoch_loss_clust, epoch + 1)
-            writer.add_scalar('/Loss_rot_' + 'Epoch', epoch_loss_rot, epoch + 1)
+            writer.add_scalar('/Loss_rot_' + 'Epoch', 1., epoch + 1)
 
         print_both(txt_file,
-                   'Loss: {0:.4f}\tLoss_recovery: {1:.4f}\tLoss_clustering: {2:.4f}\tLoss_clustering: {3:.4f}'.format(epoch_loss,
+                   'Loss: {0:.4f}\tLoss_recovery: {1:.4f}\tLoss_clustering: {2:.4f}\tLoss_rotation: {3:.4f}'.format(epoch_loss,
                                                                                                       epoch_loss_rec,
                                                                                                       epoch_loss_clust,
-                                                                                                      epoch_loss_rot))
+                                                                                                      1.))
         # plotter.plot('loss', 'train', 'Train Loss', epoch, epoch_loss)
         # If wanted to do some criterium in the future (for now useless)
         if epoch_loss < best_loss or epoch_loss >= best_loss:
@@ -499,27 +506,28 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         # Iterate over data.
         for step, data in enumerate(dataloader):
             # Get the inputs and labels
-            inputs, _, inputs_rot = data
+            inputs, _, _ = data
             # print(inputs.shape)
             inputs = inputs.to(device)
             threshold = 0.0
             inputs = (inputs > threshold).type(torch.FloatTensor).to(device)
 
-            inputs_rot = inputs_rot.to(device)
+            # inputs_rot = inputs_rot.to(device)
             # inputs_rot = (inputs_rot > threshold).type(torch.FloatTensor).to(device)
             # zero the parameter gradients
             optimizer.zero_grad()
 
             with torch.set_grad_enabled(True):
                 outputs, _, feats, _ = model(inputs)
-                _, _, feats_rot, _ = model(inputs_rot)
+                # _, _, feats_rot, _ = model(inputs_rot)
                 #                 print(torch.unique(F.sigmoid(outputs).detach()))
                 #                 print(torch.unique(outputs.detach()))
                 criterion_rot = loss_functions.EuclideanDistLoss()
-                loss_rot = criterion_rot(feats, feats_rot)
-                loss_rot = (rot_loss_weight * loss_rot)
+                # loss_rot = criterion_rot(feats, feats_rot)
+                # loss_rot = (rot_loss_weight * loss_rot)
                 loss_rec = criterion(outputs, inputs)
-                loss = loss_rec + (rot_loss_weight * loss_rot)
+                loss = loss_rec
+                       # + (rot_loss_weight * loss_rot)
                 loss.backward()
                 loss_values.append(loss.item())
                 optimizer.step()
@@ -527,7 +535,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
             # For keeping statistics
             running_loss += loss.item() * inputs.size(0)
             running_loss_rec += loss_rec.item() * inputs.size(0)
-            running_loss_rot += loss_rot.item() * inputs.size(0)
+            # running_loss_rot += loss_rot.item() * inputs.size(0)
 
             # Some current stats
             loss_batch = loss.item()
@@ -536,8 +544,8 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
             loss_batch_rec = loss_rec.item()
             loss_accum_rec = running_loss_rec / ((batch_num - 1) * batch + inputs.size(0))
 
-            loss_batch_rot = loss_rot.item()
-            loss_accum_rot = running_loss_rot / ((batch_num - 1) * batch + inputs.size(0))
+            # loss_batch_rot = loss_rot.item()
+            # loss_accum_rot = running_loss_rot / ((batch_num - 1) * batch + inputs.size(0))
 
             if batch_num % print_freq == 0:
                 print_both(txt_file, 'Pretraining:\tEpoch: [{0}][{1}/{2}]\t'
@@ -550,8 +558,8 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
                                                                                 loss_accum,
                                                                                 loss_batch_rec,
                                                                                 loss_accum_rec,
-                                                                                loss_batch_rot,
-                                                                                loss_accum_rot
+                                                                                1.,
+                                                                                1.
                                                                                 ))
 
                 # vis.plot_loss(np.mean(loss_values), step)
@@ -561,7 +569,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
                     niter = epoch * len(dataloader) + batch_num
                     writer.add_scalar('Pretraining/Loss', loss_accum, niter)
                     writer.add_scalar('Pretraining/Loss_Reconstruction', loss_accum_rec, niter)
-                    writer.add_scalar('Pretraining/Loss_Rotation', loss_accum_rot, niter)
+                    writer.add_scalar('Pretraining/Loss_Rotation', 1., niter)
             batch_num = batch_num + 1
 
             # if batch_num in [len(dataloader), len(dataloader) // 2, len(dataloader) // 4, 3 * len(dataloader) // 4]:
@@ -582,7 +590,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         # torch.sigmoid(
         epoch_loss = running_loss / dataset_size
         epoch_loss_rec = running_loss_rec / dataset_size
-        epoch_loss_rot = running_loss_rot / dataset_size
+        # epoch_loss_rot = running_loss_rot / dataset_size
         if epoch == 0: first_loss = epoch_loss
         if epoch == 4 and epoch_loss / first_loss > 1:
             print_both(txt_file, "\nLoss not converging, starting pretraining again\n")
@@ -593,7 +601,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         if board:
             writer.add_scalar('Pretraining/Loss' + '_Epoch', epoch_loss, epoch + 1)
             writer.add_scalar('Pretraining/Loss' + '_Epoch_Reconstruction', epoch_loss_rec, epoch + 1)
-            writer.add_scalar('Pretraining/Loss' + '_Epoch_Rotation', epoch_loss_rot, epoch + 1)
+            writer.add_scalar('Pretraining/Loss' + '_Epoch_Rotation', 1., epoch + 1)
 
         print_both(txt_file, 'Pretraining:\t Loss: {:.8f}'.format(epoch_loss))
 
@@ -637,7 +645,7 @@ def kmeans(model, dataloader, params):
         else:
             output_array = outputs.cpu().detach().numpy()
         # print(output_array.shape)
-        if output_array.shape[0] > 50000: break
+        # if output_array.shape[0] > 50000: break
 
     # Perform K-means
     km.fit_predict(output_array)

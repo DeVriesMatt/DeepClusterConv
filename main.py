@@ -15,16 +15,18 @@ import os
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TestTubeLogger
 import torchio as tio
-
+from single_cell_dataset import SingleCellDataset
 
 from datasets import ImageFolder
 from loss_functions import *
 import pl_networks
 from training_functions import *
-import torch.multiprocessing
 
+import torch.multiprocessing
 torch.multiprocessing.set_sharing_strategy('file_system')
 import networks_resnet
+
+
 # path = '/home/mvries/Documents/GitHub/cellAnalysis/SingleCellFull/OPM_Roi_Images_Full_646464_Cluster3/'
 # vuc_path = '/home/mvries/Documents/Datasets/VickPlatesStacked/Treatments_plate_002_166464/'
 
@@ -56,7 +58,7 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./SingleCellERK_128/nets/CAE_bn3_Seq_2D_003_pretrained.pt',
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='ResNet',
+    parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool',
                                  'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq',
                                  'CAE_bn3_Seq_2D'],
@@ -72,7 +74,7 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path',
                         default=single_cell_erk_128,
                         help='path to dataset')
-    parser.add_argument('--batch_size', default=8, type=int, help='batch size')
+    parser.add_argument('--batch_size', default=32, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.02, type=float, help='learning rate for pretraining')
     parser.add_argument('--weight', default=0.0, type=float, help='weight decay for clustering')
@@ -91,7 +93,7 @@ if __name__ == "__main__":
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
     parser.add_argument('--num_features', default=128, type=int, help='number of features to extract')
-    parser.add_argument('--custom_img_size', default=128, type=int, help='size of custom images')
+    parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
@@ -402,18 +404,26 @@ if __name__ == "__main__":
             flip1
             # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
+        transform = transforms.Compose([
+            transforms.ToTensor()
+        ])
 
         # Read data from selected folder and apply transformations
+        dataset = SingleCellDataset('/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/allData.csv',
+                                    '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/Single_Cell_ERK_Stacked_All_RmNuc/Cell_Minus_Nuc/',
+                                    transform=transform,
+                                    img_size=64,
+                                    target_transform=True)
         image_dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
         # Prepare data for network: schuffle and arrange batches
-        dataloader = torch.utils.data.DataLoader(image_dataset, batch_size=batch,
-                                                 shuffle=True, num_workers=workers)
+        dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch,
+                                                 shuffle=False, num_workers=workers)
 
         image_dataset_inference = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
-        dataloader_inference = torch.utils.data.DataLoader(image_dataset_inference, batch_size=1,
+        dataloader_inference = torch.utils.data.DataLoader(dataset, batch_size=1,
                                                            shuffle=False, num_workers=workers)
         # Size of data sets
-        dataset_size = len(image_dataset)
+        dataset_size = len(dataset)
 
         tmp = "Training set size:\t" + str(dataset_size)
         print_both(f, tmp)
@@ -462,7 +472,7 @@ if __name__ == "__main__":
         # FocalTverskyLoss()
         # TverskyLoss() # DiceLoss() #DiceBCELoss() # torch.nn.BCEWithLogitsLoss() # nn.MSELoss(size_average=True)
         # Clustering loss
-        criterion_2 = nn.KLDivLoss(size_average=False)
+        criterion_2 = nn.KLDivLoss(reduction='sum')
 
         criteria = [criterion_1, criterion_2]
 
