@@ -39,6 +39,7 @@ single_cell_erk_128 = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021
 single_cell_erk_rmNuc = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_RmNuc/'
 modelnet10 = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Train/'
 all_erk = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_All/'
+sng128 = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_128/'
 
 if __name__ == "__main__":
 
@@ -55,8 +56,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
-    parser.add_argument('--pretrained_net', default='./SingleCellERK_128/nets/CAE_bn3_Seq_2D_003_pretrained.pt',
+    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrained_net', default='./ResultsHPC/DeepClusterConv/SingleCellERK_128/SingleCellERK_128/nets/CAE_bn3_Seq_006_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool',
@@ -72,7 +73,7 @@ if __name__ == "__main__":
                                  'SingleCellERK_Full'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default=single_cell_erk_128,
+                        default=sng128,
                         help='path to dataset')
     parser.add_argument('--batch_size', default=32, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
@@ -88,12 +89,14 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', default=1000, type=int, help='clustering epochs')
     parser.add_argument('--epochs_pretrain', default=200, type=int, help='pretraining epochs')
     parser.add_argument('--printing_frequency', default=10, type=int, help='training stats printing frequency')
-    parser.add_argument('--gamma', default=0.999, type=float, help='clustering loss weight')
+    parser.add_argument('--gamma', default=0.1, type=float, help='clustering loss weight')
     parser.add_argument('--update_interval', default=1, type=int, help='update interval for target distribution')
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
+
     parser.add_argument('--num_features', default=128, type=int, help='number of features to extract')
     parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
+
     parser.add_argument('--leaky', default=True, type=str2bool)
     parser.add_argument('--neg_slope', default=0.01, type=float)
     parser.add_argument('--activations', default=False, type=str2bool)
@@ -416,6 +419,7 @@ if __name__ == "__main__":
                                     target_transform=True)
         image_dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
         # Prepare data for network: schuffle and arrange batches
+
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch,
                                                  shuffle=False, num_workers=workers)
 

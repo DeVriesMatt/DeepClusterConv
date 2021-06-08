@@ -146,11 +146,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
 
     # Initialise clusters
     print_both(txt_file, '\nInitializing cluster centers based on K-means')
-    km, reduced_pca = kmeans(model, copy.deepcopy(dl), params)
+    km = kmeans(model, copy.deepcopy(dl), params)
     # b = np.zeros((11021, 3))
     # b[:, 0] = reduced_pca[:, 0]
     # b[:, 1] = reduced_pca[:, 1]
-    # b[:, 2] = km.labels_ # km.labels_
+    # b[:, 2] = km.labels_ # km.labels_df.loc[(df['serialNumber'] == img), 'xdim'] = 1
     # print(km.labels_)
     # data = pd.DataFrame(b, columns=['PC1', 'PC2', 'label'])
     # facet_pca = sns.lmplot(data=data, x='PC1', y='PC2', hue='label',
@@ -302,6 +302,7 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     print((batch_num - 1) % update_interval == 0 and not (batch_num == 1 and epoch == 0))
                     print_both(txt_file, '\nUpdating target distribution:')
                     output_distribution, labels, preds = calculate_predictions(model, dataloader, params)
+                    model.train()
                     target_distribution = target(output_distribution)
                     nmi = metrics.nmi(labels, preds)
                     ari = metrics.ari(labels, preds)
@@ -318,11 +319,11 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                     # check stop criterion
                     delta_label = np.sum(preds != preds_prev).astype(np.float32) / preds.shape[0]
                     preds_prev = np.copy(preds)
-                    if delta_label < tol:
-                        print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
-                        print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
-                        finished = True
-                        break
+                    # if delta_label < tol:
+                    #     print_both(txt_file, 'Label divergence ' + str(delta_label) + '< tol ' + str(tol))
+                    #     print_both(txt_file, 'Reached tolerance threshold. Stopping training.')
+                    #     finished = True
+                    #     break
 
                 tar_dist = target_distribution[((batch_num - 1) * batch):(batch_num * batch), :]
                 tar_dist = torch.from_numpy(tar_dist).to(device)
@@ -353,8 +354,10 @@ def train_model(model, dataloader, criteria, optimizers, schedulers, num_epochs,
                 # TODO: added (1-gamma) to the reconstruction loss
                 loss_rec = criteria[0](outputs, inputs)
                 loss_clust = criteria[1](torch.log(clusters), tar_dist)
+
                 loss = ((1-gamma) * loss_rec) + (gamma * loss_clust)
                        # + (rot_loss_weight * loss_rot)
+
                 loss.backward()
                 # TODO: checking if optimiser not working properly
                 optimizer.step()
@@ -654,8 +657,8 @@ def kmeans(model, dataloader, params):
     model.clustering.set_weight(weights.to(params['device']))
     # torch.cuda.empty_cache()
 
-    pca = manifold.TSNE(n_components=2).fit_transform(output_array)
-    return km, pca
+    # pca = manifold.TSNE(n_components=2).fit_transform(output_array)
+    return km
 
 
 # Function forwarding data through network, collecting clustering weight output and returning prediciotns and labels
