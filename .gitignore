@@ -16,6 +16,7 @@ ModelNet10/
 SingleCellERK/
 SingleCellERK_128/
 SingleCellERK_rmNuc/
+SingleCellERK_Full/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
