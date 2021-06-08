@@ -429,13 +429,13 @@ if __name__ == "__main__":
                                     transform=transform,
                                     img_size=64,
                                     target_transform=True)
-        image_dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
+        # image_dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
         # Prepare data for network: schuffle and arrange batches
 
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch,
                                                  shuffle=False, num_workers=workers)
 
-        image_dataset_inference = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
+        # image_dataset_inference = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
         dataloader_inference = torch.utils.data.DataLoader(dataset, batch_size=1,
                                                            shuffle=False, num_workers=workers)
         # Size of data sets
