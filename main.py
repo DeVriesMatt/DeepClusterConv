@@ -41,6 +41,10 @@ modelnet10 = '/home/mvries/Documents/Datasets/ModelNet10Voxel/Train/'
 all_erk = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/SingleCell_ERK_Stacked_All/'
 sng128 = '/home/mvries/Documents/Datasets/SingleCell_ERK_Cell_128/'
 
+
+csv_file = '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/allData.csv'
+
+
 if __name__ == "__main__":
 
     # Translate string entries to bool for parser
@@ -75,6 +79,9 @@ if __name__ == "__main__":
     parser.add_argument('--dataset_path',
                         default=sng128,
                         help='path to dataset')
+    parser.add_argument('--csv_dataset_path',
+                        default=csv_file,
+                        help='path to csv dataset')
     parser.add_argument('--batch_size', default=32, type=int, help='batch size')
     parser.add_argument('--rate', default=0.000002, type=float, help='learning rate for clustering')
     parser.add_argument('--rate_pretrain', default=0.02, type=float, help='learning rate for pretraining')
@@ -340,6 +347,10 @@ if __name__ == "__main__":
     # Data folder
     data_dir = args.dataset_path
     params['data_dir'] = data_dir
+
+    csv_dir = args.csv_dataset_path
+    params['csv_dir'] = csv_dir
+
     tmp = "\nData preparation\nReading data from:\t./" + data_dir
     print_both(f, tmp)
 
@@ -412,8 +423,8 @@ if __name__ == "__main__":
         ])
 
         # Read data from selected folder and apply transformations
-        dataset = SingleCellDataset('/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/allData.csv',
-                                    '/home/mvries/Documents/Datasets/OPM/SingleCellERK_04_2021/bakal03_ERK/Single_Cell_ERK_Stacked_All_RmNuc/Cell_Minus_Nuc/',
+        dataset = SingleCellDataset(csv_dir,
+                                    data_dir,
                                     transform=transform,
                                     img_size=64,
                                     target_transform=True)
