@@ -75,7 +75,8 @@ if __name__ == "__main__":
                                  'SingleCellERK_128',
                                  'SingleCellERK',
                                  'SingleCellERK_Full',
-                                 'SingleCellERK_RmNuc_64'],
+                                 'SingleCellERK_RmNuc_64',
+                                 'SingleCellERK_Nuc_64'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
                         default=modelnet10,
