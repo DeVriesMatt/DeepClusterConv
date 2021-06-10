@@ -60,7 +60,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Use DCEC for clustering')
     parser.add_argument('--mode', default='train_full', choices=['train_full', 'pretrain'], help='mode')
     parser.add_argument('--tensorboard', default=True, type=bool, help='export training stats to tensorboard')
-    parser.add_argument('--pretrain', default=False, type=str2bool, help='perform autoencoder pretraining')
+    parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./ResultsHPC/DeepClusterConv/SingleCellERK_128/SingleCellERK_128/nets/CAE_bn3_Seq_006_pretrained.pt',
                         help='index or path of pretrained net')
     parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
@@ -78,7 +78,7 @@ if __name__ == "__main__":
                                  'SingleCellERK_RmNuc_64'],
                         help='custom or prepared dataset')
     parser.add_argument('--dataset_path',
-                        default=sng128,
+                        default=modelnet10,
                         help='path to dataset')
     parser.add_argument('--csv_dataset_path',
                         default=csv_file,
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     parser.add_argument('--tol', default=1e-2, type=float, help='stop criterium tolerance')
     parser.add_argument('--num_clusters', default=10, type=int, help='number of clusters')
 
-    parser.add_argument('--num_features', default=128, type=int, help='number of features to extract')
+    parser.add_argument('--num_features', default=1024, type=int, help='number of features to extract')
     parser.add_argument('--custom_img_size', default=64, type=int, help='size of custom images')
 
     parser.add_argument('--leaky', default=True, type=str2bool)
@@ -424,12 +424,15 @@ if __name__ == "__main__":
         ])
 
         # Read data from selected folder and apply transformations
-        dataset = SingleCellDataset(csv_dir,
-                                    data_dir,
-                                    transform=transform,
-                                    img_size=64,
-                                    target_transform=True)
-        # image_dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
+        if 'cell' in data_dir.lower():
+            dataset = SingleCellDataset(csv_dir,
+                                        data_dir,
+                                        transform=transform,
+                                        img_size=img_size[0],
+                                        target_transform=True)
+
+        else:
+            dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
         # Prepare data for network: schuffle and arrange batches
 
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch,
