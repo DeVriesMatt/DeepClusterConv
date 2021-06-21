@@ -1,0 +1,17 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:589: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ModelNet10//reconstructed_img/CAE_bn3_Seq_035/pretrain_epoch_pred52.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/DeepClusterConv/training_functions.py:589: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ModelNet10//reconstructed_img/CAE_bn3_Seq_035/pretrain_epoch_pred53.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/DeepClusterConv/training_functions.py:589: UserWarning: /data/scratch/DBI/DUDBI/DYNCESYS/mvries/DeepClusterConv/ModelNet10//reconstructed_img/CAE_bn3_Seq_036/pretrain_epoch_pred43.tif is a low contrast image
+  torch.sigmoid(outputs[0]).cpu().detach().numpy())
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+slurmstepd: error: *** JOB 2122016 ON gpu01 CANCELLED AT 2021-06-20T14:20:34 DUE TO TIME LIMIT ***

@@ -1,0 +1,18 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 488, in <module>
+    model = train_model(model, dataloader, criteria, optimizers, schedulers, epochs, params, dataloader_inference)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 149, in train_model
+    km, reduced_pca = kmeans(model, copy.deepcopy(dl), params)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 634, in kmeans
+    _, _, outputs, _ = model(inputs)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/mvries/DeepClusterConv/networks.py", line 423, in forward
+    x = self.deconv1(x)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/modules/module.py", line 727, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/modules/conv.py", line 1091, in forward
+    output_padding, self.groups, self.dilation)
+RuntimeError: CUDA out of memory. Tried to allocate 1024.00 MiB (GPU 0; 15.78 GiB total capacity; 13.72 GiB already allocated; 627.50 MiB free; 14.04 GiB reserved in total by PyTorch)

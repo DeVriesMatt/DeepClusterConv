@@ -1,0 +1,12 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 432, in <module>
+    image_dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
+  File "/home/mvries/DeepClusterConv/datasets.py", line 298, in __init__
+    size=size)
+  File "/home/mvries/DeepClusterConv/datasets.py", line 128, in __init__
+    classes, class_to_idx = self._find_classes(self.root)
+  File "/home/mvries/DeepClusterConv/datasets.py", line 155, in _find_classes
+    classes = [d.name for d in os.scandir(dir) if d.is_dir()]
+FileNotFoundError: [Errno 2] No such file or directory: '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SingleCell_ERK_Stacked_All_RmNuc/Cell_Minus/Nuc/'

@@ -1,3 +1,2 @@
 /home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
   warnings.warn(warning.format(ret))
-slurmstepd: error: *** JOB 1585189 ON gpu01 CANCELLED AT 2021-05-28T12:26:28 DUE TO TIME LIMIT ***

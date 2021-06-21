@@ -1,0 +1,39 @@
+/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/nn/_reduction.py:44: UserWarning: size_average and reduce args will be deprecated, please use reduction='sum' instead.
+  warnings.warn(warning.format(ret))
+Traceback (most recent call last):
+  File "main.py", line 516, in <module>
+    model = pretraining(model, dataloader, criteria[0], optimizers[1], schedulers[1], epochs, params)
+  File "/home/mvries/DeepClusterConv/training_functions.py", line 510, in pretraining
+    for step, data in enumerate(dataloader):
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 435, in __next__
+    data = self._next_data()
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1085, in _next_data
+    return self._process_data(data)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 1111, in _process_data
+    data.reraise()
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/_utils.py", line 428, in reraise
+    raise self.exc_type(msg)
+FileNotFoundError: Caught FileNotFoundError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/_utils/worker.py", line 198, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/home/mvries/DeepClusterConv/single_cell_dataset.py", line 68, in __getitem__
+    image = io.imread(img_path + '.tif').astype(np.float16)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/skimage/io/_io.py", line 48, in imread
+    img = call_plugin('imread', fname, plugin=plugin, **plugin_args)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/skimage/io/manage_plugins.py", line 209, in call_plugin
+    return func(*args, **kwargs)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/skimage/io/_plugins/tifffile_plugin.py", line 36, in imread
+    with TiffFile(fname, **kwargs_tiff) as tif:
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/tifffile/tifffile.py", line 2868, in __init__
+    fh = FileHandle(arg, mode=mode, name=name, offset=offset, size=size)
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/tifffile/tifffile.py", line 8653, in __init__
+    self.open()
+  File "/home/mvries/.conda/envs/dcfn/lib/python3.7/site-packages/tifffile/tifffile.py", line 8666, in open
+    self._fh = open(self._file, self._mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/data/scratch/DBI/DUDBI/DYNCESYS/mvries/Datasets/SingleCell_ERK_Stacked_All_RmNuc/Cell_Minus_Nuc/0001_0001_accelerator_20210318_bakal03_erk_main_21-03-18_17-38-12.tif'
+
