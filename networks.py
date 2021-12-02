@@ -514,7 +514,7 @@ class CAE_4(nn.Module):
 
 # Convolutional autoencoder with 4 convolutional blocks (BN version)
 class CAE_bn4(nn.Module):
-    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[32, 64, 128, 256], leaky=True,
+    def __init__(self, input_shape=[64, 64, 64, 1], num_clusters=10, filters=[64, 128, 256, 512], leaky=True,
                  neg_slope=0.01, activations=False, bias=True, num_features=100):
         super(CAE_bn4, self).__init__()
         self.activations = activations
@@ -786,6 +786,7 @@ class CAE_bn5(nn.Module):
             x = self.sig(x)
         else:
             x = self.relu5_1(x)
+        down_out = x
         x = x.view(x.size(0), -1)
         fcdown1 = x
         x = self.embedding(x)
@@ -797,7 +798,7 @@ class CAE_bn5(nn.Module):
                    ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2),
                    ((self.input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2),
                    ((self.input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2))
-        x = self.deconv5(x)
+        x = self.deconv5(down_out)
         x = self.relu4_2(x)
         x = self.bn5_2(x)
         x = self.deconv4(x)

@@ -104,7 +104,7 @@ b = np.zeros((len(embedding), 3))
 b[:, 0] = embedding[:, 0]
 b[:, 1] = embedding[:, 1]
 b[:, 2] = km.labels_
-data = pd.DataFrame(b, columns=['Umap1','Umap2','label'])
+data = pd.DataFrame(bclosest, _ = pairwise_distances_argmin_min(km.cluster_centers_, output_array), columns=['Umap1','Umap2','label'])
 facet = sns.lmplot(data=data, x='Umap1', y='Umap2', hue='label',
                    fit_reg=False, legend=True, legend_out=True, scatter_kws={"s": 6})
 plt.show()

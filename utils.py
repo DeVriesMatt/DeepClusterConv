@@ -10,7 +10,6 @@ def create_dir_if_not_exist(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
-
 # mat = scipy.io.loadmat('/home/mvries/Documents/Datasets/Pix3D/model/chair/IKEA_BERNHARD/voxel.mat')
 # io.imsave('/home/mvries/Documents/Datasets/Pix3D/model/chair/IKEA_BERNHARD/voxel.tif', mat)
 

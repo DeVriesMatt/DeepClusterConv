@@ -63,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument('--pretrain', default=True, type=str2bool, help='perform autoencoder pretraining')
     parser.add_argument('--pretrained_net', default='./ResultsHPC/DeepClusterConv/SingleCellERK_128/SingleCellERK_128/nets/CAE_bn3_Seq_006_pretrained.pt',
                         help='index or path of pretrained net')
-    parser.add_argument('--net_architecture', default='CAE_bn3_Seq',
+    parser.add_argument('--net_architecture', default='CAE_bn5',
                         choices=['CAE_3', 'CAE_bn3', 'CAE_bn3_maxpool',
                                  'CAE_4', 'CAE_bn4', 'CAE_5', 'CAE_bn5', 'ResNet', 'CAE_bn3_Seq',
                                  'CAE_bn3_Seq_2D'],
@@ -455,7 +455,7 @@ if __name__ == "__main__":
         if model_name == 'ResNet':
             # Evaluate the proper model
             to_eval = "networks_resnet." + model_name + "(networks_resnet.BasicBlock," \
-                                                        "layers=" + "[1,1,1,1]" + "," \
+                                                        "layers=" + "[3, 4, 6, 3]" + "," \
                                                         "block_inplanes=networks_resnet.get_inplanes(), " \
                                                         "input_shape=img_size, " \
                                                         "num_clusters=num_clusters, " \
