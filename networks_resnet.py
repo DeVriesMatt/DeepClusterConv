@@ -172,7 +172,7 @@ class ResNet(nn.Module):
         #                         (input_shape[1]  // 2 // 2 - 1) // 2) * (
         #                         (input_shape[2]  // 2 // 2 - 1) // 2) * filters[2]
 
-        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
+        self.deembedding = nn.Linear(num_features, 512, bias=bias)
         out_pad = 1 if input_shape[0] // 2 // 2 // 2// 2 % 2 == 0 else 0
         self.deconv5 = nn.ConvTranspose3d(filters[4], filters[3], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
@@ -182,7 +182,7 @@ class ResNet(nn.Module):
                                           bias=bias)
         self.bn4_2 = nn.BatchNorm3d(filters[2])
         out_pad = 1 if input_shape[0] // 2 // 2 % 2 == 0 else 0
-        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 3, stride=2, padding=0, output_padding=out_pad,
+        self.deconv3 = nn.ConvTranspose3d(filters[2], filters[1], 5, stride=2, padding=2, output_padding=out_pad,
                                           bias=bias)
         self.bn3_2 = nn.BatchNorm3d(filters[1])
         out_pad = 1 if input_shape[0] // 2 % 2 == 0 else 0
@@ -278,9 +278,9 @@ class ResNet(nn.Module):
         #            ((self.input_shape[1] // 2 // 2 - 1) // 2),
         #            ((self.input_shape[2] // 2 // 2 - 1) // 2))
         x = x.view(x.size(0), self.filters[4],
-                   ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2),
-                   ((self.input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2))
+                   ((self.input_shape[0] // 2 // 2 // 2 // 2 //2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 // 2 // 2 // 2 - 1) // 2))
         x = self.deconv5(x)
         x = self.relu4_2(x)
         x = self.bn5_2(x)
