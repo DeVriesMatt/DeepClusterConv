@@ -168,11 +168,12 @@ class ResNet(nn.Module):
                 (input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2) * (
                                    (input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2) * filters[4]
         self.embedding = nn.Linear(lin_features_len, num_features, bias=bias)
-        deemb_lin_features_len = ((input_shape[0] // 2 // 2 - 1) // 2) * (
-                                (input_shape[1]  // 2 // 2 - 1) // 2) * (
-                                (input_shape[2]  // 2 // 2 - 1) // 2) * filters[2]
-        self.deembedding = nn.Linear(num_features, deemb_lin_features_len, bias=bias)
-        out_pad = 1 if input_shape[0] // 2 // 2 // 2 // 2 % 2 == 0 else 0
+        # deemb_lin_features_len = ((input_shape[0] // 2 // 2 - 1) // 2) * (
+        #                         (input_shape[1]  // 2 // 2 - 1) // 2) * (
+        #                         (input_shape[2]  // 2 // 2 - 1) // 2) * filters[2]
+
+        self.deembedding = nn.Linear(num_features, lin_features_len, bias=bias)
+        out_pad = 1 if input_shape[0] // 2 // 2 // 2// 2 % 2 == 0 else 0
         self.deconv5 = nn.ConvTranspose3d(filters[4], filters[3], 3, stride=2, padding=0, output_padding=out_pad,
                                           bias=bias)
         self.bn5_2 = nn.BatchNorm3d(filters[3])
@@ -272,15 +273,19 @@ class ResNet(nn.Module):
         clustering_out = self.clustering(x)
         x = self.deembedding(x)
         x = self.relu5_2(x)
-        x = x.view(x.size(0), self.filters[2],
-                   ((self.input_shape[0] // 2 // 2 - 1) // 2),
-                   ((self.input_shape[1] // 2 // 2 - 1) // 2),
-                   ((self.input_shape[2] // 2 // 2 - 1) // 2))
-        # x = self.deconv5(x)
-        # x = self.relu4_2(x)
-        # x = self.bn5_2(x)
-        # x = self.deconv4(x)
-        # x = self.relu3_2(x)
+        # x = x.view(x.size(0), self.filters[2],
+        #            ((self.input_shape[0] // 2 // 2 - 1) // 2),
+        #            ((self.input_shape[1] // 2 // 2 - 1) // 2),
+        #            ((self.input_shape[2] // 2 // 2 - 1) // 2))
+        x = x.view(x.size(0), self.filters[4],
+                   ((self.input_shape[0] // 2 // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[1] // 2 // 2 // 2 // 2 - 1) // 2),
+                   ((self.input_shape[2] // 2 // 2 // 2 // 2 - 1) // 2))
+        x = self.deconv5(x)
+        x = self.relu4_2(x)
+        x = self.bn5_2(x)
+        x = self.deconv4(x)
+        x = self.relu3_2(x)
         x = self.bn4_2(x)
         x = self.deconv3(x)
         x = self.relu2_2(x)
