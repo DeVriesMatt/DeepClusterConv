@@ -612,6 +612,12 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
         if epoch_loss < best_loss or epoch_loss >= best_loss:
             best_loss = epoch_loss
             best_model_wts = copy.deepcopy(model.state_dict())
+            torch.save({
+                'epoch': epoch,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'loss': epoch_loss
+            }, pretrained)
 
         print_both(txt_file, '')
 
@@ -622,12 +628,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
     # load best model weights
     model.load_state_dict(best_model_wts)
     model.pretrained = True
-    torch.save({
-        'epoch': epoch,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'loss': epoch_loss
-    }, pretrained)
+
     # torch.save(model.state_dict(), pretrained)
 
     return model
