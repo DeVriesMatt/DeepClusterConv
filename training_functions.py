@@ -621,6 +621,7 @@ def pretraining(model, dataloader, criterion, optimizer, scheduler, num_epochs, 
 
         print_both(txt_file, '')
 
+
     time_elapsed = time.time() - since
     print_both(txt_file, 'Pretraining complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
