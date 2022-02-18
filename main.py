@@ -434,7 +434,6 @@ if __name__ == "__main__":
 
         else:
             dataset = ImageFolder(root=data_dir, transform=data_transforms, size=img_size[0])
-        # Prepare data for network: schuffle and arrange batches
 
         dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch,
                                                  shuffle=False, num_workers=workers)

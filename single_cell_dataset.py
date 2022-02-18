@@ -80,4 +80,70 @@ class SingleCellDataset(Dataset):
             image = self.transform(image)
             image = image.unsqueeze(0)
 
+        serial_number = self.new_df.loc[idx, 'serialNumber']
+
+        return image, label, feats
+
+
+class SingleCellDatasetAll(Dataset):
+    def __init__(self, annotations_file,
+                 img_dir,
+                 img_size=128,
+                 label_col='Treatment',
+                 transform=None,
+                 target_transform=None,
+                 cell_component='cell'):
+        self.annot_df = pd.read_csv(annotations_file)
+        self.img_dir = img_dir
+        self.img_size = img_size
+        self.label_col = label_col
+        self.transform = transform
+        self.target_transform = target_transform
+        self.cell_component = cell_component
+
+        self.new_df = self.annot_df[(self.annot_df.xDim <= self.img_size) &
+                                    (self.annot_df.yDim <= self.img_size) &
+                                    (self.annot_df.zDim <= self.img_size)].reset_index(drop=True)
+
+        # encode label
+        le = LabelEncoder()
+        label_col_enc = self.new_df.loc[:, self.label_col]
+        label_col_enc = le.fit_transform(label_col_enc)
+        self.new_df['label_col_enc'] = label_col_enc
+
+    def __len__(self):
+        return len(self.new_df)
+
+    def __getitem__(self, idx):
+        # read the image
+        treatment = self.new_df.loc[idx, 'Treatment']
+        plate_num = 'Plate' + str(self.new_df.loc[idx, 'PlateNumber'])
+        if self.cell_component == 'cell':
+            component_path = 'stacked'
+        else:
+            component_path = 'stacked_nucleus'
+
+        img_path = os.path.join(self.img_dir,
+                                plate_num,
+                                component_path,
+                                'Cells',
+                                self.new_df.loc[idx, 'serialNumber'])
+
+        image = io.imread(img_path + '.tif').astype(np.float16)
+        image = pad_img(image, self.img_size)
+
+        # return encoded label as tensor
+        label = self.new_df.loc[idx, 'label_col_enc']
+        label = torch.tensor(label)
+
+        # return the classical features as torch tensor
+        feats = self.new_df.iloc[idx, 16:-4]
+        feats = torch.tensor(feats)
+
+        if self.transform:
+            image = self.transform(image)
+            image = image.unsqueeze(0)
+
+        serial_number = self.new_df.loc[idx, 'serialNumber']
+
         return image, label, feats
